@@ -1,4 +1,4 @@
-package de.swproj.teamchat.ui.login;
+package de.swproj.teamchat.view.activities.login;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModel;
 
 import android.util.Patterns;
 
-import de.swproj.teamchat.data.LoginRepository;
-import de.swproj.teamchat.data.Result;
-import de.swproj.teamchat.data.model.LoggedInUser;
+import de.swproj.teamchat.datamodell.login.LoginRepository;
+import de.swproj.teamchat.datamodell.login.Result;
+import de.swproj.teamchat.datamodell.login.model.LoggedInUser;
 import de.swproj.teamchat.R;
 
 public class LoginViewModel extends ViewModel {

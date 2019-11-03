@@ -1,4 +1,4 @@
-package de.swproj.teamchat.ui.login;
+package de.swproj.teamchat.view.activities.login;
 
 import android.app.Activity;
 
@@ -23,8 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import de.swproj.teamchat.R;
-import de.swproj.teamchat.ui.login.LoginViewModel;
-import de.swproj.teamchat.ui.login.LoginViewModelFactory;
 
 public class LoginActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package de.swproj.teamchat.data.model;
+package de.swproj.teamchat.datamodell.login.model;
 
 /**
  * Data class that captures user information for logged in users retrieved from LoginRepository

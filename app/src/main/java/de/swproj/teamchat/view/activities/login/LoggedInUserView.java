@@ -1,4 +1,4 @@
-package de.swproj.teamchat.ui.login;
+package de.swproj.teamchat.view.activities.login;
 
 /**
  * Class exposing authenticated user details to the UI.

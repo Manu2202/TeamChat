@@ -1,4 +1,4 @@
-package de.swproj.teamchat.data;
+package de.swproj.teamchat.datamodell.login;
 
 /**
  * A generic class that holds a result success w/ data or an error exception.

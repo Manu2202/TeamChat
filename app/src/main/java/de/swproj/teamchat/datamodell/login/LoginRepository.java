@@ -1,6 +1,6 @@
-package de.swproj.teamchat.data;
+package de.swproj.teamchat.datamodell.login;
 
-import de.swproj.teamchat.data.model.LoggedInUser;
+import de.swproj.teamchat.datamodell.login.model.LoggedInUser;
 
 /**
  * Class that requests authentication and user information from the remote data source and

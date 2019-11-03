@@ -1,11 +1,11 @@
-package de.swproj.teamchat.ui.login;
+package de.swproj.teamchat.view.activities.login;
 
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.annotation.NonNull;
 
-import de.swproj.teamchat.data.LoginDataSource;
-import de.swproj.teamchat.data.LoginRepository;
+import de.swproj.teamchat.datamodell.login.LoginDataSource;
+import de.swproj.teamchat.datamodell.login.LoginRepository;
 
 /**
  * ViewModel provider factory to instantiate LoginViewModel.

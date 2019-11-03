@@ -1,6 +1,6 @@
-package de.swproj.teamchat.data;
+package de.swproj.teamchat.datamodell.login;
 
-import de.swproj.teamchat.data.model.LoggedInUser;
+import de.swproj.teamchat.datamodell.login.model.LoggedInUser;
 
 import java.io.IOException;
 
