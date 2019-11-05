@@ -2,23 +2,6 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 28
-
-    signingConfigs {
-        debug {
-            storeFile file('../app/dbgKey.jks')
-            storePassword "android"
-            keyAlias "debugKeyForGoogle"
-            keyPassword "android"
-        }
-
-        release {
-            storeFile file('../app/dbgKey.jks')
-            storePassword "android"
-            keyAlias "debugKeyForGoogle"
-            keyPassword "android"
-        }
-    }
-
     defaultConfig {
         applicationId "de.swproj.teamchat"
         minSdkVersion 24
@@ -45,6 +28,4 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-
-    implementation 'com.google.android.gms:play-services-auth:17.0.0'
 }
