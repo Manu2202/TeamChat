@@ -25,6 +25,14 @@ public class Chat {
         this.currUsers = currUsers;
         this.admin = admin;
     }
+    public Chat(String name, Color color, ArrayList<Message> messages, ArrayList<User> currUsers, User admin) {
+        this.name = name;
+        this.color = color;
+        this.messages = messages;
+        this.id = 0;
+        this.currUsers = currUsers;
+        this.admin = admin;
+    }
 
     public void update(){
 

@@ -22,6 +22,15 @@ public class Event extends Message {
         this.status = status;
     }
 
+    public Event(Time timeStamp, String message, boolean isEvent, User creator, Date date,
+                 String description, Byte status) {
+        super(timeStamp, message, isEvent, creator);
+        this.date = date;
+        this.description = description;
+        this.status = status;
+
+    }
+
     @Override
     public Time getTimeStamp() {
         return super.getTimeStamp();

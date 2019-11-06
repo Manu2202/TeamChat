@@ -22,6 +22,13 @@ public abstract class Message {
         this.isEvent = isEvent;
         this.creator = creator;
     }
+    public Message(Time timeStamp, String message, boolean isEvent, User creator) {
+        this.timeStamp = timeStamp;
+        this.message = message;
+        this.id = 0;
+        this.isEvent = isEvent;
+        this.creator = creator;
+    }
 
     public Time getTimeStamp() {
         return timeStamp;
