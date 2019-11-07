@@ -21,6 +21,7 @@ import de.swproj.teamchat.R;
 public class TestGoogleProfileActivity extends AppCompatActivity {
 
     TextView name;
+    TextView fullName;
     TextView email;
     TextView googleID;
     Button signOut;
@@ -40,6 +41,7 @@ public class TestGoogleProfileActivity extends AppCompatActivity {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
 
+        fullName = findViewById(R.id.fullName);
         name = findViewById(R.id.googleName);
         email = findViewById(R.id.googleEmail);
         googleID = findViewById(R.id.googleID);
@@ -62,12 +64,13 @@ public class TestGoogleProfileActivity extends AppCompatActivity {
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
         if (acct != null) {
             String personName = acct.getDisplayName();
-            // String personGivenName = acct.getGivenName();
-            // String personFamilyName = acct.getFamilyName();
+            String personGivenName = acct.getGivenName();
+            String personFamilyName = acct.getFamilyName();
             String personEmail = acct.getEmail();
             String personId = acct.getId();
             // Uri personPhoto = acct.getPhotoUrl();
 
+            fullName.setText("Vor- und Nachname: " + personGivenName + " " + personFamilyName);
             name.setText("Google Account Name: " + personName);
             email.setText("Google Email: " + personEmail);
             googleID.setText("Google ID: " + personId);
