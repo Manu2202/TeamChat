@@ -16,10 +16,24 @@ public class DBConnection extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
+        sqLiteDatabase.execSQL(DBCreate.getChatTable());
+        sqLiteDatabase.execSQL(DBCreate.getUserTable());
+        sqLiteDatabase.execSQL(DBCreate.getUserChatTable());
+        sqLiteDatabase.execSQL(DBCreate.getMessageTable());
+        sqLiteDatabase.execSQL(DBCreate.getEventTable());
+        sqLiteDatabase.execSQL(DBCreate.getEventUserTable());
+
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+        sqLiteDatabase.execSQL(DBCreate.deleteChatTable());
+        sqLiteDatabase.execSQL(DBCreate.deleteUserTable());
+        sqLiteDatabase.execSQL(DBCreate.deleteUserChatTable());
+        sqLiteDatabase.execSQL(DBCreate.deleteMessageTable());
+        sqLiteDatabase.execSQL(DBCreate.deleteEventTable());
+        sqLiteDatabase.execSQL(DBCreate.deleteEventUserTable());
 
+        onCreate(sqLiteDatabase);
     }
 }

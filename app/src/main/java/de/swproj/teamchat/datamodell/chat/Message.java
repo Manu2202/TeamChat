@@ -14,13 +14,15 @@ public abstract class Message {
     private int id;
     private boolean isEvent;
     private User creator;
+    private int chatid;
 
-    public Message(Time timeStamp, String message, int id, boolean isEvent, User creator) {
+    public Message(Time timeStamp, String message, int id, boolean isEvent, User creator,int chatid) {
         this.timeStamp = timeStamp;
         this.message = message;
         this.id = id;
         this.isEvent = isEvent;
         this.creator = creator;
+        this.chatid=chatid;
     }
     public Message(Time timeStamp, String message, boolean isEvent, User creator) {
         this.timeStamp = timeStamp;
@@ -28,6 +30,11 @@ public abstract class Message {
         this.id = 0;
         this.isEvent = isEvent;
         this.creator = creator;
+
+    }
+
+    public int getChatid() {
+        return chatid;
     }
 
     public Time getTimeStamp() {
