@@ -13,23 +13,18 @@ import java.util.ArrayList;
 
 public class Chat {
     private String name;
-    private Color color;
+    private int color;
     private int id;
     private String admin;
 
-    public Chat(int id, String name, Color color, String admin) {
+    public Chat(int id, String name, int color, String admin) {
         this.name = name;
         this.color = color;
         this.id = id;
         this.admin = admin;
     }
 
-    public Chat(int id, String name, String admin) {
-        this.name = name;
-        this.color=null;
-        this.id = id;
-        this.admin = admin;
-    }
+
 
 
     public void update(){
@@ -40,10 +35,9 @@ public class Chat {
         return name;
     }
 
-    public Color getColor() {
+    public int getColor() {
         return color;
     }
-
 
 
     public int getId() {

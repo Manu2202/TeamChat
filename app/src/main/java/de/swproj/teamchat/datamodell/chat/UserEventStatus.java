@@ -2,13 +2,13 @@ package de.swproj.teamchat.datamodell.chat;
 
 public class UserEventStatus {
     private String userId;
-    private String messageId;
+    private int eventId;
     private byte status;
     private String reason;
 
-    public UserEventStatus(String userId, String messageId, byte status, String reason) {
+    public UserEventStatus(String userId, int messageId, byte status, String reason) {
         this.userId = userId;
-        this.messageId = messageId;
+        this.eventId = messageId;
         this.status = status;
         this.reason = reason;
     }
@@ -17,8 +17,8 @@ public class UserEventStatus {
         return userId;
     }
 
-    public String getMessageId() {
-        return messageId;
+    public int getEventId() {
+        return eventId;
     }
 
     public byte getStatus() {
