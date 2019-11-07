@@ -4,14 +4,19 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.os.Build;
 import android.util.Log;
 
-import java.sql.Time;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 import de.swproj.teamchat.datamodell.chat.Chat;
 import de.swproj.teamchat.datamodell.chat.Event;
 import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.datamodell.chat.User;
+import de.swproj.teamchat.datamodell.chat.UserEventStatus;
 
 
 public class DBStatements {
@@ -23,7 +28,7 @@ public DBStatements (Context context){
 
 
 
-public int updateChat(Chat chat){
+public void updateChat(Chat chat){
     int chatId=chat.getId();
     boolean isNew=true;
     SQLiteDatabase db = dbConnection.getReadableDatabase();
@@ -33,7 +38,7 @@ public int updateChat(Chat chat){
     db.beginTransaction();
     Cursor c=db.query(DBCreate.TABLE_CHAT,new String []{DBCreate.COL_CHAT_ID},DBCreate.COL_CHAT_ID+"="+chatId,null,null,null,null);
    isNew= c.getCount()!=0;
-   db.close();
+   db.endTransaction();
 
 
    //Start writing
@@ -47,20 +52,24 @@ public int updateChat(Chat chat){
     //put values
     values.put(DBCreate.COL_CHAT_ID, chatId);
     values.put(DBCreate.COL_CHAT_NAME, chat.getName());
-    values.put(DBCreate.COL_CHAT_COLOR, chat.getColor().toString());
-    values.put(DBCreate.COL_CHAT_FK_Creator, chat.getAdmin().getGoogleId());
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        values.put(DBCreate.COL_CHAT_COLOR, chat.getColor().toArgb());
+    }else{
+        values.put(DBCreate.COL_CHAT_COLOR, 0);
+    }
+    values.put(DBCreate.COL_CHAT_FK_Creator, chat.getAdmin());
 
 
    try {
        //create new Chat
        if (isNew) {
-          chatId = (int) db.insertOrThrow(DBCreate.TABLE_CHAT, null, values);
+          db.insertOrThrow(DBCreate.TABLE_CHAT, null, values);
 
        }
 
        //update Chat with ID...
        else {
-           int rows = db.update(DBCreate.TABLE_CHAT, values, DBCreate.COL_CHAT_ID + "=?",new String[]{""+chatId});
+         db.update(DBCreate.TABLE_CHAT, values, DBCreate.COL_CHAT_ID + "=?",new String[]{""+chatId});
 
 
        }
@@ -71,38 +80,52 @@ public int updateChat(Chat chat){
        db.endTransaction();
    }
 
-   db.beginTransaction();
+
+
+
+}
+
+public boolean updateChatMembers(String[] userIDs, int chatId){
+    SQLiteDatabase db = dbConnection.getReadableDatabase();
+    db.beginTransaction();
+
+    boolean success=true;
+
+    ContentValues values= null;
     try{
         db.delete(DBCreate.TABLE_USERCHAT, DBCreate.COL_USERCHAT_FK_CHAT + "=?", new String[]{""+chatId}); // todo: Delete USer from Chat (Events)
 
-        for (User u:chat.getCurrUsers()
-        ) {
+        for (String s:userIDs) {
             values= new ContentValues();
             values.put(DBCreate.COL_USERCHAT_FK_CHAT, chatId);
-            values.put(DBCreate.COL_USERCHAT_FK_USER, u.getGoogleId());
+            values.put(DBCreate.COL_USERCHAT_FK_USER, s );
             db.insertOrThrow(DBCreate.TABLE_USERCHAT, null, values);
+
         }
+        db.setTransactionSuccessful();
     }catch (Exception e){
+        success=false;
         Log.d("DB_Error class DBStatements:", "Unable to write CHAT_USER in db");
     }finally {
+
         db.endTransaction();
     }
 
-   db.close();
-
-    return chatId;
+    return success;
 }
-
 
 public boolean insertMessage (Message message){
 
     boolean insertsuccesfull=true;
 
     SQLiteDatabase db = dbConnection.getWritableDatabase();
-
-    db.beginTransaction();
-
     ContentValues values = new ContentValues();
+    int messageId =-1;
+    db.beginTransaction();
+try {
+
+
+
     //put values
     values.put(DBCreate.COL_MESSAGE_FK_CREATOR, message.getCreator().getGoogleId());
     values.put(DBCreate.COL_MESSAGE_FK_CHATID, message.getChatid());
@@ -111,23 +134,67 @@ public boolean insertMessage (Message message){
     values.put(DBCreate.COL_MESSAGE_ISEVENT, message.isEvent());
     values.put(DBCreate.COL_MESSAGE_TIMESTAMP, message.getTimeStamp().getTime());
 
+     messageId = (int) db.insertOrThrow(DBCreate.TABLE_MESSAGE, null, values);
+     db.setTransactionSuccessful();
+}catch (Exception e){
+    insertsuccesfull=false;
+    Log.d("DB_Error class DBStatements:", "Unable to write Message in DB from db");
+}finally {
+    db.endTransaction();
+}
 
 
-    int messageId = (int) db.insertOrThrow(DBCreate.TABLE_MESSAGE, null, values);
-
-    if(message.isEvent()){
+    if(message.isEvent()&&messageId!=-1){
         Event e = (Event) message;
         values = new ContentValues();
 
-        values.put(DBCreate.COL_EVENT_DATE, e.getDate().getTime());
-        values.put(DBCreate.COL_EVENT_DESCRIPTION, e.getDescription());
-        values.put(DBCreate.COL_EVENT_FK_MESSAGEID, messageId);
+        int eventId=-1;
 
-        int eventId = (int) db.insertOrThrow(DBCreate.TABLE_MESSAGE, null, values);
+         // create new Event
 
+        db.beginTransaction();
+        try{
+            values.put(DBCreate.COL_EVENT_ID, messageId);
+            values.put(DBCreate.COL_EVENT_DATE, e.getDate().getTime());
+            values.put(DBCreate.COL_EVENT_DESCRIPTION, e.getDescription());
+            values.put(DBCreate.COL_EVENT_FK_MESSAGEID, messageId);
 
+            eventId = (int) db.insertOrThrow(DBCreate.TABLE_EVENT, null, values);
 
-        // todo: get user from chat >> insert event user table
+            db.setTransactionSuccessful();
+        }catch (Exception d){
+            insertsuccesfull=false;
+            Log.d("DB_Error class DBStatements:", "Unable to write Event in DB from db");
+        }finally {
+            db.endTransaction();
+        }
+
+        // if there is a newe Event, add members
+
+      if(eventId!=-1) {
+
+          ArrayList<String> chatMmembers = getChatMembers(message.getChatid());
+          db.beginTransaction();
+
+          try {
+              for (String userId : chatMmembers
+              ) {
+                  values = new ContentValues();
+                  values.put(DBCreate.COL_EVENTUSER_FK_EVENT, eventId);
+                  values.put(DBCreate.COL_EVENTUSER_FK_USER, userId);
+                  values.put(DBCreate.COL_EVENTUSER_REASON, " ");
+                  values.put(DBCreate.COL_EVENTUSER_STATUS, 0);
+                  db.insertOrThrow(DBCreate.TABLE_EVENTUSER, null, values);
+              }
+              db.setTransactionSuccessful();
+          }catch (Exception ex){
+              insertsuccesfull=false;
+              Log.d("DB_Error class DBStatements:", "Unable to write EventUser in DB from db");
+          }finally {
+              db.endTransaction();
+          }
+      }
+
 
 
 
@@ -135,12 +202,208 @@ public boolean insertMessage (Message message){
     }
 
 
+  db.endTransaction();
 
+    return insertsuccesfull;
+}
+
+public boolean insertUser(User user){
+    boolean insertsuccesfull=true;
+
+    SQLiteDatabase db = dbConnection.getWritableDatabase();
+
+    db.beginTransaction();
+
+    try {
+
+
+        ContentValues values = new ContentValues();
+        //put values
+
+        values.put(DBCreate.COL_USER_G_ID, user.getGoogleId());
+        values.put(DBCreate.COL_USER_ACCNAME, user.getAccountName());
+        values.put(DBCreate.COL_USER_MAIL,user.getGoogleMail());
+        values.put(DBCreate.COL_USER_FIRSTNAME, user.getFirstName());
+        values.put(DBCreate.COL_USER_NAME, user.getName());
+
+
+        db.insertOrThrow(DBCreate.TABLE_USER, null, values);
+
+        db.setTransactionSuccessful();
+
+    }catch (Exception e){
+        insertsuccesfull=false;
+        Log.d("DB_Error class DBStatements:", "Unable to write User in db");
+    }finally {
+        db.endTransaction();
+    }
 
 
 
     return insertsuccesfull;
 }
+
+public boolean updateUserEventStatus(UserEventStatus status){
+    boolean insertsuccesfull=true;
+
+    SQLiteDatabase db = dbConnection.getWritableDatabase();
+
+    db.beginTransaction();
+
+    try {
+
+
+        ContentValues values = new ContentValues();
+        //put values
+
+        values.put(DBCreate.COL_EVENTUSER_FK_USER, status.getUserId());
+        values.put(DBCreate.COL_EVENTUSER_FK_EVENT, status.getMessageId());
+        values.put(DBCreate.COL_EVENTUSER_FK_EVENT, status.getMessageId());
+
+
+
+        db.insertOrThrow(DBCreate.TABLE_USER, null, values);
+
+        db.setTransactionSuccessful();
+
+    }catch (Exception e){
+        insertsuccesfull=false;
+        Log.d("DB_Error class DBStatements:", "Unable to write User in db");
+    }finally {
+        db.endTransaction();
+    }
+
+
+
+    return insertsuccesfull;
+}
+
+
+
+
+public ArrayList<String> getChatMembers(int chatId){
+    ArrayList<String> memberIds = new ArrayList<>();
+
+    SQLiteDatabase db = dbConnection.getReadableDatabase();
+
+    db.beginTransaction();
+    try {
+        Cursor c = db.query(DBCreate.TABLE_USERCHAT, new String[]{DBCreate.COL_USERCHAT_FK_USER,},DBCreate.COL_USERCHAT_FK_CHAT+"="+chatId , null, null, null, null);
+
+        if (c.moveToFirst()) {
+            int userId = c.getColumnIndex(DBCreate.COL_USERCHAT_FK_USER);
+            do {
+                memberIds.add(c.getString(userId));
+
+            } while (c.moveToNext());
+        }
+
+    }catch (Exception e){
+        Log.d("DB_Error class DBStatements:", "Unable to read Users in Chat from  "+ chatId+"db");
+    }finally {
+        db.endTransaction();
+    }
+
+
+    return memberIds;
+}
+
+public User getUser(String googleID){
+    User user = null;
+    SQLiteDatabase db = dbConnection.getReadableDatabase();
+    db.beginTransaction();
+
+    try {
+
+        Cursor c = db.query(DBCreate.TABLE_USER, new String[]{DBCreate.COL_USER_G_ID, DBCreate.COL_USER_MAIL, DBCreate.COL_USER_ACCNAME, DBCreate.COL_USER_FIRSTNAME, DBCreate.COL_USER_NAME},
+                DBCreate.COL_USER_G_ID+"="+googleID, null, null, null, null);
+        if (c.moveToFirst()) {
+
+            int id = c.getColumnIndex(DBCreate.COL_USER_G_ID);
+            int mail = c.getColumnIndex(DBCreate.COL_USER_MAIL);
+            int acc = c.getColumnIndex(DBCreate.COL_USER_ACCNAME);
+            int name = c.getColumnIndex(DBCreate.COL_USER_NAME);
+            int fname = c.getColumnIndex(DBCreate.COL_USER_FIRSTNAME);
+
+                user =new User(c.getString(id), c.getString(mail), c.getString(acc), c.getString(name), c.getString(fname));
+            }
+    }catch (Exception e){
+        Log.d("DB_Error class DBStatements:", "Unable to read User "+googleID+" from db");
+    }finally {
+        db.endTransaction();
+    }
+
+
+    return user;
+}
+
+
+public List<User> getAllUser(){
+    ArrayList<User> users= new ArrayList<>();
+    SQLiteDatabase db = dbConnection.getReadableDatabase();
+
+    db.beginTransaction();
+    try {
+
+
+
+        Cursor c = db.query(DBCreate.TABLE_USER, new String[]{DBCreate.COL_USER_G_ID, DBCreate.COL_USER_MAIL, DBCreate.COL_USER_ACCNAME, DBCreate.COL_USER_FIRSTNAME, DBCreate.COL_USER_NAME}, null, null, null, null, null);
+        if (c.moveToFirst()) {
+            // String googleId, String googleMail, String accountName, String name, String firstName
+            int id = c.getColumnIndex(DBCreate.COL_USER_G_ID);
+            int mail = c.getColumnIndex(DBCreate.COL_USER_MAIL);
+            int acc = c.getColumnIndex(DBCreate.COL_USER_ACCNAME);
+            int name = c.getColumnIndex(DBCreate.COL_USER_NAME);
+            int fname = c.getColumnIndex(DBCreate.COL_USER_FIRSTNAME);
+            do {
+                users.add(new User(c.getString(id), c.getString(mail), c.getString(acc), c.getString(name), c.getString(fname)));
+
+            } while (c.moveToNext());
+        }
+
+    }catch (Exception e){
+        Log.d("DB_Error class DBStatements:", "Unable to read Users from db");
+    }finally {
+        db.endTransaction();
+    }
+
+    return users;
+    }
+
+
+public Chat getChat(int chatId){
+    Chat chat = null;
+    SQLiteDatabase db = dbConnection.getReadableDatabase();
+    db.beginTransaction();
+
+    try {
+
+        Cursor c = db.query(DBCreate.TABLE_USER, new String[]{DBCreate.COL_CHAT_ID,DBCreate.COL_CHAT_FK_Creator, DBCreate.COL_CHAT_NAME, DBCreate.COL_CHAT_COLOR},
+                DBCreate.COL_USER_G_ID+"="+chatId, null, null, null, null);
+        if (c.moveToFirst()) {
+
+            int id = c.getColumnIndex(DBCreate.COL_USER_G_ID);
+            int creator = c.getColumnIndex(DBCreate.COL_USER_MAIL);
+            int name = c.getColumnIndex(DBCreate.COL_USER_ACCNAME);
+            int color = c.getColumnIndex(DBCreate.COL_USER_NAME);
+
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                chat =new Chat(c.getInt(id), c.getString(name),Color.valueOf(c.getInt(color)),  c.getString(creator));
+            }else  chat =new Chat(c.getInt(id), c.getString(name),  c.getString(creator));
+        }
+    }catch (Exception e){
+        Log.d("DB_Error class DBStatements:", "Unable to read Chat "+chatId+" from db");
+    }finally {
+        db.endTransaction();
+    }
+
+
+    return chat;
+
+    }
+
+
 
 
 

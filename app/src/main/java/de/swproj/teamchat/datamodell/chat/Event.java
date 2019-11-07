@@ -15,8 +15,8 @@ public class Event extends Message {
     private Byte status;
 
     public Event(Time timeStamp, String message, int id, boolean isEvent, User creator, Date date,
-                 String description, Byte status) {
-        super(timeStamp, message, id, isEvent, creator);
+                 String description,int chatid, Byte status) {
+        super(timeStamp, message, id, isEvent, creator, chatid);
         this.date = date;
         this.description = description;
         this.status = status;
@@ -30,6 +30,9 @@ public class Event extends Message {
         this.status = status;
 
     }
+
+    @Override
+    public int getChatid() { return super.getChatid(); }
 
     @Override
     public Time getTimeStamp() {

@@ -38,7 +38,7 @@ public class DBCreate {
         return "CREATE TABLE " + TABLE_CHAT + " ("
                   + COL_CHAT_ID + " INTEGER PRIMARY KEY, "
                 + COL_CHAT_NAME + " TEXT, "
-                + COL_CHAT_COLOR + " TEXT, "
+                + COL_CHAT_COLOR + " INTEGER, "
                 + COL_CHAT_FK_Creator + " TEXT  NOT NULL REFERENCES "+ TABLE_USER+")";
     }
 
@@ -78,7 +78,7 @@ public class DBCreate {
 
     protected static String getMessageTable() {
         return "CREATE TABLE " + TABLE_MESSAGE + " ("
-                + COL_MESSAGE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + COL_MESSAGE_ID + " INTEGER PRIMARY KEY, "
                 + COL_MESSAGE_TIMESTAMP+ " TEXT,"
                 + COL_MESSAGE_MESSAGE+ " TEXT,"
                 + COL_MESSAGE_ISEVENT+ " INTEGER,"

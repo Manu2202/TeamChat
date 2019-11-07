@@ -5,6 +5,8 @@ package de.swproj.teamchat.datamodell.chat;
  * For the project: TeamChat.
  */
 
+
+
 import android.graphics.Color;
 
 import java.util.ArrayList;
@@ -12,27 +14,23 @@ import java.util.ArrayList;
 public class Chat {
     private String name;
     private Color color;
-    private ArrayList<Message> messages;
     private int id;
-    ArrayList<User> currUsers;
-    private User admin;
+    private String admin;
 
-    public Chat(String name, Color color, ArrayList<Message> messages, int id, ArrayList<User> currUsers, User admin) {
+    public Chat(int id, String name, Color color, String admin) {
         this.name = name;
         this.color = color;
-        this.messages = messages;
         this.id = id;
-        this.currUsers = currUsers;
         this.admin = admin;
     }
-    public Chat(String name, Color color, ArrayList<Message> messages, ArrayList<User> currUsers, User admin) {
+
+    public Chat(int id, String name, String admin) {
         this.name = name;
-        this.color = color;
-        this.messages = messages;
-        this.id = 0;
-        this.currUsers = currUsers;
+        this.color=null;
+        this.id = id;
         this.admin = admin;
     }
+
 
     public void update(){
 
@@ -46,19 +44,15 @@ public class Chat {
         return color;
     }
 
-    public ArrayList<Message> getMessages() {
-        return messages;
-    }
+
 
     public int getId() {
         return id;
     }
 
-    public ArrayList<User> getCurrUsers() {
-        return currUsers;
-    }
 
-    public User getAdmin() {
+
+    public String getAdmin() {
         return admin;
     }
 }
