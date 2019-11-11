@@ -5,16 +5,16 @@ android {
 
     signingConfigs {
         debug {
-            storeFile file('../app/dbgKey.jks')
+            storeFile file('..\\app\\dbgKey2.jks')
             storePassword "android"
-            keyAlias "debugKeyForGoogle"
+            keyAlias 'debugKeyForGoogle2'
             keyPassword "android"
         }
 
         release {
-            storeFile file('../app/dbgKey.jks')
+            storeFile file('..\\app\\dbgKey2.jks')
             storePassword "android"
-            keyAlias "debugKeyForGoogle"
+            keyAlias 'debugKeyForGoogle2'
             keyPassword "android"
         }
     }

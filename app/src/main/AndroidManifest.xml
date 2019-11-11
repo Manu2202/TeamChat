@@ -11,13 +11,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.activities.login.TestGoogleProfileActivity"></activity>
         <activity android:name=".view.activities.MainActivity" />
         <activity android:name=".view.activities.EditEventActivity" />
         <activity android:name=".view.activities.EditChatActivity" />
         <activity android:name=".view.activities.ChatActivity" />
+        <activity android:name=".view.activities.GoogleProfileActivity" />
         <activity
-            android:name=".view.activities.login.LoginActivity"
+            android:name=".view.activities.LoginActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
