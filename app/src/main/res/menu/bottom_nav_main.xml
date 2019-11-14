@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Item für den Chat Reiter -->
+    <item
+        android:id="@+id/nav_chats"
+        android:icon="@drawable/ic_chat_main"
+        android:title="Chats"/>
+
+    <!-- Item für den Event Reiter -->
+    <item
+        android:id="@+id/nav_events"
+        android:icon="@drawable/ic_event_main"
+        android:title="Events"/>
+
+    <!-- Item für den Kontakte Reiter -->
+    <item
+        android:id="@+id/nav_contacts"
+        android:icon="@drawable/ic_contacts_main"
+        android:title="Kontakte"/>
+
+
+</menu>
