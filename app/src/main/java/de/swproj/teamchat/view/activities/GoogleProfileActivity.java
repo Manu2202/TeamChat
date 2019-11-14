@@ -1,4 +1,4 @@
-package de.swproj.teamchat.view.activities.login;
+package de.swproj.teamchat.view.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,7 +18,7 @@ import com.google.android.gms.tasks.Task;
 
 import de.swproj.teamchat.R;
 
-public class TestGoogleProfileActivity extends AppCompatActivity {
+public class GoogleProfileActivity extends AppCompatActivity {
 
     TextView name;
     TextView fullName;
@@ -84,7 +84,7 @@ public class TestGoogleProfileActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
 
-                        Toast.makeText(TestGoogleProfileActivity.this, "Ausgeloggt", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GoogleProfileActivity.this, "Ausgeloggt", Toast.LENGTH_SHORT).show();
                         finish();
 
                     }
