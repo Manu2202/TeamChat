@@ -493,6 +493,10 @@ public ArrayList<Event>getEvent(String userId){
     return null;
 }
 
+public Message getLastMessage( int chatid){
+
+    return null;
+}
 
 
 
