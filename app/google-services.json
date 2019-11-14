@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "981418032949",
+    "firebase_url": "https://teamchat-push-service.firebaseio.com",
+    "project_id": "teamchat-push-service",
+    "storage_bucket": "teamchat-push-service.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:981418032949:android:0f82c475d68288b965167c",
+        "android_client_info": {
+          "package_name": "de.swproj.teamchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "981418032949-dgu1muhij0kejh22u7a2jllt40iq5prl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnbRemWU0k1k9-Jzc49IxtvekJaO7wFOo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "981418032949-dgu1muhij0kejh22u7a2jllt40iq5prl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:981418032949:android:f8adfb8b5391c65e65167c",
+        "android_client_info": {
+          "package_name": "de.swproj.teamchat.view.activities"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "981418032949-dgu1muhij0kejh22u7a2jllt40iq5prl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnbRemWU0k1k9-Jzc49IxtvekJaO7wFOo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "981418032949-dgu1muhij0kejh22u7a2jllt40iq5prl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
