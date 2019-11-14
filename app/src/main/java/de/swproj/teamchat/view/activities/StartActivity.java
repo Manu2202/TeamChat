@@ -27,7 +27,9 @@ public class StartActivity extends AppCompatActivity {
     GoogleSignInClient mGoogleSignInClient;
     int RC_SIGN_IN = 0;
     /////////////////////
+
     private Button btn_reg;
+    private Button btn_login;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +67,15 @@ public class StartActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent reg_intent = new Intent(StartActivity.this, RegisterActivity.class);
                 startActivity(reg_intent);
+            }
+        });
+        //Log in per Mail
+        btn_login = (Button)findViewById(R.id.btn_start_login);
+        btn_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent login_intent = new Intent(StartActivity.this,LoginActivity.class);
+                startActivity(login_intent);
             }
         });
     }

@@ -7,7 +7,7 @@
     tools:context=".view.activities.LoginActivity">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout"
+        android:id="@+id/login_email"
         android:layout_width="409dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="200dp"
@@ -22,12 +22,12 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout2"
+        android:id="@+id/login_password"
         android:layout_width="409dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
+        app:layout_constraintTop_toBottomOf="@+id/login_email">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
@@ -45,6 +45,6 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout2" />
+        app:layout_constraintTop_toBottomOf="@+id/login_password" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
