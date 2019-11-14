@@ -6,11 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.ListFragment;
+import de.swproj.teamchat.R;
 
 
 /*
@@ -35,6 +37,9 @@ public class FragmentMainChats extends ListFragment {
         super.onActivityCreated(savedInstanceState);
 
         ListView list = getListView();
+        String[] s = new String[]{"Hier könnte Ihre Werbung stehen!", "Wählen Sie die 62 70 8"};
+        ArrayAdapter adapter = new ArrayAdapter(getActivity(), R.layout.dummy_list_item, R.id.textView, s);
+        setListAdapter(adapter);
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

@@ -75,14 +75,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-    /*
-     * Method on Click of the Button "New Chat". Open the Activity "EditChatActivity"
-     */
-    public void createChat(View view){
-
-    }
-
     /*
      * Private Method to setup the fragements and the Bottom Navigation View
      */
