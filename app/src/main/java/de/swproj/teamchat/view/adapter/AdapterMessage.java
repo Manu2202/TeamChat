@@ -1,12 +1,29 @@
 package de.swproj.teamchat.view.adapter;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.transition.Fade;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.util.Pair;
+import androidx.core.view.ViewCompat;
+import de.swproj.teamchat.Connection.Database.DBStatements;
+import de.swproj.teamchat.R;
+import de.swproj.teamchat.datamodell.chat.Event;
 import de.swproj.teamchat.datamodell.chat.Message;
+import de.swproj.teamchat.view.activities.ChatActivity;
+import de.swproj.teamchat.view.activities.ViewEventActivity;
 
 
 /*
@@ -17,28 +34,88 @@ import de.swproj.teamchat.datamodell.chat.Message;
 public class AdapterMessage extends BaseAdapter {
 
     private ArrayList<Message> messages;
+    private DBStatements db;
+    String authentictedUser = "abc";
+    private AppCompatActivity activity;//todo: Get Authenticated user for send and show
 
-    public AdapterMessage(ArrayList<Message> messages) {
+    public AdapterMessage(ArrayList<Message> messages, DBStatements dbStatements, AppCompatActivity activity) {
         this.messages = messages;
+        db = dbStatements;
+        this.activity = activity;
     }
 
     @Override
     public int getCount() {
-        return 0;
+        return messages.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return messages.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return null;
+        final Message message = messages.get(position);
+        Context context = parent.getContext();
+
+        if(convertView==null) {
+
+            if (message.isEvent()) {
+
+                    LayoutInflater lf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    convertView = lf.inflate(R.layout.listitem_event, null, false);
+
+            } else {
+
+
+                LayoutInflater lf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                // todo: creator mit act user vergleichen
+                if (message.getCreator().equals(authentictedUser)) {
+                    convertView = lf.inflate(R.layout.listitem_message, null, false);
+                } else {
+                    convertView = lf.inflate(R.layout.listitem_message2, null, false);
+                }
+
+
+            }
+            TextView tvMessage = convertView.findViewById(R.id.li_message_tvmessage);
+            TextView tvTime = convertView.findViewById(R.id.li_message_tvtime);
+            TextView tvUser = convertView.findViewById(R.id.li_message_tvuser);
+            tvMessage.setText(message.getMessage());
+            tvTime.setText(message.getTimeStamp().toString());
+            tvUser.setText(message.getCreator().getAccountName());
+
+
+            if (message.isEvent()) {
+                final Event event = db.getEvent(message.getId());
+                TextView tvDate = convertView.findViewById(R.id.li_event_tvdate);
+                tvDate.setText(event.getDate().toString());
+                final CardView cv = convertView.findViewById(R.id.li_message_cv);
+
+
+                cv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(activity, ViewEventActivity.class);
+                        intent.putExtra("eventId", message.getId());
+                        ActivityOptionsCompat op = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, (Pair<View, String>[])
+                                new Pair[]{new Pair<View, String>(cv, ViewCompat.getTransitionName(cv))});
+
+                        activity.startActivity(intent, op.toBundle());
+                    }
+                });
+
+
+            }
+        }
+
+            return convertView;
+        }
     }
-}
+

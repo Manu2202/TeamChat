@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/li_message_cv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:cardCornerRadius="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        style="@style/Widget.MaterialComponents.CardView"
+
+        android:transitionName="cv">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            >
+
+            <TextView
+                android:id="@+id/viewevent_tvcreator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="8dp"
+                android:text="username"
+                style="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:transitionName="2"
+                />
+
+            <TextView
+                android:id="@+id/viewevent_tvtime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="8dp"
+                android:text="18:19"
+                style="@style/TextAppearance.MaterialComponents.Subtitle2" />
+
+            <View
+                android:id="@+id/li_message_divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/viewevent_tvcreator"
+                android:padding="2dp"
+                android:background="@android:color/darker_gray"/>
+
+            <TextView
+                android:id="@+id/viewevent_tvname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/li_message_divider"
+                android:transitionName="top"
+                android:text="Großes Besauffest"
+                style="@style/TextAppearance.MaterialComponents.Headline4" />
+
+
+            <TextView
+                android:id="@+id/viewevent_tvdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/viewevent_tvname"
+                android:text="11.11.11 18:30 Uhr"
+                style="@style/TextAppearance.MaterialComponents.Headline5" />
+
+
+            <TextView
+                android:id="@+id/viewevent_txtdescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/viewevent_tvdate"
+                android:text="Descriptopn"
+                style="@style/TextAppearance.MaterialComponents.Headline6" />
+
+            <TextView
+                android:id="@+id/viewevent_tvdescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/viewevent_txtdescription"
+                android:text="Lets meet an kill peobple, all perseon should have fun. So come together and sing!!! "
+                style="@style/TextAppearance.MaterialComponents.Body1" />
+
+
+
+
+            <Button
+                android:id="@+id/viewevent_btncancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="absagen"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/viewevent_txtstatus"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                android:textSize="16dp"
+                />
+
+            <Button
+                android:id="@+id/viewevent_btncomit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="zusagen"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/viewevent_txtstatus"
+                />
+
+            <TextView
+                android:id="@+id/viewevent_txtstatus"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/viewevent_tvdescription"
+                android:text="Your Status:" />
+
+            <TextView
+                android:id="@+id/viewevent_tvstatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/viewevent_txtstatus"
+                android:text="zugesagt"
+                android:layout_below="@+id/viewevent_tvdescription"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                />
+
+            <ListView
+                android:id="@+id/viewevent_lvstates"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/viewevent_btncomit" />
+
+
+        </RelativeLayout>
+
+
+
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>

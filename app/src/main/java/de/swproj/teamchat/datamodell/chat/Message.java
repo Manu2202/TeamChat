@@ -7,7 +7,7 @@ package de.swproj.teamchat.datamodell.chat;
 
 import java.sql.Time;
 
-public abstract class Message {
+public class Message {
 
     private Time timeStamp;
     private String message;
