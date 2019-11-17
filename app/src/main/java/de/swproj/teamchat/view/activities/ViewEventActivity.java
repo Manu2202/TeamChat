@@ -9,6 +9,7 @@ import de.swproj.teamchat.datamodell.chat.UserEventStatus;
 import android.os.Bundle;
 import android.transition.Fade;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -45,11 +46,8 @@ public class ViewEventActivity extends AppCompatActivity {
         tvStatus.setText(event.getStatus());
 
         ArrayList<UserEventStatus> userEventStatuses = db.getUserEventStatus(id);
-
-
-
-
-
+        ListView lvStates = findViewById(R.id.viewevent_lvstates);
+        lvStates.setDivider(null);
 
 
 
