@@ -71,7 +71,6 @@ public class AdapterEvent extends BaseAdapter {
             TextView tvDate = convertView.findViewById(R.id.li_event_tvdate);
             // tvDate.setText(event.getDate().toString());
             tvDate.setText("19.11.2019");
-            final CardView cv = convertView.findViewById(R.id.li_message_cv);
 
 
         }
