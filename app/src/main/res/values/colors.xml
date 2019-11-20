@@ -11,4 +11,6 @@
     <color name="colorOnSurface">#212121</color>
     <color name="colorOnBackground">#212121</color>
     <color name="background">#FAFAFA</color>
+    <color name="save_green">#6CA468</color>
+    <color name="cancel_red">#FF0000</color>
 </resources>

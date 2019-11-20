@@ -18,7 +18,11 @@ public class EditEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_event);
     }
 
-    public void saveChanges(View view){
+    public void onClickSaveChanges(View view){
+
+    }
+
+    public void onClickCancel(View view){
 
     }
 }
