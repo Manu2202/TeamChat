@@ -64,6 +64,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             mLoginProgress.dismiss();
                             Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
+                            mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(mainIntent);
                             finish();
                             // Sign in success, update UI with the signed-in user's information
