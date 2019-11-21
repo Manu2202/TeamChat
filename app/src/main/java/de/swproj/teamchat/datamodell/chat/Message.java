@@ -58,4 +58,9 @@ public class Message {
     public String getCreator() {
         return creator;
     }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }
+

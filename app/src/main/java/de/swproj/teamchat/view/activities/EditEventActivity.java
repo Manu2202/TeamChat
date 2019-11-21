@@ -24,6 +24,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
@@ -164,9 +165,8 @@ public class EditEventActivity extends AppCompatActivity {
 
     public void onClickSaveChanges(View view){
         if (eventId == 0){
-            // TODO: Sich selbst aus DB holen -> User
-            User dummyUser = new User("123", "googlemail@gmail.de",
-                    "dummy", "Dummy", "MyDummy");
+            // TODO: Sich selbst aus DB holen -> UserID für Event
+
 
             // TODO: Die MessageID richtig übergeben -> jetzt nur Dummy Wert
             msgId = 345;
@@ -178,8 +178,8 @@ public class EditEventActivity extends AppCompatActivity {
             Byte status = 2;
             try {
                 Date date = new Date(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute);
-                event = new Event(new Timestamp(System.currentTimeMillis()),
-                        et_title.getText().toString(), msgId, true, dummyUser,
+                event = new Event(new Time(System.currentTimeMillis()),
+                        et_title.getText().toString(), msgId, true, "dummyUser",
                         date, et_description.getText().toString(), chatID, status);
 
                 HashMap<String, Object> eventMap = convertToMap(event);
@@ -218,7 +218,7 @@ public class EditEventActivity extends AppCompatActivity {
         eventMap.put("Titel", event.getMessage());
         eventMap.put("MessageID", event.getId());
         eventMap.put("IsEvent", event.isEvent());
-        eventMap.put("CreatorID", event.getCreator().getGoogleId());
+        eventMap.put("CreatorID", event.getCreator());
         eventMap.put("Date", event.getDate());
         eventMap.put("Description", event.getDescription());
         eventMap.put("ChatID", event.getChatid());

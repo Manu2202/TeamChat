@@ -75,4 +75,9 @@ public class Event extends Message {
     public void setStatus(Byte status) {
         this.status = status;
     }
+
+    @Override
+    public void setId(int id) {
+        super.setId(id);
+    }
 }
