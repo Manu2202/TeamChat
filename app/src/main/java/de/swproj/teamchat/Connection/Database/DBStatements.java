@@ -4,11 +4,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.os.Build;
 import android.util.Log;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,8 +18,9 @@ import de.swproj.teamchat.datamodell.chat.User;
 import de.swproj.teamchat.datamodell.chat.UserEventStatus;
 
 
+
 public class DBStatements {
-private DBConnection dbConnection;
+private de.swproj.teamchat.Connection.Database.DBConnection dbConnection;
 
 public DBStatements (Context context){
     dbConnection = new DBConnection(context);

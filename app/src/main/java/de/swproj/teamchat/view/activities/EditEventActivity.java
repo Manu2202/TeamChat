@@ -1,5 +1,6 @@
 package de.swproj.teamchat.view.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.datamodell.chat.Event;
@@ -11,16 +12,24 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import java.sql.Time;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EditEventActivity extends AppCompatActivity {
 
@@ -41,11 +50,15 @@ public class EditEventActivity extends AppCompatActivity {
 
     private DatePickerDialog.OnDateSetListener dateSetListener;
     private TimePickerDialog.OnTimeSetListener timeSetListener;
+    private FirebaseFirestore firebaseDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_event);
+
+        // Connect Firebase
+        firebaseDB = FirebaseFirestore.getInstance();
 
         // Connect the Layout Components
         tv_selectDate = (TextView)findViewById(R.id.edit_event_tv_select_date);
@@ -125,7 +138,6 @@ public class EditEventActivity extends AppCompatActivity {
         timeSetListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                hourOfDay = hourOfDay +1;  // Hour starts at '0'
                 String hour;
                 String min;
                 // Format the hour and min
@@ -170,6 +182,23 @@ public class EditEventActivity extends AppCompatActivity {
                         et_title.getText().toString(), msgId, true, dummyUser,
                         date, et_description.getText().toString(), chatID, status);
 
+                HashMap<String, Object> eventMap = convertToMap(event);
+
+                firebaseDB.collection("message")
+                        .add(eventMap)
+                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                Log.d("Event Added", "DocumentSnapshot added with ID: " + documentReference.getId());
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                                                  @Override
+                                                  public void onFailure(@NonNull Exception e) {
+                                                      Log.w("Event Added", "Error adding document", e);
+                                                  }
+                                              });
+
                 finishActivity(0);
 
             }catch(NullPointerException npe){
@@ -181,5 +210,20 @@ public class EditEventActivity extends AppCompatActivity {
     public void onClickCancel(View view){
         // Just go back to the previous Activity, safe nothing
         finishActivity(1);
+    }
+
+    private HashMap<String, Object> convertToMap(Event event){
+        HashMap<String, Object> eventMap = new HashMap<>();
+        eventMap.put("Timestamp", event.getTimeStamp());
+        eventMap.put("Titel", event.getMessage());
+        eventMap.put("MessageID", event.getId());
+        eventMap.put("IsEvent", event.isEvent());
+        eventMap.put("CreatorID", event.getCreator().getGoogleId());
+        eventMap.put("Date", event.getDate());
+        eventMap.put("Description", event.getDescription());
+        eventMap.put("ChatID", event.getChatid());
+        eventMap.put("Status", event.getStatus());
+
+        return eventMap;
     }
 }

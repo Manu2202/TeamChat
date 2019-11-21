@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "981418032949-jfo94f8kjb9mikb316vfd82olpujajtl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "de.swproj.teamchat",
+            "certificate_hash": "15d428dac3bcd3df3d3e0564c07cc67c17425cff"
+          }
+        },
+        {
+          "client_id": "981418032949-pievcjrlm822gks6e4go9gv9533h6fm1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "de.swproj.teamchat",
+            "certificate_hash": "a1553a7cd6979bdd71ba1a2877a514e389cfd0bf"
+          }
+        },
+        {
           "client_id": "981418032949-dgu1muhij0kejh22u7a2jllt40iq5prl.apps.googleusercontent.com",
           "client_type": 3
         }
