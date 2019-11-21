@@ -75,8 +75,15 @@ public class MainActivity extends AppCompatActivity {
             case R.id.btn_main_create_event:
                 Intent createEventIntent = new Intent(this, EditEventActivity.class);
                 // Put in a Extra to get know, which id the Event get (-> 0 = new Event)
-                createEventIntent.putExtra("ID", 0);
+                createEventIntent.putExtra("ID", "0");
                 startActivity(createEventIntent);
+                break;
+            case R.id.btn_main_new_chat:
+                Intent createChatIntent = new Intent(this, EditChatActivity.class);
+                // ID = 0 -> new Chat
+                createChatIntent.putExtra("ID", "0");
+                startActivity(createChatIntent);
+                break;
         }
 
         return true;
