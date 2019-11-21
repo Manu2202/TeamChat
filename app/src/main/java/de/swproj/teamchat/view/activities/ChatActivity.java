@@ -14,7 +14,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -54,10 +56,9 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-
-
-
     public void sendMessage(View view){
+     //   Time timeStamp, String message, boolean isEvent, User creator,int chatid
+
   //todo: send Message implementaion
     }
 

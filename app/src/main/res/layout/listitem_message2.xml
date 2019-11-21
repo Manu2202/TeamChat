@@ -18,7 +18,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        >
+        app:cardBackgroundColor="@color/colorPrimaryVariant"
+       >
 
 
         <RelativeLayout
@@ -34,7 +35,8 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="8dp"
-                android:text="username" />
+                android:text="username"
+                />
 
             <TextView
                 android:id="@+id/li_message_tvtime"
@@ -51,7 +53,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_below="@+id/li_message_tvcreator"
-                android:background="@android:color/darker_gray"
+                android:background="@color/colorPrimaryDark"
 
                 android:padding="2dp" />
 
