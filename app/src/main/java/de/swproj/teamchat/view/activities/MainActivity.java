@@ -67,10 +67,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         super.onOptionsItemSelected(item);
-        if (item.getItemId() == R.id.btn_main_logout){
-            FirebaseAuth.getInstance().signOut();
-            sendtoStart();
+        switch(item.getItemId()){
+            case R.id.btn_main_logout:
+                FirebaseAuth.getInstance().signOut();
+                sendtoStart();
+                break;
+            case R.id.btn_main_create_event:
+                Intent createEventIntent = new Intent(this, EditEventActivity.class);
+                // Put in a Extra to get know, which id the Event get (-> 0 = new Event)
+                createEventIntent.putExtra("ID", 0);
+                startActivity(createEventIntent);
         }
+
         return true;
     }
 

@@ -6,6 +6,7 @@ package de.swproj.teamchat.datamodell.chat;
  */
 
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class Event extends Message {
@@ -14,15 +15,15 @@ public class Event extends Message {
     private String description;
     private Byte status;
 
-    public Event(Time timeStamp, String message, int id, boolean isEvent, User creator, Date date,
-                 String description,int chatid, Byte status) {
+    public Event(Timestamp timeStamp, String message, int id, boolean isEvent, User creator, Date date,
+                 String description, int chatid, Byte status) {
         super(timeStamp, message, id, isEvent, creator, chatid);
         this.date = date;
         this.description = description;
         this.status = status;
     }
 
-    public Event(Time timeStamp, String message, boolean isEvent, User creator, Date date,
+    public Event(Timestamp timeStamp, String message, boolean isEvent, User creator, Date date,
                  String description, Byte status) {
         super(timeStamp, message, isEvent, creator);
         this.date = date;
@@ -35,7 +36,7 @@ public class Event extends Message {
     public int getChatid() { return super.getChatid(); }
 
     @Override
-    public Time getTimeStamp() {
+    public Timestamp getTimeStamp() {
         return super.getTimeStamp();
     }
 
