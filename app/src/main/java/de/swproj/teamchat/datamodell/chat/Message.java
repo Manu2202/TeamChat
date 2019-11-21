@@ -10,14 +10,14 @@ import java.sql.Timestamp;
 
 public class Message {
 
-    private Timestamp timeStamp;
+    private Time timeStamp;
     private String message;
     private int id;
     private boolean isEvent;
     private String creator;
     private int chatid;
 
-    public Message(Timestamp timeStamp, String message, int id, boolean isEvent, String creator, int chatID) {
+    public Message(Time timeStamp, String message, int id, boolean isEvent, String creator, int chatID) {
         this.timeStamp = timeStamp;
         this.message = message;
         this.id = id;
@@ -26,7 +26,7 @@ public class Message {
         this.chatid=chatID;
     }
 
-    public Message(Timestamp timeStamp, String message, boolean isEvent, String creator, int chatID) {
+    public Message(Time timeStamp, String message, boolean isEvent, String creator, int chatID) {
         this.timeStamp = timeStamp;
         this.message = message;
         this.id = 0;
@@ -39,7 +39,7 @@ public class Message {
         return chatid;
     }
 
-    public Timestamp getTimeStamp() {
+    public Time getTimeStamp() {
         return timeStamp;
     }
 
