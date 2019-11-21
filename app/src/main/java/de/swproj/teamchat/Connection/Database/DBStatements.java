@@ -31,7 +31,7 @@ public DBStatements (Context context){
 
 
 public void updateChat(Chat chat){
-    int chatId=chat.getId();
+    String chatId=chat.getId();
     boolean isNew=true;
     SQLiteDatabase db = dbConnection.getReadableDatabase();
 
@@ -122,7 +122,7 @@ public boolean insertMessage (Message message){
 
     SQLiteDatabase db = dbConnection.getWritableDatabase();
     ContentValues values = new ContentValues();
-    int messageId =-1;
+
     db.beginTransaction();
 try {
 
@@ -140,7 +140,7 @@ try {
     values.put(DBCreate.COL_MESSAGE_ID, message.getId());
     values.put(DBCreate.COL_MESSAGE_TIMESTAMP, message.getTimeStamp().getTime());
 
-     messageId = (int) db.insertOrThrow(DBCreate.TABLE_MESSAGE, null, values);
+     db.insertOrThrow(DBCreate.TABLE_MESSAGE, null, values);
      db.setTransactionSuccessful();
 }catch (Exception e){
     insertsuccesfull=false;
@@ -150,22 +150,22 @@ try {
 }
 
 
-    if(message.isEvent()&&messageId!=-1){
+    if(message.isEvent()){
         Event e = (Event) message;
         values = new ContentValues();
 
-        int eventId=-1;
+
 
          // create new Event
 
         db.beginTransaction();
         try{
-            values.put(DBCreate.COL_EVENT_ID, messageId);
+            values.put(DBCreate.COL_EVENT_ID, message.getId());
             values.put(DBCreate.COL_EVENT_DATE, e.getDate().getTime());
             values.put(DBCreate.COL_EVENT_DESCRIPTION, e.getDescription());
-            values.put(DBCreate.COL_EVENT_FK_MESSAGEID, messageId);
+            values.put(DBCreate.COL_EVENT_FK_MESSAGEID, message.getId());
 
-            eventId = (int) db.insertOrThrow(DBCreate.TABLE_EVENT, null, values);
+            db.insertOrThrow(DBCreate.TABLE_EVENT, null, values);
 
             db.setTransactionSuccessful();
         }catch (Exception d){
@@ -177,7 +177,7 @@ try {
 
         // if there is a newe Event, add members
 
-      if(eventId!=-1) {
+      if(null==null) {
 
           ArrayList<String> chatMmembers = getChatMembers(message.getChatid());
           db.beginTransaction();
@@ -186,7 +186,7 @@ try {
               for (String userId : chatMmembers
               ) {
                   values = new ContentValues();
-                  values.put(DBCreate.COL_EVENTUSER_FK_EVENT, eventId);
+                  values.put(DBCreate.COL_EVENTUSER_FK_EVENT, message.getId());
                   values.put(DBCreate.COL_EVENTUSER_FK_USER, userId);
                   values.put(DBCreate.COL_EVENTUSER_REASON, " ");
                   values.put(DBCreate.COL_EVENTUSER_STATUS, 0);
@@ -285,7 +285,7 @@ public boolean updateUserEventStatus(UserEventStatus status){
     return insertsuccesfull;
 }
 
-public ArrayList<UserEventStatus> getUserEventStatus(int eventId){
+public ArrayList<UserEventStatus> getUserEventStatus(String eventId){
     ArrayList<UserEventStatus> userEventStats = new ArrayList<>();
 
     SQLiteDatabase db = dbConnection.getReadableDatabase();
@@ -324,7 +324,7 @@ public ArrayList<UserEventStatus> getUserEventStatus(int eventId){
     return userEventStats;
 }
 
-public UserEventStatus getUserEventStatus(int eventId, String userId) {
+public UserEventStatus getUserEventStatus(String eventId, String userId) {
         UserEventStatus state = null;
     SQLiteDatabase db = dbConnection.getReadableDatabase();
 
@@ -360,7 +360,7 @@ public UserEventStatus getUserEventStatus(int eventId, String userId) {
         return  state;
     }
 
-public ArrayList<String> getChatMembers(int chatId){
+public ArrayList<String> getChatMembers(String chatId){
     ArrayList<String> memberIds = new ArrayList<>();
 
     SQLiteDatabase db = dbConnection.getReadableDatabase();
@@ -449,7 +449,7 @@ public List<User> getUser(){
     return users;
     }
 
-public Chat getChat(int chatId){
+public Chat getChat(String chatId){
     Chat chat = null;
     SQLiteDatabase db = dbConnection.getReadableDatabase();
     db.beginTransaction();
@@ -466,7 +466,7 @@ public Chat getChat(int chatId){
             int color = c.getColumnIndex(DBCreate.COL_USER_NAME);
 
 
-                chat =new Chat(c.getInt(id), c.getString(name), c.getInt(color),  c.getString(creator));
+                chat =new Chat(c.getString(id), c.getString(name), c.getInt(color),  c.getString(creator));
 
         }
     }catch (Exception e){
@@ -480,7 +480,7 @@ public Chat getChat(int chatId){
 
     }
 
-public ArrayList<Message> getMessages(int chatId){
+public ArrayList<Message> getMessages(String chatId){
         ArrayList<Message> messages= new ArrayList<>();
         SQLiteDatabase db = dbConnection.getReadableDatabase();
 
@@ -502,7 +502,7 @@ public ArrayList<Message> getMessages(int chatId){
 
                 do {
                     // Time timeStamp, String message, int id, boolean isEvent, User creator,int chatid
-                    messages.add(new Message(Time.valueOf(c.getInt(timestmp)+""), c.getString(message), c.getInt(id), (c.getInt(isEvent)==1), c.getString(creator),c.getInt(chatId)));
+                    messages.add(new Message(Time.valueOf(c.getInt(timestmp)+""), c.getString(message), c.getInt(id), (c.getInt(isEvent)==1), c.getString(creator),chatId));
 
                 } while (c.moveToNext());
             }
@@ -516,7 +516,7 @@ public ArrayList<Message> getMessages(int chatId){
         return messages;
     }
 
-public Message getMessage(int messageID){
+public Message getMessage(String messageID){
 
        Message message=null;
         SQLiteDatabase db = dbConnection.getReadableDatabase();
@@ -536,7 +536,7 @@ public Message getMessage(int messageID){
                 int timestmp = c.getColumnIndex(DBCreate.COL_MESSAGE_TIMESTAMP);
 
 
-                message=new Message(Time.valueOf(c.getInt(timestmp) + ""), c.getString(messageInt), c.getInt(id), (c.getInt(isEvent) == 1), c.getString(creator), chatId);
+                message=new Message(Time.valueOf(c.getInt(timestmp) + ""), c.getString(messageInt), c.getInt(id), (c.getInt(isEvent) == 1), c.getString(creator), c.getString(chatId));
 
 
 
@@ -550,7 +550,7 @@ public Message getMessage(int messageID){
         return message;
     }
 
-public Event getEvent(int messageId){
+public Event getEvent(String messageId){
          Message message=getMessage(messageId);
          Event event =null;
 
@@ -594,13 +594,13 @@ public Event getEvent(int messageId){
     return event;
 }
 
-public ArrayList<Event>getEvent(String userId){
+public ArrayList<Event>getEvents(String userId){
 
 
     return null;
 }
 
-public Message getLastMessage( int chatid){
+public Message getLastMessage( String chatid){
 
     return null;
 }

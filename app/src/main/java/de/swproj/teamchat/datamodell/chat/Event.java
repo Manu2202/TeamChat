@@ -15,7 +15,7 @@ public class Event extends Message {
     private Byte status;
 
     public Event(Time timeStamp, String message, int id, boolean isEvent, String creator, Date date,
-                 String description, int chatid, Byte status) {
+                 String description, String chatid, Byte status) {
         super(timeStamp, message, id, isEvent, creator, chatid);
         this.date = date;
         this.description = description;
@@ -23,7 +23,7 @@ public class Event extends Message {
     }
 
     public Event(Time timeStamp, String message, boolean isEvent, String creator, Date date,
-                 String description, int chatid, Byte status) {
+                 String description, String chatid, Byte status) {
         //super(timeStamp, message, isEvent, creatorId);
         super(timeStamp, message, isEvent, creator, chatid);
         this.date = date;
@@ -33,7 +33,7 @@ public class Event extends Message {
     }
 
     @Override
-    public int getChatid() { return super.getChatid(); }
+    public String getChatid() { return super.getChatid(); }
 
     @Override
     public Time getTimeStamp() {

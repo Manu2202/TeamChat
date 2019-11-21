@@ -15,9 +15,9 @@ public class Message {
     private int id;
     private boolean isEvent;
     private String creator;
-    private int chatid;
+    private String chatid;
 
-    public Message(Time timeStamp, String message, int id, boolean isEvent, String creator, int chatID) {
+    public Message(Time timeStamp, String message, int id, boolean isEvent, String creator, String chatID) {
         this.timeStamp = timeStamp;
         this.message = message;
         this.id = id;
@@ -26,7 +26,7 @@ public class Message {
         this.chatid=chatID;
     }
 
-    public Message(Time timeStamp, String message, boolean isEvent, String creator, int chatID) {
+    public Message(Time timeStamp, String message, boolean isEvent, String creator, String chatID) {
         this.timeStamp = timeStamp;
         this.message = message;
         this.id = 0;
@@ -35,7 +35,7 @@ public class Message {
         this.chatid=chatID;
     }
 
-    public int getChatid() {
+    public String getChatid() {
         return chatid;
     }
 
