@@ -172,7 +172,7 @@ public class EditEventActivity extends AppCompatActivity {
             msgId = 345;
 
             // TODO: Holen der entsprechenden Chat ID
-            int chatID = 984;
+            String chatID = "984";
 
             // Own created Event -> User automatically accepted
             Byte status = 2;

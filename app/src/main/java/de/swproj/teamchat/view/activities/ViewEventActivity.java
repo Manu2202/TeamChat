@@ -24,7 +24,7 @@ public class ViewEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_event);
 
         db= new DBStatements(this);
-        int id = getIntent().getIntExtra("eventID",0);
+        String id = getIntent().getStringExtra("eventID");
 
         event = db.getEvent(id);
         //todo: enumeration with Status ids (byte to string)

@@ -35,7 +35,7 @@ public class ChatActivity extends AppCompatActivity {
 
         db= new DBStatements(this);
 
-        int id = getIntent().getIntExtra("chatID",0);
+        String id = getIntent().getStringExtra("chatID");
 
         chat = db.getChat(id);
         messages=db.getMessages(id);
