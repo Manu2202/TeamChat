@@ -36,7 +36,7 @@ public class DBCreate {
 
     protected static String getChatTable() {
         return "CREATE TABLE " + TABLE_CHAT + " ("
-                  + COL_CHAT_ID + " INTEGER PRIMARY KEY, "
+                  + COL_CHAT_ID + " TEXT PRIMARY KEY, "
                 + COL_CHAT_NAME + " TEXT, "
                 + COL_CHAT_COLOR + " INTEGER, "
                 + COL_CHAT_FK_Creator + " TEXT  NOT NULL REFERENCES "+ TABLE_USER+")";
@@ -57,7 +57,7 @@ public class DBCreate {
     protected static String getUserChatTable(){
         return "CREATE TABLE "+ TABLE_USERCHAT+" ("
                 + COL_USERCHAT_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + COL_USERCHAT_FK_CHAT + " INTEGER NOT NULL REFERENCES " + TABLE_CHAT + ","
+                + COL_USERCHAT_FK_CHAT + " TEXT NOT NULL REFERENCES " + TABLE_CHAT + ","
                 + COL_USERCHAT_FK_USER + " TEXT NOT NULL REFERENCES " + TABLE_USER + ")";
     }
 
@@ -78,12 +78,12 @@ public class DBCreate {
 
     protected static String getMessageTable() {
         return "CREATE TABLE " + TABLE_MESSAGE + " ("
-                + COL_MESSAGE_ID + " INTEGER PRIMARY KEY, "
+                + COL_MESSAGE_ID + " TEXT PRIMARY KEY, "
                 + COL_MESSAGE_TIMESTAMP+ " TEXT,"
                 + COL_MESSAGE_MESSAGE+ " TEXT,"
                 + COL_MESSAGE_ISEVENT+ " INTEGER,"
                 + COL_MESSAGE_FK_CREATOR + " TEXT NOT NULL REFERENCES" + TABLE_USER +","
-                + COL_MESSAGE_FK_CHATID + " INTEGER NOT NULL REFERENCES" + TABLE_CHAT+" )";
+                + COL_MESSAGE_FK_CHATID + " TEXT NOT NULL REFERENCES" + TABLE_CHAT+" )";
 
     }
 
@@ -101,10 +101,10 @@ public class DBCreate {
 
     protected static String getEventTable() {
         return "CREATE TABLE " + TABLE_EVENT + " ("
-                + COL_EVENT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + COL_EVENT_ID + " TEXT PRIMARY KEY AUTOINCREMENT, "
                 + COL_EVENT_DATE + " TEXT, "
                 + COL_EVENT_DESCRIPTION+ " TEXT,"
-                + COL_EVENT_FK_MESSAGEID + "INTEGER NOT NULL REFERENCES" + TABLE_MESSAGE+" )";
+                + COL_EVENT_FK_MESSAGEID + "TEXT NOT NULL REFERENCES" + TABLE_MESSAGE+" )";
     }
 
     protected static String deleteEventTable() {

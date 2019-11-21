@@ -14,10 +14,10 @@ import java.util.ArrayList;
 public class Chat {
     private String name;
     private int color;
-    private int id;
+    private String id;
     private String admin;
 
-    public Chat(int id, String name, int color, String admin) {
+    public Chat(String id, String name, int color, String admin) {
         this.name = name;
         this.color = color;
         this.id = id;
@@ -40,7 +40,7 @@ public class Chat {
     }
 
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 

@@ -31,7 +31,7 @@ public DBStatements (Context context){
 
 
 public void updateChat(Chat chat){
-    int chatId=chat.getId();
+    String chatId=chat.getId();
     boolean isNew=true;
     SQLiteDatabase db = dbConnection.getReadableDatabase();
 
@@ -466,7 +466,7 @@ public Chat getChat(int chatId){
             int color = c.getColumnIndex(DBCreate.COL_USER_NAME);
 
 
-                chat =new Chat(c.getInt(id), c.getString(name), c.getInt(color),  c.getString(creator));
+                chat =new Chat(c.getString(id), c.getString(name), c.getInt(color),  c.getString(creator));
 
         }
     }catch (Exception e){
