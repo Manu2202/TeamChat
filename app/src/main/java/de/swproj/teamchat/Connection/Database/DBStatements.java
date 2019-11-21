@@ -502,7 +502,7 @@ public ArrayList<Message> getMessages(String chatId){
 
                 do {
                     // Time timeStamp, String message, int id, boolean isEvent, User creator,int chatid
-                    messages.add(new Message(Time.valueOf(c.getInt(timestmp)+""), c.getString(message), c.getInt(id), (c.getInt(isEvent)==1), c.getString(creator),chatId));
+                    messages.add(new Message(Time.valueOf(c.getInt(timestmp)+""), c.getString(message), c.getString(id), (c.getInt(isEvent)==1), c.getString(creator),chatId));
 
                 } while (c.moveToNext());
             }
@@ -536,7 +536,7 @@ public Message getMessage(String messageID){
                 int timestmp = c.getColumnIndex(DBCreate.COL_MESSAGE_TIMESTAMP);
 
 
-                message=new Message(Time.valueOf(c.getInt(timestmp) + ""), c.getString(messageInt), c.getInt(id), (c.getInt(isEvent) == 1), c.getString(creator), c.getString(chatId));
+                message=new Message(Time.valueOf(c.getInt(timestmp) + ""), c.getString(messageInt), c.getString(id), (c.getInt(isEvent) == 1), c.getString(creator), c.getString(chatId));
 
 
 

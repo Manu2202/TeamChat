@@ -52,7 +52,7 @@ public class AdapterEvent extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Context context = parent.getContext();
-        final Event ev = events.get(position);
+         Event ev = events.get(position);
 
         if (convertView == null) {
 

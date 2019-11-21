@@ -14,7 +14,7 @@ public class Event extends Message {
     private String description;
     private Byte status;
 
-    public Event(Time timeStamp, String message, int id, boolean isEvent, String creator, Date date,
+    public Event(Time timeStamp, String message, String id, boolean isEvent, String creator, Date date,
                  String description, String chatid, Byte status) {
         super(timeStamp, message, id, isEvent, creator, chatid);
         this.date = date;
@@ -46,7 +46,7 @@ public class Event extends Message {
     }
 
     @Override
-    public int getId() {
+    public String getId() {
         return super.getId();
     }
 
@@ -77,7 +77,7 @@ public class Event extends Message {
     }
 
     @Override
-    public void setId(int id) {
+    public void setId(String id) {
         super.setId(id);
     }
 }

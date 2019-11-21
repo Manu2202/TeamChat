@@ -35,7 +35,7 @@ import java.util.Map;
 public class EditEventActivity extends AppCompatActivity {
 
     private Event event;
-    private int msgId;
+    private String msgId;
     private int eventId;
     private Calendar cal;
     private int selectedYear;
@@ -72,7 +72,7 @@ public class EditEventActivity extends AppCompatActivity {
 
         // get the own intent of the Activity
         Intent ownIntent = getIntent();
-        msgId = ownIntent.getIntExtra("ID", 0);
+        msgId = ownIntent.getStringExtra("ID");
     }
 
     /*
@@ -169,7 +169,7 @@ public class EditEventActivity extends AppCompatActivity {
 
 
             // TODO: Die MessageID richtig übergeben -> jetzt nur Dummy Wert
-            msgId = 345;
+            msgId = "345";
 
             // TODO: Holen der entsprechenden Chat ID
             String chatID = "984";

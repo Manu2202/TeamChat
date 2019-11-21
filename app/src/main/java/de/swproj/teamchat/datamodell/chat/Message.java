@@ -12,12 +12,12 @@ public class Message {
 
     private Time timeStamp;
     private String message;
-    private int id;
+    private String id;
     private boolean isEvent;
     private String creator;
     private String chatid;
 
-    public Message(Time timeStamp, String message, int id, boolean isEvent, String creator, String chatID) {
+    public Message(Time timeStamp, String message, String id, boolean isEvent, String creator, String chatID) {
         this.timeStamp = timeStamp;
         this.message = message;
         this.id = id;
@@ -29,7 +29,7 @@ public class Message {
     public Message(Time timeStamp, String message, boolean isEvent, String creator, String chatID) {
         this.timeStamp = timeStamp;
         this.message = message;
-        this.id = 0;
+        this.id = null;
         this.isEvent = isEvent;
         this.creator = creator;
         this.chatid=chatID;
@@ -47,7 +47,7 @@ public class Message {
         return message;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -59,7 +59,7 @@ public class Message {
         return creator;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 }

@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "981418032949-n2q7tfh4t1tlnd3c7ulio5u77bbenbu1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "de.swproj.teamchat",
+            "certificate_hash": "726899bd4805c7b11688c8776f561eae882860d8"
+          }
+        },
+        {
           "client_id": "981418032949-jfo94f8kjb9mikb316vfd82olpujajtl.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
