@@ -89,7 +89,7 @@ public class AdapterMessage extends BaseAdapter {
             TextView tvUser = convertView.findViewById(R.id.li_message_tvuser);
             tvMessage.setText(message.getMessage());
             tvTime.setText(message.getTimeStamp().toString());
-            tvUser.setText(message.getCreator().getAccountName());
+            tvUser.setText(message.getCreator());
 
 
             if (message.isEvent()) {

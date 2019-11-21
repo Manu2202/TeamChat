@@ -6,39 +6,31 @@ package de.swproj.teamchat.datamodell.chat;
  */
 
 import java.sql.Time;
-import java.sql.Timestamp;
 
 public class Message {
 
-    private Timestamp timeStamp;
+    private Time timeStamp;
     private String message;
     private int id;
     private boolean isEvent;
-    private User creator;
+    private String creator;
     private int chatid;
 
-    public Message(Timestamp timeStamp, String message, int id, boolean isEvent, User creator,int chatid) {
+    public Message(Time timeStamp, String message, int id, boolean isEvent, String creatorID,int chatID) {
         this.timeStamp = timeStamp;
         this.message = message;
         this.id = id;
         this.isEvent = isEvent;
-        this.creator = creator;
-        this.chatid=chatid;
+        this.creator = creatorID;
+        this.chatid=chatID;
     }
-    public Message(Timestamp timeStamp, String message, boolean isEvent, User creator) {
-        this.timeStamp = timeStamp;
-        this.message = message;
-        this.id = 0;
-        this.isEvent = isEvent;
-        this.creator = creator;
 
-    }
 
     public int getChatid() {
         return chatid;
     }
 
-    public Timestamp getTimeStamp() {
+    public Time getTimeStamp() {
         return timeStamp;
     }
 
@@ -54,7 +46,7 @@ public class Message {
         return isEvent;
     }
 
-    public User getCreator() {
+    public String getCreator() {
         return creator;
     }
 }

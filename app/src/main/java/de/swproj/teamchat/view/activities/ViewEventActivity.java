@@ -38,7 +38,7 @@ public class ViewEventActivity extends AppCompatActivity {
         TextView tvDescripton = findViewById(R.id.viewevent_tvdescription);
         TextView tvStatus = findViewById(R.id.viewevent_tvstatus);
 
-        tvCreator.setText(event.getCreator().getAccountName());
+        tvCreator.setText(event.getCreator());
         tvtime.setText(event.getTimeStamp().toString());
         tvDate.setText(event.getDate().toString());
         tvName.setText(event.getMessage());
