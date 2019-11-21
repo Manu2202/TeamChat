@@ -14,24 +14,25 @@ public class Message {
     private String message;
     private int id;
     private boolean isEvent;
-    private User creator;
+    private String creator;
     private int chatid;
 
-    public Message(Timestamp timeStamp, String message, int id, boolean isEvent, User creator,int chatid) {
+    public Message(Timestamp timeStamp, String message, int id, boolean isEvent, String creator, int chatID) {
         this.timeStamp = timeStamp;
         this.message = message;
         this.id = id;
         this.isEvent = isEvent;
         this.creator = creator;
-        this.chatid=chatid;
+        this.chatid=chatID;
     }
-    public Message(Timestamp timeStamp, String message, boolean isEvent, User creator) {
+
+    public Message(Timestamp timeStamp, String message, boolean isEvent, String creator, int chatID) {
         this.timeStamp = timeStamp;
         this.message = message;
         this.id = 0;
         this.isEvent = isEvent;
         this.creator = creator;
-
+        this.chatid=chatID;
     }
 
     public int getChatid() {
@@ -54,7 +55,7 @@ public class Message {
         return isEvent;
     }
 
-    public User getCreator() {
+    public String getCreator() {
         return creator;
     }
 }
