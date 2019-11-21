@@ -1,5 +1,6 @@
 package de.swproj.teamchat.view.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import de.swproj.teamchat.Connection.Database.DBStatements;
 import de.swproj.teamchat.R;
@@ -8,7 +9,14 @@ import de.swproj.teamchat.datamodell.chat.User;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +31,9 @@ public class EditChatActivity extends AppCompatActivity {
     private HashMap<String, User> groupMember;
 
     private DBStatements dbStatements;
+    private FirebaseFirestore firebaseDB;
+
+    private TextInputEditText etChatName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +41,10 @@ public class EditChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_chat);
 
         dbStatements = new DBStatements(EditChatActivity.this);
+        // Connect Firebase
+        firebaseDB = FirebaseFirestore.getInstance();
+
+        etChatName = (TextInputEditText)findViewById(R.id.edit_chat_et_name);
 
         // Get own Intent
         Intent ownIntent = getIntent();
@@ -49,6 +64,35 @@ public class EditChatActivity extends AppCompatActivity {
     }
 
     public void saveChanges(View view){
+        if (chatId.equals("0")){
+            //TODO: Eigener User ->ID Holen
+            String dummyUserID = "ABC";
+            final Chat chat = new Chat(etChatName.getText().toString(), dummyUserID);
 
+            firebaseDB.collection("chat")
+                    .add(convertToHashMap(chat))
+                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            Log.d("Chat", "DocumentSnapshot added with ID: " + documentReference.getId());
+                            chat.setId(documentReference.getId());
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w("Chat", "Error adding document", e);
+                        }
+                    });
+        }
+    }
+
+    private HashMap<String, Object> convertToHashMap(Chat chat){
+        HashMap<String, Object> chatMap = new HashMap<>();
+        chatMap.put("Name", chat.getName());
+        chatMap.put("Color", chat.getColor());
+        chatMap.put("Admin", chat.getAdmin());
+
+        return chatMap;
     }
 }

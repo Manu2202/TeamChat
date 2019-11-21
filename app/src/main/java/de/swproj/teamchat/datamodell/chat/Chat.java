@@ -17,15 +17,17 @@ public class Chat {
     private String id;
     private String admin;
 
-    public Chat(String id, String name, int color, String admin) {
+    public Chat(String name, String admin) {
         this.name = name;
-        this.color = color;
-        this.id = id;
+        this.color = 000000;
+        this.id = "0";
         this.admin = admin;
     }
 
 
-
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public void update(){
 

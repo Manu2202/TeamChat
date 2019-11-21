@@ -190,7 +190,7 @@ public class EditEventActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(DocumentReference documentReference) {
                                 Log.d("Event", "DocumentSnapshot added with ID: " + documentReference.getId());
-                                //event.setId(documentReference.getId());
+                                event.setId(documentReference.getId());
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
