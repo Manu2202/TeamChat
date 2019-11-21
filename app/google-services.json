@@ -15,58 +15,13 @@
       },
       "oauth_client": [
         {
-          "client_id": "981418032949-n2q7tfh4t1tlnd3c7ulio5u77bbenbu1.apps.googleusercontent.com",
+          "client_id": "981418032949-va4kttotsuukiqh12rs7tn6efsp0ov33.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "de.swproj.teamchat",
-            "certificate_hash": "726899bd4805c7b11688c8776f561eae882860d8"
+            "certificate_hash": "5dd84fe3e1aa93969a6d38984215b29810c38b70"
           }
         },
-        {
-          "client_id": "981418032949-jfo94f8kjb9mikb316vfd82olpujajtl.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "de.swproj.teamchat",
-            "certificate_hash": "15d428dac3bcd3df3d3e0564c07cc67c17425cff"
-          }
-        },
-        {
-          "client_id": "981418032949-pievcjrlm822gks6e4go9gv9533h6fm1.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "de.swproj.teamchat",
-            "certificate_hash": "a1553a7cd6979bdd71ba1a2877a514e389cfd0bf"
-          }
-        },
-        {
-          "client_id": "981418032949-dgu1muhij0kejh22u7a2jllt40iq5prl.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBnbRemWU0k1k9-Jzc49IxtvekJaO7wFOo"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "981418032949-dgu1muhij0kejh22u7a2jllt40iq5prl.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:981418032949:android:f8adfb8b5391c65e65167c",
-        "android_client_info": {
-          "package_name": "de.swproj.teamchat.view.activities"
-        }
-      },
-      "oauth_client": [
         {
           "client_id": "981418032949-dgu1muhij0kejh22u7a2jllt40iq5prl.apps.googleusercontent.com",
           "client_type": 3
