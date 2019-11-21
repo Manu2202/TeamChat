@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
-import de.swproj.teamchat.Connection.Database.DBStatements;
+import de.swproj.teamchat.Connection.database.DBStatements;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.datamodell.chat.Chat;
 import de.swproj.teamchat.datamodell.chat.Message;

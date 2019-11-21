@@ -1,7 +1,6 @@
 package de.swproj.teamchat.view.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,18 +10,11 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.core.util.Pair;
-import androidx.core.view.ViewCompat;
 import androidx.transition.TransitionManager;
-import de.swproj.teamchat.Connection.Database.DBStatements;
+import de.swproj.teamchat.Connection.database.DBStatements;
 import de.swproj.teamchat.R;
-import de.swproj.teamchat.datamodell.chat.Event;
-import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.datamodell.chat.UserEventStatus;
-import de.swproj.teamchat.view.activities.ViewEventActivity;
 
 
 /*

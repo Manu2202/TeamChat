@@ -8,11 +8,10 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 
 import java.util.ArrayList;
 
-import de.swproj.teamchat.Connection.Database.DBStatements;
+import de.swproj.teamchat.Connection.database.DBStatements;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.datamodell.chat.Event;
 

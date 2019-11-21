@@ -2,10 +2,9 @@ package de.swproj.teamchat.view.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import de.swproj.teamchat.Connection.Database.DBStatements;
+import de.swproj.teamchat.Connection.database.DBStatements;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.datamodell.chat.Event;
-import de.swproj.teamchat.datamodell.chat.User;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -26,12 +25,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.sql.Time;
-import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.Map;
 
 public class EditEventActivity extends AppCompatActivity {
 

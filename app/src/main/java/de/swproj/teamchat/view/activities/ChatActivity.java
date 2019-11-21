@@ -1,10 +1,9 @@
 package de.swproj.teamchat.view.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import de.swproj.teamchat.Connection.Database.DBStatements;
+import de.swproj.teamchat.Connection.database.DBStatements;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.datamodell.chat.Chat;
-import de.swproj.teamchat.datamodell.chat.Event;
 import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.view.adapter.AdapterMessage;
 
@@ -14,9 +13,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 
 public class ChatActivity extends AppCompatActivity {
 

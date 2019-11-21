@@ -1,4 +1,4 @@
-package de.swproj.teamchat.Connection.Database;
+package de.swproj.teamchat.Connection.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -6,11 +6,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DBConnection extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME="Omdb.db";
-    public static final int DATABASE_VERSION=1;
+    public static final String DATABASE_NAME = "Omdb.db";
+    public static final int DATABASE_VERSION = 1;
 
-    public DBConnection(Context context){
-        super(context,DATABASE_NAME,null,DATABASE_VERSION);
+    public DBConnection(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
