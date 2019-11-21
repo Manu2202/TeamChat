@@ -74,7 +74,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.btn_main_create_event:
                 Intent createEventIntent = new Intent(this, EditEventActivity.class);
-                // TODO: Übergabe, von wo aus Activity aufgerufen wird
+                // Put in a Extra to get know, which id the Event get (-> 0 = new Event)
+                createEventIntent.putExtra("ID", 0);
                 startActivity(createEventIntent);
         }
 
