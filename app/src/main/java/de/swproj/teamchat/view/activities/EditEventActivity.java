@@ -2,6 +2,7 @@ package de.swproj.teamchat.view.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import de.swproj.teamchat.Connection.Database.DBStatements;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.datamodell.chat.Event;
 import de.swproj.teamchat.datamodell.chat.User;
@@ -36,13 +37,13 @@ public class EditEventActivity extends AppCompatActivity {
 
     private Event event;
     private String msgId;
-    private int eventId;
     private Calendar cal;
     private int selectedYear;
     private int selectedMonth;
     private int selectedDay;
     private int selectedHour;
     private int selectedMinute;
+    private DBStatements dbStatements;
 
     private TextView tv_selectDate;
     private TextView tv_selectTime;
@@ -60,6 +61,9 @@ public class EditEventActivity extends AppCompatActivity {
 
         // Connect Firebase
         firebaseDB = FirebaseFirestore.getInstance();
+
+        // Initialize Local Database Statements
+        dbStatements = new DBStatements(EditEventActivity.this);
 
         // Connect the Layout Components
         tv_selectDate = (TextView)findViewById(R.id.edit_event_tv_select_date);
@@ -164,7 +168,7 @@ public class EditEventActivity extends AppCompatActivity {
 
 
     public void onClickSaveChanges(View view){
-        if (eventId == 0){
+        if (msgId.equals("0")){
             // TODO: Sich selbst aus DB holen -> UserID für Event
 
 
@@ -191,6 +195,9 @@ public class EditEventActivity extends AppCompatActivity {
                             public void onSuccess(DocumentReference documentReference) {
                                 Log.d("Event", "DocumentSnapshot added with ID: " + documentReference.getId());
                                 event.setId(documentReference.getId());
+
+                                // Push the new Event in Local Database
+                                dbStatements.insertMessage(event);
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {

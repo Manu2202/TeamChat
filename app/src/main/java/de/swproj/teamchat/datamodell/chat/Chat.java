@@ -17,6 +17,13 @@ public class Chat {
     private String id;
     private String admin;
 
+    public Chat(String name, int color, String id, String admin){
+        this.name = name;
+        this.color = color;
+        this.id = id;
+        this.admin = admin;
+    }
+
     public Chat(String name, String admin) {
         this.name = name;
         this.color = 000000;

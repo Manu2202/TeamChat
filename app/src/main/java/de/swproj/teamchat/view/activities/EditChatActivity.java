@@ -76,6 +76,9 @@ public class EditChatActivity extends AppCompatActivity {
                         public void onSuccess(DocumentReference documentReference) {
                             Log.d("Chat", "DocumentSnapshot added with ID: " + documentReference.getId());
                             chat.setId(documentReference.getId());
+
+                            // Push the new Chat in Local Database
+                            dbStatements.updateChat(chat);
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
