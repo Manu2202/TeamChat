@@ -189,13 +189,13 @@ public class EditEventActivity extends AppCompatActivity {
                         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                             @Override
                             public void onSuccess(DocumentReference documentReference) {
-                                Log.d("Event Added", "DocumentSnapshot added with ID: " + documentReference.getId());
+                                Log.d("Event", "DocumentSnapshot added with ID: " + documentReference.getId());
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
                                                   @Override
                                                   public void onFailure(@NonNull Exception e) {
-                                                      Log.w("Event Added", "Error adding document", e);
+                                                      Log.w("Event", "Error adding document", e);
                                                   }
                                               });
 

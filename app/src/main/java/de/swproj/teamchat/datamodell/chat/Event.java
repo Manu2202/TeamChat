@@ -13,10 +13,10 @@ public class Event extends Message {
 
     private Date date;
     private String description;
-    private int status;
+    private Byte status;
 
     public Event(Timestamp timeStamp, String message, int id, boolean isEvent, User creator, Date date,
-                 String description, int chatid, int status) {
+                 String description, int chatid, Byte status) {
         super(timeStamp, message, id, isEvent, creator, chatid);
         this.date = date;
         this.description = description;
@@ -24,7 +24,7 @@ public class Event extends Message {
     }
 
     public Event(Timestamp timeStamp, String message, boolean isEvent, User creator, Date date,
-                 String description, int status) {
+                 String description, Byte status) {
         super(timeStamp, message, isEvent, creator);
         this.date = date;
         this.description = description;
@@ -68,7 +68,7 @@ public class Event extends Message {
         return description;
     }
 
-    public int getStatus() {
+    public Byte getStatus() {
         return status;
     }
 
