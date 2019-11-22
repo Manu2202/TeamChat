@@ -205,6 +205,7 @@ public class EditChatActivity extends AppCompatActivity {
                         }
                     });
         }
+        // TODO: Update exisiterenden Chat
     }
 
     private HashMap<String, Object> convertToHashMap(Chat chat){
