@@ -8,6 +8,15 @@
 
 
     <FrameLayout
+        android:id="@+id/list_color_background"
+        android:layout_width="832dp"
+        android:layout_height="80dp"
+        android:minWidth="50dp"
+        android:minHeight="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <FrameLayout
         android:id="@+id/list_color_box"
         android:layout_width="12dp"
         android:layout_height="80dp"
@@ -29,6 +38,7 @@
         android:text="Letzte Chat Message, und so sieht es aus wenn sie nicht ins Feld passt"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="16sp"
+        style="@style/TextAppearance.MaterialComponents.Subtitle2"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintStart_toEndOf="@+id/list_color_box"
         app:layout_constraintTop_toTopOf="parent"
@@ -41,6 +51,7 @@
         android:layout_marginStart="304dp"
         android:layout_marginBottom="8dp"
         android:text="17.11.2019"
+        style="@style/TextAppearance.MaterialComponents.Caption"
         app:layout_constraintBottom_toTopOf="@+id/chatListLastMessage"
         app:layout_constraintStart_toEndOf="@+id/list_color_box" />
 
@@ -52,6 +63,7 @@
         android:layout_marginTop="16dp"
         android:text="Hier sollte ein Chatname stehen"
         app:layout_constraintStart_toEndOf="@+id/list_color_box"
+        style="@style/TextAppearance.MaterialComponents.Subtitle1"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
