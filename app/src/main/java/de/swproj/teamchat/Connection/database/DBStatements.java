@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.nfc.NfcAdapter;
 import android.os.Build;
 import android.util.Log;
 
@@ -437,7 +436,7 @@ public class DBStatements {
         ArrayList<User> users = new ArrayList<>();
         SQLiteDatabase db = dbConnection.getReadableDatabase();
 
-       final String MY_QUERY = "SELECT * FROM "+DBCreate.getUserTable() +" a INNER JOIN "+DBCreate.TABLE_USERCHAT+" b ON a."+ DBCreate.COL_USER_G_ID +"=b."+DBCreate.COL_USERCHAT_FK_USER+
+        final String MY_QUERY = "SELECT * FROM "+DBCreate.getUserTable() +" a INNER JOIN "+DBCreate.TABLE_USERCHAT+" b ON a."+ DBCreate.COL_USER_G_ID +"=b."+DBCreate.COL_USERCHAT_FK_USER+
                " WHERE b."+DBCreate.COL_USERCHAT_FK_CHAT+"=?";
         db.beginTransaction();
         try {
@@ -608,14 +607,71 @@ public class DBStatements {
     }
 
     public ArrayList<Event> getEvents(String userId) {
+         ArrayList<String> eventIDs= new ArrayList<>();
+
+        SQLiteDatabase db = dbConnection.getReadableDatabase();
+
+        db.beginTransaction();
+        try {
 
 
-        return null;
+            Cursor c = db.query(DBCreate.TABLE_EVENTUSER, new String[]{DBCreate.COL_EVENTUSER_FK_EVENT},
+                    DBCreate.COL_EVENTUSER_FK_USER+"=?", new String []{userId}, null, null, null);
+            if (c.moveToFirst()) {
+
+                int eventId = c.getColumnIndex(DBCreate.COL_USER_G_ID);
+
+                do {
+                   eventIDs.add(c.getString(eventId));
+
+                } while (c.moveToNext());
+            }
+
+        } catch (Exception e) {
+            Log.d("DB_Error class DBStatements:", "Unable to read Users from db");
+        } finally {
+            db.endTransaction();
+        }
+
+         ArrayList<Event> events = new ArrayList<>();
+
+        for (String s:eventIDs
+             ) {
+            events.add(getEvent(s));
+        }
+
+
+        return events;
     }
 
     public Message getLastMessage(String chatid) {
+        Message message = null;
+        SQLiteDatabase db = dbConnection.getReadableDatabase();
 
-        return null;
+
+        try{
+          Cursor c=  db.query(DBCreate.TABLE_MESSAGE, null, DBCreate.COL_MESSAGE_TIMESTAMP+"=(" +
+                  "SELECT MAX("+ DBCreate.COL_MESSAGE_TIMESTAMP+" FROM "+DBCreate.TABLE_MESSAGE+" WHERE "+DBCreate.COL_MESSAGE_FK_CHATID+")" +
+                  ") AND "+DBCreate.COL_MESSAGE_FK_CHATID+"=?", new String[]{chatid}, null, null, null);
+               if(c.moveToFirst()){
+                   int id = c.getColumnIndex(DBCreate.COL_MESSAGE_ID);
+                   int chatId = c.getColumnIndex(DBCreate.COL_MESSAGE_FK_CHATID);
+                   int creator = c.getColumnIndex(DBCreate.COL_MESSAGE_FK_CREATOR);
+                   int isEvent = c.getColumnIndex(DBCreate.COL_MESSAGE_ISEVENT);
+                   int messageInt = c.getColumnIndex(DBCreate.COL_MESSAGE_MESSAGE);
+                   int timestmp = c.getColumnIndex(DBCreate.COL_MESSAGE_TIMESTAMP);
+
+
+                   message = new Message(Time.valueOf(c.getInt(timestmp) + ""), c.getString(messageInt), c.getString(id), (c.getInt(isEvent) == 1), c.getString(creator), c.getString(chatId));
+               }
+        }catch (Exception e){
+            Log.d("DB_Error class DBStatements:", "Unable to read LastMessage from db");
+        }finally {
+            db.endTransaction();
+        }
+
+
+        return message;
     }
 
 
