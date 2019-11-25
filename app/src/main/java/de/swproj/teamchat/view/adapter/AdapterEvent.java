@@ -59,7 +59,7 @@ public class AdapterEvent extends BaseAdapter {
 
             TextView tvMessage = convertView.findViewById(R.id.li_message_tvmessage);
             TextView tvTime = convertView.findViewById(R.id.li_message_tvtime);
-            TextView tvUser = convertView.findViewById(R.id.li_message_tvuser);
+            TextView tvUser = convertView.findViewById(R.id.li_message_tvcreator);
             tvMessage.setText(ev.getMessage());
             tvTime.setText(ev.getTimeStamp().toString());
             tvUser.setText(ev.getCreator());

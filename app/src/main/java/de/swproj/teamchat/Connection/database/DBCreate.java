@@ -82,8 +82,8 @@ public class DBCreate {
                 + COL_MESSAGE_TIMESTAMP + " TEXT,"
                 + COL_MESSAGE_MESSAGE + " TEXT,"
                 + COL_MESSAGE_ISEVENT + " INTEGER,"
-                + COL_MESSAGE_FK_CREATOR + " TEXT NOT NULL REFERENCES" + TABLE_USER + ","
-                + COL_MESSAGE_FK_CHATID + " TEXT NOT NULL REFERENCES" + TABLE_CHAT + " )";
+                + COL_MESSAGE_FK_CREATOR + " TEXT NOT NULL REFERENCES " + TABLE_USER + ","
+                + COL_MESSAGE_FK_CHATID + " TEXT NOT NULL REFERENCES " + TABLE_CHAT + " )";
 
     }
 
@@ -101,10 +101,10 @@ public class DBCreate {
 
     protected static String getEventTable() {
         return "CREATE TABLE " + TABLE_EVENT + " ("
-                + COL_EVENT_ID + " TEXT PRIMARY KEY AUTOINCREMENT, "
+                + COL_EVENT_ID + " TEXT PRIMARY KEY, "
                 + COL_EVENT_DATE + " TEXT, "
                 + COL_EVENT_DESCRIPTION + " TEXT,"
-                + COL_EVENT_FK_MESSAGEID + "TEXT NOT NULL REFERENCES" + TABLE_MESSAGE + " )";
+                + COL_EVENT_FK_MESSAGEID + "TEXT NOT NULL REFERENCES " + TABLE_MESSAGE + " )";
     }
 
     protected static String deleteEventTable() {
@@ -125,9 +125,9 @@ public class DBCreate {
         return "CREATE TABLE " + TABLE_EVENTUSER + " ("
                 + COL_EVENTUSER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + COL_EVENTUSER_FK_EVENT + " INTEGER NOT NULL REFERENCES " + TABLE_EVENT + ","
-                + COL_EVENTUSER_FK_USER + " TEXT NOT NULL REFERENCES " + TABLE_USER
-                + COL_EVENTUSER_STATUS + "INTEGER" + ","
-                + COL_EVENTUSER_REASON + "TEXT " + ","
+                + COL_EVENTUSER_FK_USER + " TEXT NOT NULL REFERENCES " + TABLE_USER+","
+                + COL_EVENTUSER_STATUS + " INTEGER" + ","
+                + COL_EVENTUSER_REASON + " TEXT "
                 + ")";
     }
 

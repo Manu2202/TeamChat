@@ -4,21 +4,35 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.ListFragment;
+import de.swproj.teamchat.Connection.database.DBStatements;
 import de.swproj.teamchat.R;
+import de.swproj.teamchat.datamodell.chat.Chat;
+import de.swproj.teamchat.datamodell.chat.Message;
+import de.swproj.teamchat.datamodell.chat.User;
+import de.swproj.teamchat.view.adapter.AdapterChat;
 import de.swproj.teamchat.view.fragments.FragmentMainChats;
 import de.swproj.teamchat.view.fragments.FragmentMainContacts;
 import de.swproj.teamchat.view.fragments.FragmentMainEvents;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.sql.Time;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,9 +42,23 @@ public class MainActivity extends AppCompatActivity {
     private ListFragment eventFragment;
     private ListFragment contactFragment;
     private static Fragment lastSelectedFragment;
+    private DBStatements db;
+
 
     //FirebaseAuth
     private FirebaseAuth mAuth;
+
+    private void  addTestdat(){
+        db.insertUser(new User("11","sdjhdj","Horst","Horst","Idiot"));
+        db.insertChat(new Chat("test",29855,"123","11"));
+        Date currentTime = Calendar.getInstance().getTime();
+             Time time =new Time (currentTime.getTime());
+        db.insertMessage(new Message(time,"Hallo, der horst ist da!!!","oho",false,"11","123"));
+
+        Log.d("                ",db.getChat().size()+"");
+
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
-
+        db= new DBStatements(this);
         setUpUI();
     }
     @Override
@@ -100,6 +128,10 @@ public class MainActivity extends AppCompatActivity {
         chatFragment = new FragmentMainChats();
         eventFragment = new FragmentMainEvents();
         contactFragment = new FragmentMainContacts();
+        //---------------------------------------------------------------  Test
+        addTestdat();
+
+
 
         //Set Up the first Fragment, if lastSelectedFragment is NULL, else use this
         if(lastSelectedFragment == null){

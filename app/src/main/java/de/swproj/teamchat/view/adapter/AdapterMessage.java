@@ -2,6 +2,7 @@ package de.swproj.teamchat.view.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,12 +81,13 @@ public class AdapterMessage extends BaseAdapter {
 
 
             }
+            Log.d("MessageAdapter Message: ", message.getMessage()+"  "+message.getCreator());
             TextView tvMessage = convertView.findViewById(R.id.li_message_tvmessage);
             TextView tvTime = convertView.findViewById(R.id.li_message_tvtime);
-            TextView tvUser = convertView.findViewById(R.id.li_message_tvuser);
+            TextView tvUser = convertView.findViewById(R.id.li_message_tvcreator);
             tvMessage.setText(message.getMessage());
             tvTime.setText(message.getTimeStamp().toString());
-            tvUser.setText(message.getCreator());
+            tvUser.setText(message.getCreator()+"");
 
 
             if (message.isEvent()) {

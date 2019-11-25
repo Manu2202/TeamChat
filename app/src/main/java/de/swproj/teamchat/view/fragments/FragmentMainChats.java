@@ -10,13 +10,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.util.ArrayList;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.ListFragment;
-
-import java.util.ArrayList;
-
-import de.swproj.teamchat.Connection.database.DBStatements;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.datamodell.chat.Chat;
 import de.swproj.teamchat.view.activities.ChatActivity;
@@ -29,13 +27,17 @@ import de.swproj.teamchat.view.adapter.AdapterChat;
  */
 
 public class FragmentMainChats extends ListFragment {
+ private DBStatements db;
+ private ArrayList<Chat> chats;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+          db = new DBStatements(inflater.getContext());
+        chats=db.getChat();
 
         //TODO: Den Adapter erzeugen und mit Werten füllen und auf ListFragment setzen
-        Log.d("Fragments:", "In Chat Fragment");
+        Log.d("Fragments:", "In Chat Fragment"+" Chatcount "+chats.size());
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }

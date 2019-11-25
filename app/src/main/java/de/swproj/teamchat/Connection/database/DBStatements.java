@@ -29,6 +29,8 @@ public class DBStatements {
 
 
     public void updateChat(Chat chat) {
+        //todo: BUG fix
+
         String chatId = chat.getId();
         boolean isNew = true;
         SQLiteDatabase db = dbConnection.getReadableDatabase();
@@ -36,44 +38,43 @@ public class DBStatements {
         // check if allready exists
 
         db.beginTransaction();
-        Cursor c = db.query(DBCreate.TABLE_CHAT, new String[]{DBCreate.COL_CHAT_ID}, DBCreate.COL_CHAT_ID + "=?", new String[]{chatId + ""}, null, null, null, null);
-        isNew = c.getCount() != 0;
+        Cursor c = db.query(DBCreate.TABLE_CHAT, new String[]{DBCreate.COL_CHAT_ID}, DBCreate.COL_CHAT_ID + "=?", new String[]{chatId}, null, null, null, null);
+        isNew = c.getCount() == 0;
+        db.setTransactionSuccessful();
         db.endTransaction();
 
-
+  Log.d("UpdateChat","Is new "+isNew);
         //Start writing
 
-        db = dbConnection.getWritableDatabase();
-        db.beginTransaction();
+
 
 
         ContentValues values = new ContentValues();
         //put values
         values.put(DBCreate.COL_CHAT_ID, chatId);
         values.put(DBCreate.COL_CHAT_NAME, chat.getName());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            values.put(DBCreate.COL_CHAT_COLOR, chat.getColor());
-        } else {
-            values.put(DBCreate.COL_CHAT_COLOR, 0);
-        }
+        values.put(DBCreate.COL_CHAT_COLOR, chat.getColor());
         values.put(DBCreate.COL_CHAT_FK_Creator, chat.getAdmin());
 
-
+        db = dbConnection.getWritableDatabase();
+        db.beginTransaction();
         try {
             //create new Chat
             if (isNew) {
-                db.insertOrThrow(DBCreate.TABLE_CHAT, null, values);
+                Log.d("UpdateChat","Is new "+isNew);
+             Long i=   db.insertOrThrow(DBCreate.TABLE_CHAT, null, values);
 
-            }
+                Log.d("UpdateChat","Insert: "+i);
 
-            //update Chat with ID...
+            }//update Chat with ID...
             else {
-                db.update(DBCreate.TABLE_CHAT, values, DBCreate.COL_CHAT_ID + "=?", new String[]{"" + chatId});
 
+                db.update(DBCreate.TABLE_CHAT, values, DBCreate.COL_CHAT_ID + "=?", new String[]{"" + chatId});
 
             }
 
         } catch (Exception e) {
+
             Log.d("DB_Error class DBStatements:", "Unable to write CHAT in db");
         } finally {
             db.endTransaction();
@@ -81,6 +82,40 @@ public class DBStatements {
 
 
     }
+public boolean insertChat(Chat chat){
+    boolean insertsuccesfull = true;
+
+    SQLiteDatabase db = dbConnection.getWritableDatabase();
+
+    db.beginTransaction();
+
+    try {
+
+
+        ContentValues values = new ContentValues();
+        //put values
+
+        values.put(DBCreate.COL_CHAT_ID, chat.getId());
+        values.put(DBCreate.COL_CHAT_NAME, chat.getName());
+        values.put(DBCreate.COL_CHAT_COLOR, chat.getColor());
+        values.put(DBCreate.COL_CHAT_FK_Creator, chat.getAdmin());
+
+
+
+        db.insertOrThrow(DBCreate.TABLE_CHAT, null, values);
+
+        db.setTransactionSuccessful();
+
+    } catch (Exception e) {
+        insertsuccesfull = false;
+        Log.d("DB_Error class DBStatements:", "Unable to write Chat in db");
+    } finally {
+        db.endTransaction();
+    }
+
+
+    return insertsuccesfull;
+}
 
     public boolean updateChatMembers(String[] userIDs, int chatId) {
         SQLiteDatabase db = dbConnection.getReadableDatabase();
@@ -198,7 +233,7 @@ public class DBStatements {
         }
 
 
-        db.endTransaction();
+
 
         return insertsuccesfull;
     }
@@ -392,6 +427,7 @@ public class DBStatements {
             }
         } catch (Exception e) {
             Log.d("DB_Error class DBStatements:", "Unable to read User " + googleID + " from db");
+            e.printStackTrace();
         } finally {
             db.endTransaction();
         }
@@ -425,6 +461,7 @@ public class DBStatements {
 
         } catch (Exception e) {
             Log.d("DB_Error class DBStatements:", "Unable to read Users from db");
+            e.printStackTrace();
         } finally {
             db.endTransaction();
         }
@@ -457,7 +494,8 @@ public class DBStatements {
             }
 
         } catch (Exception e) {
-            Log.d("DB_Error class DBStatements:", "Unable to read Users from db");
+            Log.d("DB_Error class DBStatements:", "Unable to read Users of Chat "+chatId+" from DB");
+            e.printStackTrace();
         } finally {
             db.endTransaction();
         }
@@ -473,26 +511,66 @@ public class DBStatements {
         try {
 
             Cursor c = db.query(DBCreate.TABLE_CHAT, new String[]{DBCreate.COL_CHAT_ID, DBCreate.COL_CHAT_FK_Creator, DBCreate.COL_CHAT_NAME, DBCreate.COL_CHAT_COLOR},
-                    DBCreate.COL_USER_G_ID + "=" + chatId, null, null, null, null);
+                    DBCreate.COL_CHAT_ID + "=?", new String[]{chatId}, null, null, null);
             if (c.moveToFirst()) {
 
-                int id = c.getColumnIndex(DBCreate.COL_USER_G_ID);
-                int creator = c.getColumnIndex(DBCreate.COL_USER_MAIL);
-                int name = c.getColumnIndex(DBCreate.COL_USER_ACCNAME);
-                int color = c.getColumnIndex(DBCreate.COL_USER_NAME);
+                int id = c.getColumnIndex(DBCreate.COL_CHAT_ID);
+                int creator = c.getColumnIndex(DBCreate.COL_CHAT_FK_Creator);
+                int name = c.getColumnIndex(DBCreate.COL_CHAT_NAME);
+                int color = c.getColumnIndex(DBCreate.COL_CHAT_COLOR);
 
-
-                chat = new Chat(c.getString(id), c.getInt(color), c.getString(name), c.getString(creator));
+              //     public Chat(String name, int color, String id, String admin)
+                chat = new Chat(c.getString(name), c.getInt(color), c.getString(id), c.getString(creator));
 
             }
         } catch (Exception e) {
             Log.d("DB_Error class DBStatements:", "Unable to read Chat " + chatId + " from db");
+            e.printStackTrace();
         } finally {
             db.endTransaction();
         }
 
 
         return chat;
+
+    }
+
+
+
+    public ArrayList<Chat> getChat() {
+        ArrayList<Chat> chats = new ArrayList<>();
+        SQLiteDatabase db = dbConnection.getReadableDatabase();
+        db.beginTransaction();
+
+        try {
+
+            Cursor c = db.query(DBCreate.TABLE_CHAT, new String[]{DBCreate.COL_CHAT_ID, DBCreate.COL_CHAT_FK_Creator, DBCreate.COL_CHAT_NAME, DBCreate.COL_CHAT_COLOR},
+                    null, null, null, null, null);
+            c= db.rawQuery("SELECT * FROM "+DBCreate.TABLE_CHAT,null);
+            Log.d("GetChat","Cursor count "+  c.getCount());
+
+
+            int id = c.getColumnIndex(DBCreate.COL_CHAT_ID);
+            int creator = c.getColumnIndex(DBCreate.COL_CHAT_FK_Creator);
+            int name = c.getColumnIndex(DBCreate.COL_CHAT_NAME);
+            int color = c.getColumnIndex(DBCreate.COL_CHAT_COLOR);
+
+            if (c.moveToFirst()) {
+                do {
+                    Log.d("GetChat","Schleife");
+                    chats.add(new Chat(c.getString(name), c.getInt(color), c.getString(id), c.getString(creator)));
+                }while (c.moveToNext());
+
+
+            }
+        } catch (Exception e) {
+            Log.d("DB_Error class DBStatements:", "Unable to read Chats  from db");
+        } finally {
+            db.endTransaction();
+        }
+
+
+        return chats;
 
     }
 
@@ -506,6 +584,8 @@ public class DBStatements {
 
             Cursor c = db.query(DBCreate.TABLE_MESSAGE, new String[]{DBCreate.COL_MESSAGE_ID, DBCreate.COL_MESSAGE_FK_CHATID, DBCreate.COL_MESSAGE_TIMESTAMP, DBCreate.COL_MESSAGE_FK_CREATOR, DBCreate.COL_MESSAGE_MESSAGE, DBCreate.COL_MESSAGE_ISEVENT},
                     DBCreate.COL_MESSAGE_FK_CHATID + "=?", new String[]{chatId + ""}, null, null, null);
+
+            Log.d("getMassages","Cursor count "+c.getCount());
             if (c.moveToFirst()) {
                 // String googleId, String googleMail, String accountName, String name, String firstName
                 int id = c.getColumnIndex(DBCreate.COL_MESSAGE_ID);
@@ -517,13 +597,14 @@ public class DBStatements {
 
                 do {
                     // Time timeStamp, String message, int id, boolean isEvent, User creator,int chatid
-                    messages.add(new Message(Time.valueOf(c.getInt(timestmp) + ""), c.getString(message), c.getString(id), (c.getInt(isEvent) == 1), c.getString(creator), chatId));
+                    messages.add(new Message(new Time(c.getInt(timestmp)), c.getString(message), c.getString(id), (c.getInt(isEvent) == 1), c.getString(creator), chatId));
 
                 } while (c.moveToNext());
             }
 
         } catch (Exception e) {
-            Log.d("DB_Error class DBStatements:", "Unable to read Users from db");
+            Log.d("DB_Error class DBStatements:", "Unable to read Message of Chat "+chatId+" from db");
+            e.printStackTrace();
         } finally {
             db.endTransaction();
         }
@@ -629,6 +710,7 @@ public class DBStatements {
 
         } catch (Exception e) {
             Log.d("DB_Error class DBStatements:", "Unable to read Users from db");
+            e.printStackTrace();
         } finally {
             db.endTransaction();
         }
@@ -647,12 +729,15 @@ public class DBStatements {
     public Message getLastMessage(String chatid) {
         Message message = null;
         SQLiteDatabase db = dbConnection.getReadableDatabase();
-
+        db.beginTransaction();
 
         try{
-          Cursor c=  db.query(DBCreate.TABLE_MESSAGE, null, DBCreate.COL_MESSAGE_TIMESTAMP+"=(" +
+            Cursor c = db.rawQuery("SELECT * FROM " +DBCreate.TABLE_MESSAGE+" WHERE "+ DBCreate.COL_MESSAGE_FK_CHATID+"=? AND "+DBCreate.COL_MESSAGE_TIMESTAMP+"=(SELECT MAX("+ DBCreate.COL_MESSAGE_TIMESTAMP+") FROM "+DBCreate.TABLE_MESSAGE+"" +
+                            " WHERE "+DBCreate.COL_MESSAGE_FK_CHATID+");",new String[] {chatid} );
+      /*    Cursor c=  db.query(DBCreate.TABLE_MESSAGE, null, DBCreate.COL_MESSAGE_TIMESTAMP+"=(" +
                   "SELECT MAX("+ DBCreate.COL_MESSAGE_TIMESTAMP+" FROM "+DBCreate.TABLE_MESSAGE+" WHERE "+DBCreate.COL_MESSAGE_FK_CHATID+")" +
-                  ") AND "+DBCreate.COL_MESSAGE_FK_CHATID+"=?", new String[]{chatid}, null, null, null);
+                  ") AND "+DBCreate.COL_MESSAGE_FK_CHATID+"=?", new String[]{chatid}, null, null, null);*/
+           Log.d("getLasMessage", "Cursor count "+c.getCount()+"  ChatID "+chatid);
                if(c.moveToFirst()){
                    int id = c.getColumnIndex(DBCreate.COL_MESSAGE_ID);
                    int chatId = c.getColumnIndex(DBCreate.COL_MESSAGE_FK_CHATID);

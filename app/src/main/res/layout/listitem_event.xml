@@ -26,7 +26,7 @@
             >
 
             <TextView
-                android:id="@+id/li_message_tvuser"
+                android:id="@+id/li_message_tvcreator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
@@ -51,7 +51,7 @@
                 android:id="@+id/li_message_divider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_below="@+id/li_message_tvuser"
+                android:layout_below="@+id/li_message_tvcreator"
                 android:padding="2dp"
                 android:background="@android:color/darker_gray"/>
 
