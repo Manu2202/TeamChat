@@ -748,11 +748,12 @@ public boolean insertChat(Chat chat){
         db.beginTransaction();
 
         try{
-            Cursor c = db.rawQuery("SELECT * FROM " +DBCreate.TABLE_MESSAGE+" WHERE "+ DBCreate.COL_MESSAGE_FK_CHATID+"=? AND "+DBCreate.COL_MESSAGE_TIMESTAMP+"=(SELECT MAX("+ DBCreate.COL_MESSAGE_TIMESTAMP+") FROM "+DBCreate.TABLE_MESSAGE+"" +
-                            " WHERE "+DBCreate.COL_MESSAGE_FK_CHATID+");",new String[] {chatid} );
-      /*    Cursor c=  db.query(DBCreate.TABLE_MESSAGE, null, DBCreate.COL_MESSAGE_TIMESTAMP+"=(" +
-                  "SELECT MAX("+ DBCreate.COL_MESSAGE_TIMESTAMP+" FROM "+DBCreate.TABLE_MESSAGE+" WHERE "+DBCreate.COL_MESSAGE_FK_CHATID+")" +
-                  ") AND "+DBCreate.COL_MESSAGE_FK_CHATID+"=?", new String[]{chatid}, null, null, null);*/
+            Cursor c = db.rawQuery("SELECT * FROM " +DBCreate.TABLE_MESSAGE+" WHERE "+ DBCreate.COL_MESSAGE_FK_CHATID+"=? AND "+DBCreate.COL_MESSAGE_TIMESTAMP+
+                    "=(SELECT MAX("+ DBCreate.COL_MESSAGE_TIMESTAMP+") FROM "+DBCreate.TABLE_MESSAGE+"" + " WHERE "+DBCreate.COL_MESSAGE_FK_CHATID+");"
+                    ,new String[] {chatid} );
+    //     Cursor c=  db.query(DBCreate.TABLE_MESSAGE, null, DBCreate.COL_MESSAGE_TIMESTAMP+"=(" +
+      //            "SELECT MAX("+ DBCreate.COL_MESSAGE_TIMESTAMP+" FROM "+DBCreate.TABLE_MESSAGE+" WHERE "+DBCreate.COL_MESSAGE_FK_CHATID+")" +
+       //           ") AND "+DBCreate.COL_MESSAGE_FK_CHATID+"=?", new String[]{chatid}, null, null, null);
            Log.d("getLasMessage", "Cursor count "+c.getCount()+"  ChatID "+chatid);
                if(c.moveToFirst()){
                    int id = c.getColumnIndex(DBCreate.COL_MESSAGE_ID);
@@ -763,10 +764,11 @@ public boolean insertChat(Chat chat){
                    int timestmp = c.getColumnIndex(DBCreate.COL_MESSAGE_TIMESTAMP);
 
 
-                   message = new Message(Time.valueOf(c.getInt(timestmp) + ""), c.getString(messageInt), c.getString(id), (c.getInt(isEvent) == 1), c.getString(creator), c.getString(chatId));
+                   message = new Message(new Time(c.getInt(timestmp)), c.getString(messageInt), c.getString(id), (c.getInt(isEvent) == 1), c.getString(creator), c.getString(chatId));
                }
         }catch (Exception e){
             Log.d("DB_Error class DBStatements:", "Unable to read LastMessage from db");
+            e.printStackTrace();
         }finally {
             db.endTransaction();
         }

@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     private void  addTestdat(){
+
+        //löscht alle eintäge beim Start
         db.dropAll();
 
         db.insertUser(new User("11","sdjhdj","Horst","Horst","Idiot"));
@@ -71,11 +73,11 @@ public class MainActivity extends AppCompatActivity {
         Date currentTime = Calendar.getInstance().getTime();
              Time time =new Time (currentTime.getTime());
         db.insertMessage(new Message(time,"Hallo, der horst ist da!!!","oho",false,"11","123"));
-        time.setTime(currentTime.getTime());
+        time.setTime(currentTime.getTime()+5);
 
     //    Time timeStamp, String message, String id, boolean isEvent, String creator, Date date, String description, String chatid, Byte status
         db.insertMessage(new Event(time,"Panik","546s",true,"11",currentTime,"hilfe ein virus","123",(byte)1));
-        time.setTime(currentTime.getTime());
+        time.setTime(currentTime.getTime()+10);
         db.insertMessage(new Message(time,"Cool ;D","o4546",false,"abc","123"));
         Log.d("Main TestDaten  ",db.getUser().size()+"");
         for(User user:db.getUser()){
