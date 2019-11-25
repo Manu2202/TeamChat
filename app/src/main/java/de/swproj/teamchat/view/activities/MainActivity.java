@@ -53,8 +53,10 @@ public class MainActivity extends AppCompatActivity {
         db.dropAll();
 
         db.insertUser(new User("11","sdjhdj","Horst","Horst","Idiot"));
-        db.insertUser(new User("Gott","sdjhdj","Horst","Gott","Herr"));
+        db.insertUser(new User("Gott","sdjhdj","Der Herr der Dinge","Gott","Herr"));
         db.insertChat(new Chat("test",0xFF0C00F1,"123","11"));
+        db.updateChatMembers(new String[]{"11","Gott"},"123");
+
       //  db.insertChat(new Chat("Labergruppe", 0xFFFB0B03, "394", "Gott"));
         db.insertChat(new Chat("Tetris esport Team", 0xFFFBB400, "3934", "Gott"));
         db.insertChat(new Chat("Anonyme Alkoholiker", 0xFFB0FB03, "3954", "Gott"));
@@ -72,7 +74,10 @@ public class MainActivity extends AppCompatActivity {
 
     //    Time timeStamp, String message, String id, boolean isEvent, String creator, Date date, String description, String chatid, Byte status
         db.insertMessage(new Event(time,"Panik","546s",true,"11",currentTime,"hilfe ein virus","123",(byte)1));
-        Log.d("                ",db.getChat().size()+"");
+        Log.d("Main TestDaten  ",db.getUser().size()+"");
+        for(User user:db.getUser()){
+            Log.d("User: ",user.getAccountName()+"");
+        }
 
     }
 

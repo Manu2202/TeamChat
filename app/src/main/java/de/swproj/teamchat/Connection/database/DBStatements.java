@@ -122,7 +122,7 @@ public boolean insertChat(Chat chat){
     return insertsuccesfull;
 }
 
-    public boolean updateChatMembers(String[] userIDs, int chatId) {
+    public boolean updateChatMembers(String[] userIDs, String chatId) {
         SQLiteDatabase db = dbConnection.getReadableDatabase();
         db.beginTransaction();
 
