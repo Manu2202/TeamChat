@@ -20,6 +20,7 @@ import de.swproj.teamchat.Connection.database.DBStatements;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.datamodell.chat.Event;
 import de.swproj.teamchat.datamodell.chat.Message;
+import de.swproj.teamchat.datamodell.chat.User;
 import de.swproj.teamchat.view.activities.ViewEventActivity;
 
 
@@ -60,6 +61,7 @@ public class AdapterMessage extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         final Message message = messages.get(position);
         Context context = parent.getContext();
+        User creator = db.getUser(message.getCreator());
 
         if(convertView==null) {
 
@@ -87,12 +89,13 @@ public class AdapterMessage extends BaseAdapter {
             TextView tvUser = convertView.findViewById(R.id.li_message_tvcreator);
             tvMessage.setText(message.getMessage());
             tvTime.setText(message.getTimeStamp().toString());
-            tvUser.setText(message.getCreator()+"");
+            tvUser.setText(creator.getAccountName());
 
 
             if (message.isEvent()) {
                 final Event event = db.getEvent(message.getId());
                 TextView tvDate = convertView.findViewById(R.id.li_event_tvdate);
+                //todo: fix date in DBstatemants
                 tvDate.setText(event.getDate().toString());
                 final CardView cv = convertView.findViewById(R.id.li_message_cv);
 
@@ -101,7 +104,9 @@ public class AdapterMessage extends BaseAdapter {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(activity, ViewEventActivity.class);
-                        intent.putExtra("eventId", message.getId());
+
+                        Log.d("Adapter Message","Open eventview: "+message.getId());
+                        intent.putExtra("eventID", message.getId());
                         ActivityOptionsCompat op = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, (Pair<View, String>[])
                                 new Pair[]{new Pair<View, String>(cv, ViewCompat.getTransitionName(cv))});
 

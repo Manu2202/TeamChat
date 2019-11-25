@@ -14,8 +14,7 @@ public class Event extends Message {
     private String description;
     private Byte status;
 
-    public Event(Time timeStamp, String message, String id, boolean isEvent, String creator, Date date,
-                 String description, String chatid, Byte status) {
+    public Event(Time timeStamp, String message, String id, boolean isEvent, String creator, Date date, String description, String chatid, Byte status) {
         super(timeStamp, message, id, isEvent, creator, chatid);
         this.date = date;
         this.description = description;

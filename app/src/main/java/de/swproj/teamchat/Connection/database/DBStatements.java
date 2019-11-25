@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import java.sql.Time;
@@ -22,6 +23,10 @@ import de.swproj.teamchat.datamodell.chat.UserEventStatus;
 
 public class DBStatements {
     private DBConnection dbConnection;
+
+    public void dropAll(){
+        dbConnection.onUpgrade(dbConnection.getWritableDatabase(),0,0);
+    }
 
     public DBStatements(Context context) {
         dbConnection = new DBConnection(context);
@@ -178,7 +183,7 @@ public boolean insertChat(Chat chat){
             db.endTransaction();
         }
 
-
+        Log.d("InsertEVent: ",message.isEvent()+"");
         if (message.isEvent()) {
             Event e = (Event) message;
             values = new ContentValues();
@@ -189,9 +194,9 @@ public boolean insertChat(Chat chat){
             db.beginTransaction();
             try {
                 values.put(DBCreate.COL_EVENT_ID, message.getId());
-                values.put(DBCreate.COL_EVENT_DATE, e.getDate().getTime());
+                values.put(DBCreate.COL_EVENT_DATE, e.getDate().getTime()+"");
                 values.put(DBCreate.COL_EVENT_DESCRIPTION, e.getDescription());
-                values.put(DBCreate.COL_EVENT_FK_MESSAGEID, message.getId());
+              //  values.put(DBCreate.COL_EVENT_FK_MESSAGEID, message.getId());
 
                 db.insertOrThrow(DBCreate.TABLE_EVENT, null, values);
 
@@ -621,7 +626,12 @@ public boolean insertChat(Chat chat){
         try {
 
             Cursor c = db.query(DBCreate.TABLE_MESSAGE, new String[]{DBCreate.COL_MESSAGE_ID, DBCreate.COL_MESSAGE_FK_CHATID, DBCreate.COL_MESSAGE_TIMESTAMP, DBCreate.COL_MESSAGE_FK_CREATOR, DBCreate.COL_MESSAGE_MESSAGE, DBCreate.COL_MESSAGE_ISEVENT},
-                    DBCreate.COL_MESSAGE_ID + "=?", new String[]{messageID + ""}, null, null, null);
+                    DBCreate.COL_MESSAGE_ID + "=?", new String[]{messageID}, null, null, null);
+
+           // Cursor c = db.rawQuery("SELECT * FROM " +DBCreate.TABLE_MESSAGE+" WHERE "+ DBCreate.COL_MESSAGE_ID+"=?;",new String[]{messageID});
+
+
+
             if (c.moveToFirst()) {
 
                 int id = c.getColumnIndex(DBCreate.COL_MESSAGE_ID);
@@ -632,12 +642,13 @@ public boolean insertChat(Chat chat){
                 int timestmp = c.getColumnIndex(DBCreate.COL_MESSAGE_TIMESTAMP);
 
 
-                message = new Message(Time.valueOf(c.getInt(timestmp) + ""), c.getString(messageInt), c.getString(id), (c.getInt(isEvent) == 1), c.getString(creator), c.getString(chatId));
+                message = new Message(new Time(c.getInt(timestmp)), c.getString(messageInt), c.getString(id), (c.getInt(isEvent) == 1), c.getString(creator), c.getString(chatId));
 
 
             }
         } catch (Exception e) {
-            Log.d("DB_Error class DBStatements:", "Unable to read Users from db");
+            Log.d("DB_Error class DBStatements:", "Unable to read Message "+messageID+" from db");
+            e.printStackTrace();
         } finally {
             db.endTransaction();
         }
@@ -655,8 +666,12 @@ public boolean insertChat(Chat chat){
             db.beginTransaction();
             try {
 
-                Cursor c = db.query(DBCreate.TABLE_EVENT, new String[]{DBCreate.COL_EVENT_DATE, DBCreate.COL_EVENT_DESCRIPTION},
-                        DBCreate.COL_EVENT_ID + "=?", new String[]{messageId + ""}, null, null, null);
+         //       Cursor c = db.query(DBCreate.TABLE_EVENT, new String[]{DBCreate.COL_EVENT_DATE, DBCreate.COL_EVENT_DESCRIPTION},
+           //             DBCreate.COL_EVENT_ID + "=?", new String[]{messageId + ""}, null, null, null);
+                Cursor c = db.rawQuery("SELECT * FROM "+ DBCreate.TABLE_EVENT,null);//" WHERE "+DBCreate.COL_EVENT_ID+"=? ;",new String[]{messageId});
+
+                Log.d("Get Message ", "counter for id "+ messageId+" coutn: "+c.getCount());
+
                 if (c.moveToFirst()) {
 
                     int date = c.getColumnIndex(DBCreate.COL_EVENT_DATE);
@@ -676,12 +691,13 @@ public boolean insertChat(Chat chat){
 
                 }
             } catch (Exception e) {
-                Log.d("DB_Error class DBStatements:", "Unable to read Users from db");
+                Log.d("DB_Error class DBStatements:", "Unable to read Event from db");
             } finally {
                 db.endTransaction();
             }
 
         }
+
 
 
         return event;

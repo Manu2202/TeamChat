@@ -7,6 +7,7 @@ import androidx.fragment.app.ListFragment;
 import de.swproj.teamchat.Connection.database.DBStatements;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.datamodell.chat.Chat;
+import de.swproj.teamchat.datamodell.chat.Event;
 import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.datamodell.chat.User;
 import de.swproj.teamchat.view.adapter.AdapterChat;
@@ -49,12 +50,28 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     private void  addTestdat(){
+        db.dropAll();
+
         db.insertUser(new User("11","sdjhdj","Horst","Horst","Idiot"));
-        db.insertChat(new Chat("test",29855,"123","11"));
+        db.insertUser(new User("Gott","sdjhdj","Horst","Gott","Herr"));
+        db.insertChat(new Chat("test",0xFF0C00F1,"123","11"));
+      //  db.insertChat(new Chat("Labergruppe", 0xFFFB0B03, "394", "Gott"));
+        db.insertChat(new Chat("Tetris esport Team", 0xFFFBB400, "3934", "Gott"));
+        db.insertChat(new Chat("Anonyme Alkoholiker", 0xFFB0FB03, "3954", "Gott"));
+        db.insertChat(new Chat("Öffentliche Alkoholiker", 0xFF00FB71, "3941", "Gott"));
+        db.insertChat(new Chat("Saufgruppe 1", 0xFF0C00F1, "3434", "Gott"));
+        db.insertChat(new Chat("Saufgruppe 2", 0xFF038814, "34", "Gott"));
+        db.insertChat(new Chat("Saufgruppe 3", 0xFF880E51, "3484", "Gott"));
+        db.insertChat(new Chat("Saufgruppe 4", 0xFF884318, "324", "Gott"));
+        db.insertChat(new Chat("Saufgruppe 5", 0xFF004888, "474", "Gott"));
+
         Date currentTime = Calendar.getInstance().getTime();
              Time time =new Time (currentTime.getTime());
         db.insertMessage(new Message(time,"Hallo, der horst ist da!!!","oho",false,"11","123"));
+        time.setTime(currentTime.getTime());
 
+    //    Time timeStamp, String message, String id, boolean isEvent, String creator, Date date, String description, String chatid, Byte status
+        db.insertMessage(new Event(time,"Panik","546s",true,"11",currentTime,"hilfe ein virus","123",(byte)1));
         Log.d("                ",db.getChat().size()+"");
 
     }

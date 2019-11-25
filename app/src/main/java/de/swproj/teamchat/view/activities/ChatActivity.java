@@ -35,6 +35,8 @@ public class ChatActivity extends AppCompatActivity {
         String id = getIntent().getStringExtra("chatID");
 
         chat = db.getChat(id);
+
+        setTitle(chat.getName());
         messages=db.getMessages(id);
 
         lvMessages.setAdapter(new AdapterMessage(messages,db,this));

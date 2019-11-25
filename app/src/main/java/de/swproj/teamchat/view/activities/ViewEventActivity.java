@@ -31,19 +31,19 @@ public class ViewEventActivity extends AppCompatActivity {
 
         UserEventStatus  userEventStatus= db.getUserEventStatus(id,activeUser);
 
-        TextView tvCreator = findViewById(R.id.viewevent_tvcreator);
+       TextView tvCreator = findViewById(R.id.viewevent_tvcreator);
         TextView tvtime = findViewById(R.id.viewevent_tvtime);
         TextView tvName = findViewById(R.id.viewevent_tvname);
         TextView tvDate = findViewById(R.id.viewevent_tvdate);
         TextView tvDescripton = findViewById(R.id.viewevent_tvdescription);
         TextView tvStatus = findViewById(R.id.viewevent_tvstatus);
 
-        tvCreator.setText(event.getCreator());
+         tvCreator.setText(event.getCreator());
         tvtime.setText(event.getTimeStamp().toString());
         tvDate.setText(event.getDate().toString());
         tvName.setText(event.getMessage());
         tvDescripton.setText(event.getDescription());
-        tvStatus.setText(event.getStatus());
+        tvStatus.setText(event.getStatus()+"");
 
         ArrayList<UserEventStatus> userEventStatuses = db.getUserEventStatus(id);
         ListView lvStates = findViewById(R.id.viewevent_lvstates);

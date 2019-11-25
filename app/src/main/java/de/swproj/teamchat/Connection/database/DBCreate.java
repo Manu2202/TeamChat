@@ -103,8 +103,9 @@ public class DBCreate {
         return "CREATE TABLE " + TABLE_EVENT + " ("
                 + COL_EVENT_ID + " TEXT PRIMARY KEY, "
                 + COL_EVENT_DATE + " TEXT, "
-                + COL_EVENT_DESCRIPTION + " TEXT,"
-                + COL_EVENT_FK_MESSAGEID + "TEXT NOT NULL REFERENCES " + TABLE_MESSAGE + " )";
+                + COL_EVENT_DESCRIPTION + " TEXT"
+              //  + ","+COL_EVENT_FK_MESSAGEID + "TEXT NOT NULL REFERENCES " + TABLE_MESSAGE
+                + " )";
     }
 
     protected static String deleteEventTable() {
