@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         db.dropAll();
 
         db.insertUser(new User("11","sdjhdj","Horst","Horst","Idiot"));
+        db.insertUser(new User("abc","sdjhdj","ICH","Man","Derine"));
         db.insertUser(new User("Gott","sdjhdj","Der Herr der Dinge","Gott","Herr"));
         db.insertChat(new Chat("test",0xFF0C00F1,"123","11"));
         db.updateChatMembers(new String[]{"11","Gott"},"123");
@@ -74,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
 
     //    Time timeStamp, String message, String id, boolean isEvent, String creator, Date date, String description, String chatid, Byte status
         db.insertMessage(new Event(time,"Panik","546s",true,"11",currentTime,"hilfe ein virus","123",(byte)1));
+        time.setTime(currentTime.getTime());
+        db.insertMessage(new Message(time,"Cool ;D","o4546",false,"abc","123"));
         Log.d("Main TestDaten  ",db.getUser().size()+"");
         for(User user:db.getUser()){
             Log.d("User: ",user.getAccountName()+"");
