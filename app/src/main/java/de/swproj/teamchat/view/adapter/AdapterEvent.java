@@ -25,12 +25,10 @@ public class AdapterEvent extends BaseAdapter {
 
     private ArrayList<Event> events;
     private DBStatements db;
-    private AppCompatActivity activity;
 
-    public AdapterEvent(ArrayList<Event> events, DBStatements dbStatements, AppCompatActivity activity) {
+    public AdapterEvent(ArrayList<Event> events, DBStatements dbStatements) {
         this.events = events;
         db = dbStatements;
-        this.activity = activity;
     }
 
     @Override
@@ -53,7 +51,7 @@ public class AdapterEvent extends BaseAdapter {
         Context context = parent.getContext();
          Event ev = events.get(position);
 
-        if (convertView == null) {
+
 
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.listitem_event, null, false);
@@ -72,7 +70,7 @@ public class AdapterEvent extends BaseAdapter {
             tvDate.setText("19.11.2019");
 
 
-        }
+
             return convertView;
     }
 
