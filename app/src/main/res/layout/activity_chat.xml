@@ -5,7 +5,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="16dp"
+    android:layout_marginBottom="8dp"
     tools:context=".view.activities.ChatActivity">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -33,19 +33,22 @@
             android:id="@+id/etMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textAutoCorrect"
             android:hint="Message ..." />
     </com.google.android.material.textfield.TextInputLayout>
 
     <ListView
         android:id="@+id/lvMessages"
         android:layout_width="match_parent"
+
         android:layout_height="match_parent"
         android:layout_above="@+id/btnSend"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_margin="16dp"
         android:divider="@android:color/transparent"
-        android:dividerHeight="16dp" />
+        android:dividerHeight="16dp"
+        android:stackFromBottom="true"/>
 
 
 </RelativeLayout>

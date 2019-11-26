@@ -28,6 +28,7 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
         lvMessages = findViewById(R.id.lvMessages);
+
         etMessage = findViewById(R.id.etMessage);
 
         db= new DBStatements(this);
