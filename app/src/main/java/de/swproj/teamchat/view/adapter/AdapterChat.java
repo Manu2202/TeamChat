@@ -54,7 +54,9 @@ public class AdapterChat extends BaseAdapter {
         Context context = parent.getContext();
         Chat chat = chats.get(position);
 
-        if (convertView == null) {
+
+        // Removed to avoid repeating items (at the cost of memory + performance)
+        // if (convertView == null) {
 
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.listitem_chat, null, false);
@@ -83,7 +85,7 @@ public class AdapterChat extends BaseAdapter {
             }
 
 
-        }
+
 
         return convertView;
     }
