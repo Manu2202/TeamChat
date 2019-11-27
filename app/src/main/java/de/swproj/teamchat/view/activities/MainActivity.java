@@ -33,6 +33,7 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -72,11 +73,12 @@ public class MainActivity extends AppCompatActivity {
         db.insertChat(new Chat("Saufgruppe 5", 0xFF004888, "474", "Gott"));
 
         Date currentTime = Calendar.getInstance().getTime();
-
+        GregorianCalendar gc = new GregorianCalendar();
+        gc.setGregorianChange(new java.sql.Date(849494994));
              Time time =new Time (currentTime.getTime());
         db.insertMessage(new Message(time,"Hallo, der horst ist da!!!","oho",false,"11","123"));
         time.setTime(currentTime.getTime()+5);
-        db.insertMessage(new Event(time,"Panik","546s",true,"11",currentTime,"hilfe ein virus","123",(byte)1));
+        db.insertMessage(new Event(time,"Panik","546s",true,"11",gc,"hilfe ein virus","123",(byte)1));
         time.setTime(currentTime.getTime()+10);
         db.insertMessage(new Message(time,"Coolbbb bfgtf ;D","o4454546",false,"abc","123"));
         time.setTime(currentTime.getTime()+10);
@@ -88,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         time.setTime(currentTime.getTime()+10);
         db.insertMessage(new Message(time,"Ein Huhun ;D","o4115jn546",false,"abc","123"));
 
-        db.insertMessage(new Event(time,"TourdeFrance","4546s",true,"Gott",currentTime,"hilfe ein russ","123",(byte)1));
+        db.insertMessage(new Event(time,"TourdeFrance","4546s",true,"Gott",gc,"hilfe ein russ","123",(byte)1));
         time.setTime(currentTime.getTime()+10);
 
 
