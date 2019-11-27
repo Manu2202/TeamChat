@@ -158,8 +158,6 @@ public class EditEventActivity extends AppCompatActivity {
         };
     }
 
-
-
     public void onClickSaveChanges(View view){
         if (msgId.equals("0")){
             // Own created Event -> User automatically accepted
@@ -170,9 +168,7 @@ public class EditEventActivity extends AppCompatActivity {
                         et_title.getText().toString(), msgId, true, "11",
                         date, et_description.getText().toString(), chatID, status);
 
-                HashMap<String, Object> eventMap = convertToMap(event);
-
-                event.setId(firebaseConnection.addToFirestore("message", eventMap));
+                event.setId(firebaseConnection.addToFirestore("message", event));
 
                 dbStatements.insertMessage(event);
 
@@ -190,20 +186,5 @@ public class EditEventActivity extends AppCompatActivity {
     public void onClickCancel(View view){
         // Just go back to the previous Activity, safe nothing
         finishActivity(1);
-    }
-
-    private HashMap<String, Object> convertToMap(Event event){
-        HashMap<String, Object> eventMap = new HashMap<>();
-        eventMap.put("Timestamp", event.getTimeStamp());
-        eventMap.put("Titel", event.getMessage());
-        eventMap.put("MessageID", event.getId());
-        eventMap.put("IsEvent", event.isEvent());
-        eventMap.put("CreatorID", event.getCreator());
-        eventMap.put("Date", event.getDate());
-        eventMap.put("Description", event.getDescription());
-        eventMap.put("ChatID", event.getChatid());
-        eventMap.put("Status", (int)event.getStatus());
-
-        return eventMap;
     }
 }

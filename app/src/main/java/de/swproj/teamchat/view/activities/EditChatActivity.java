@@ -183,22 +183,16 @@ public class EditChatActivity extends AppCompatActivity {
     public void saveChanges(View view) {
         if (chatId.equals("0")) {
             //TODO: Eigener User ->ID Holen
-            String dummyUserID = "ABC";
+            String dummyUserID = "11";
             Chat chat = new Chat(etChatName.getText().toString(), dummyUserID);
 
-            chat.setId(firebaseConnection.addToFirestore("chat", convertToHashMap(chat)));
+            chat.setId(firebaseConnection.addToFirestore("chat", chat));
 
             dbStatements.insertChat(chat);
+        }else{
+            // TODO: Update exisiterenden Chat
         }
-        // TODO: Update exisiterenden Chat
+
     }
 
-    private HashMap<String, Object> convertToHashMap(Chat chat) {
-        HashMap<String, Object> chatMap = new HashMap<>();
-        chatMap.put("Name", chat.getName());
-        chatMap.put("Color", chat.getColor());
-        chatMap.put("Admin", chat.getAdmin());
-
-        return chatMap;
-    }
 }
