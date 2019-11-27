@@ -158,8 +158,6 @@ public class EditEventActivity extends AppCompatActivity {
         };
     }
 
-
-
     public void onClickSaveChanges(View view){
         if (msgId.equals("0")){
             // Own created Event -> User automatically accepted
