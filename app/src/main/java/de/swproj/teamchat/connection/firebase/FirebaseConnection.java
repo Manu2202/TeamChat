@@ -1,4 +1,4 @@
-package de.swproj.teamchat.Connection.firebase;
+package de.swproj.teamchat.connection.firebase;
 
 /*
  * Created by Manuel Lanzinger on 27. November 2019.

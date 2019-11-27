@@ -1,14 +1,13 @@
 package de.swproj.teamchat.view.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import de.swproj.teamchat.Connection.database.DBStatements;
+import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.datamodell.chat.Event;
 import de.swproj.teamchat.datamodell.chat.UserEventStatus;
 import de.swproj.teamchat.view.adapter.AdapterUserEventStatus;
 import de.swproj.teamchat.view.dialogs.ReasonDialog;
 
-import android.app.usage.EventStats;
 import android.os.Bundle;
 import android.transition.Fade;
 import android.util.Log;

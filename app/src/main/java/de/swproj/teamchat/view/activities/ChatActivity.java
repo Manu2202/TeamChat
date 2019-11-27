@@ -1,7 +1,7 @@
 package de.swproj.teamchat.view.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
-import de.swproj.teamchat.Connection.database.DBStatements;
+import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.datamodell.chat.Chat;
 import de.swproj.teamchat.datamodell.chat.Message;

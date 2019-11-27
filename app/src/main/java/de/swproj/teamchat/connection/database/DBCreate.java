@@ -1,4 +1,4 @@
-package de.swproj.teamchat.Connection.database;
+package de.swproj.teamchat.connection.database;
 
 import android.provider.BaseColumns;
 

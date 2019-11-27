@@ -1,11 +1,9 @@
-package de.swproj.teamchat.Connection.database;
+package de.swproj.teamchat.connection.database;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Build;
-import android.provider.ContactsContract;
 import android.util.Log;
 
 import java.sql.Date;

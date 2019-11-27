@@ -7,24 +7,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import java.sql.Date;
-import java.sql.Time;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.ListFragment;
 
-import de.swproj.teamchat.Connection.database.DBStatements;
-import de.swproj.teamchat.R;
-import de.swproj.teamchat.datamodell.chat.Chat;
+import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.datamodell.chat.Event;
-import de.swproj.teamchat.view.activities.ChatActivity;
 import de.swproj.teamchat.view.activities.ViewEventActivity;
-import de.swproj.teamchat.view.adapter.AdapterChat;
 import de.swproj.teamchat.view.adapter.AdapterEvent;
 
 
@@ -59,7 +52,6 @@ public class FragmentMainEvents extends ListFragment {
 
         setListAdapter(adapterEvent);
 
-        //TODO: Test ClickListener once Dummy Data + ViewEventActivity can be tested
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import de.swproj.teamchat.Connection.database.DBStatements;
+import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.datamodell.chat.Chat;
 import de.swproj.teamchat.datamodell.chat.User;
@@ -40,7 +40,7 @@ public class MainActivityTest {
             // For Chat Tests
             db.insertChat(new Chat("Saufgruppe " + i, 0xFF004888 + i, "1000" + i, "Banhammer_L0rd " + i));
             if (i < testScale/2) {
-                db.getChat(("1000" + i)).addChatMember("10" + i);
+                //db.getChat(("1000" + i)).addChatMember("10" + i);
             }
         }
 
