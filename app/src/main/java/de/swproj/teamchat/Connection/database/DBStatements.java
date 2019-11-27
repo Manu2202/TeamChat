@@ -697,7 +697,7 @@ public class DBStatements {
         return event;
     }
 
-    public ArrayList<Event> getEvents(String userId) {
+    public ArrayList<Event> getEvents() {
          ArrayList<String> eventIDs= new ArrayList<>();
 
         SQLiteDatabase db = dbConnection.getReadableDatabase();
@@ -706,11 +706,11 @@ public class DBStatements {
         try {
 
 
-            Cursor c = db.query(DBCreate.TABLE_EVENTUSER, new String[]{DBCreate.COL_EVENTUSER_FK_EVENT},
-                    DBCreate.COL_EVENTUSER_FK_USER+"=?", new String []{userId}, null, null, null);
+            Cursor c = db.query(DBCreate.TABLE_EVENT, new String[]{DBCreate.COL_EVENT_ID},
+                    null, null, null, null, null);
             if (c.moveToFirst()) {
 
-                int eventId = c.getColumnIndex(DBCreate.COL_USER_G_ID);
+                int eventId = c.getColumnIndex(DBCreate.COL_EVENT_ID);
 
                 do {
                    eventIDs.add(c.getString(eventId));

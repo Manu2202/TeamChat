@@ -12,18 +12,13 @@ public class Chat {
     private int color;
     private String id;
     private String admin;
-    private HashSet<String> chatMember;
 
-    public Chat(String name, int color, String id, String admin){
+    public Chat(String name, int color, String id, String admin) {
         this.name = name;
         this.color = color;
         this.id = id;
         this.admin = admin;
 
-        // Initialize the chatMember Set
-        chatMember = new HashSet<String>();
-        // Add Admin as first member of the Chat
-        chatMember.add(admin);
     }
 
     public Chat(String name, String admin) {
@@ -32,10 +27,6 @@ public class Chat {
         this.id = "0";
         this.admin = admin;
 
-        // Initialize the chatMember Set
-        chatMember = new HashSet<String>();
-        // Add Admin as first member of the Chat
-        chatMember.add(admin);
     }
 
 
@@ -43,7 +34,7 @@ public class Chat {
         this.id = id;
     }
 
-    public void update(){
+    public void update() {
 
     }
 
@@ -66,17 +57,4 @@ public class Chat {
         return admin;
     }
 
-
-    public HashSet<String> getChatMember() {
-        return chatMember;
-    }
-
-
-    public void addChatMember(String userID){
-        chatMember.add(userID);
-    }
-
-    public boolean isMemberOfChat(String userID){
-        return chatMember.contains(userID);
-    }
 }
