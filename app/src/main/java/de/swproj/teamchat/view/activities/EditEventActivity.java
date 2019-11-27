@@ -27,6 +27,7 @@ public class EditEventActivity extends AppCompatActivity {
 
     private Event event;
     private String msgId;
+    private String chatID;
     private Calendar cal;
     private int selectedYear;
     private int selectedMonth;
@@ -67,6 +68,7 @@ public class EditEventActivity extends AppCompatActivity {
         // get the own intent of the Activity
         Intent ownIntent = getIntent();
         msgId = ownIntent.getStringExtra("ID");
+        chatID = ownIntent.getStringExtra("chatID");
     }
 
     /*
@@ -159,14 +161,6 @@ public class EditEventActivity extends AppCompatActivity {
 
     public void onClickSaveChanges(View view){
         if (msgId.equals("0")){
-            // TODO: Sich selbst aus DB holen -> UserID für Event
-
-
-            // TODO: Die MessageID richtig übergeben -> jetzt nur Dummy Wert
-            msgId = "345";
-
-            // TODO: Holen der entsprechenden Chat ID
-            String chatID = "984";
 
             // Own created Event -> User automatically accepted
             Byte status = 2;
@@ -185,6 +179,8 @@ public class EditEventActivity extends AppCompatActivity {
             }catch(NullPointerException npe){
                 // TODO: Info ausgeben, dass Werte nicht eingetragen sind z.B. Toast
             }
+        }else{
+            // TODO: Update eines existierenden Events
         }
     }
 
