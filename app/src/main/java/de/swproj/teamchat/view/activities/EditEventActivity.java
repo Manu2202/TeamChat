@@ -95,7 +95,7 @@ public class EditEventActivity extends AppCompatActivity {
                         android.R.style.Theme_DeviceDefault_Dialog_MinWidth,
                         dateSetListener,
                         year, month, day);
-                dateDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                //dateDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 dateDialog.show();
             }
         });
@@ -127,7 +127,7 @@ public class EditEventActivity extends AppCompatActivity {
                         EditEventActivity.this,
                         timeSetListener,
                         hour, minute, true);
-                timeDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                //timeDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 timeDialog.show();
             }
         });
