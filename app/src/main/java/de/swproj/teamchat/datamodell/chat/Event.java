@@ -7,23 +7,23 @@ package de.swproj.teamchat.datamodell.chat;
 
 import java.sql.Time;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 public class Event extends Message {
 
-    private Date date;
+    private GregorianCalendar date;
     private String description;
     private Byte status;
 
-    public Event(Time timeStamp, String message, String id, boolean isEvent, String creator, Date date, String description, String chatid, Byte status) {
+    public Event(Time timeStamp, String message, String id, boolean isEvent, String creator, GregorianCalendar date, String description, String chatid, Byte status) {
         super(timeStamp, message, id, isEvent, creator, chatid);
         this.date = date;
         this.description = description;
         this.status = status;
     }
 
-    public Event(Time timeStamp, String message, boolean isEvent, String creator, Date date,
+    public Event(Time timeStamp, String message, boolean isEvent, String creator, GregorianCalendar date,
                  String description, String chatid, Byte status) {
-        //super(timeStamp, message, isEvent, creatorId);
         super(timeStamp, message, isEvent, creator, chatid);
         this.date = date;
         this.description = description;
@@ -59,7 +59,7 @@ public class Event extends Message {
         return super.getCreator();
     }
 
-    public Date getDate() {
+    public GregorianCalendar getDate() {
         return date;
     }
 

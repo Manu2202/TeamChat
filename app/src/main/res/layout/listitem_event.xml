@@ -22,8 +22,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="4dp"
-            >
+            android:padding="4dp">
 
             <TextView
                 android:id="@+id/li_message_tvcreator"
@@ -34,8 +33,7 @@
                 android:layout_marginRight="8dp"
                 android:text="username"
                 android:transitionName="2"
-                style="@style/TextAppearance.MaterialComponents.Subtitle2"
-                />
+                style="@style/TextAppearance.MaterialComponents.Subtitle2" />
 
             <TextView
                 android:id="@+id/li_message_tvtime"
@@ -53,7 +51,7 @@
                 android:layout_height="1dp"
                 android:layout_below="@+id/li_message_tvcreator"
                 android:padding="2dp"
-                android:background="@android:color/darker_gray"/>
+                android:background="@android:color/darker_gray" />
 
             <TextView
                 android:id="@+id/li_message_tvmessage"
@@ -72,7 +70,6 @@
                 android:layout_below="@+id/li_message_tvmessage"
                 android:text="11.11.11 18:30 Uhr"
                 style="@style/TextAppearance.MaterialComponents.Headline5" />
-
 
 
         </RelativeLayout>

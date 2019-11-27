@@ -8,9 +8,10 @@ import android.os.Build;
 import android.provider.ContactsContract;
 import android.util.Log;
 
+import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 
@@ -194,7 +195,7 @@ public class DBStatements {
             db.beginTransaction();
             try {
                 values.put(DBCreate.COL_EVENT_ID, message.getId());
-                values.put(DBCreate.COL_EVENT_DATE, e.getDate().getTime()+"");
+                values.put(DBCreate.COL_EVENT_DATE, e.getDate().getTime().getTime()+"");
                 values.put(DBCreate.COL_EVENT_DESCRIPTION, e.getDescription());
               //  values.put(DBCreate.COL_EVENT_FK_MESSAGEID, message.getId());
 
@@ -675,10 +676,9 @@ public class DBStatements {
                     //public Event(Time timeStamp, String message, int id, boolean isEvent, String creatorID, Date date,
                     //                          String description,int chatid, Byte status) {
 
-                    //todo: Date aus datenbank lesen
 
-                    Date d = new Date();
-                    d.setTime(c.getInt(date));
+                    GregorianCalendar d = new GregorianCalendar();
+                    d.setTime(new Date(Long.parseLong(c.getString(date))));
                     event = new Event(message.getTimeStamp(), message.getMessage(), message.getId(), true, message.getCreator(),
                             d, c.getString(description), message.getChatid(), (byte) 0);
 
