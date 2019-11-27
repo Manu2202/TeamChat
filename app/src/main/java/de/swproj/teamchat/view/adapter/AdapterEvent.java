@@ -64,7 +64,7 @@ public class AdapterEvent extends BaseAdapter {
             tvTime.setText(ev.getTimeStamp().toString());
             tvUser.setText(ev.getCreator());
 
-            final Event event = db.getEvent(ev.getId());
+            Event event = db.getEvent(ev.getId());
             TextView tvDate = convertView.findViewById(R.id.li_event_tvdate);
             // tvDate.setText(event.getDate().toString());
             tvDate.setText("19.11.2019");
