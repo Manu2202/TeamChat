@@ -28,6 +28,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 public class EditEventActivity extends AppCompatActivity {
@@ -178,7 +179,7 @@ public class EditEventActivity extends AppCompatActivity {
             // Own created Event -> User automatically accepted
             Byte status = 2;
             try {
-                Date date = new Date(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute);
+                GregorianCalendar date = new GregorianCalendar(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute);
                 event = new Event(new Time(System.currentTimeMillis()),
                         et_title.getText().toString(), msgId, true, "dummyUser",
                         date, et_description.getText().toString(), chatID, status);
