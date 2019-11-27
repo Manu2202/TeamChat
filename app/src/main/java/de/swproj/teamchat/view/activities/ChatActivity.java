@@ -87,8 +87,8 @@ public class ChatActivity extends AppCompatActivity {
         switch(item.getItemId()){
             case R.id.btn_chat_menu_newEvent:
                 Intent newEventIntent = new Intent(this, EditEventActivity.class);
-                newEventIntent.putExtra("ID", chatID);
-                newEventIntent.putExtra("eventID", "0");
+                newEventIntent.putExtra("chatID", chatID);
+                newEventIntent.putExtra("ID", "0");
                 startActivity(newEventIntent);
                 break;
         }

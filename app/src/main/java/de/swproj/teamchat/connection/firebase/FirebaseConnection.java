@@ -5,6 +5,8 @@ package de.swproj.teamchat.connection.firebase;
  * For the project: TeamChat.
  */
 
+import android.util.Log;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
@@ -19,12 +21,13 @@ public class FirebaseConnection {
     private FirebaseFirestore firebaseDB;
     private String objectID;
 
-    public void FirebaseConnection(){
+    public FirebaseConnection(){
         // Connect Firebase
         firebaseDB = FirebaseFirestore.getInstance();
     }
 
     public String addToFirestore(String collectionPath, HashMap<String, Object> objectData){
+
         firebaseDB.collection(collectionPath).add(objectData).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
