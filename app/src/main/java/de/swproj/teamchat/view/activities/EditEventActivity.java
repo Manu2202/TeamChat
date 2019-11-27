@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -161,23 +162,25 @@ public class EditEventActivity extends AppCompatActivity {
 
     public void onClickSaveChanges(View view){
         if (msgId.equals("0")){
-
             // Own created Event -> User automatically accepted
             Byte status = 2;
             try {
                 GregorianCalendar date = new GregorianCalendar(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute);
                 event = new Event(new Time(System.currentTimeMillis()),
-                        et_title.getText().toString(), msgId, true, "dummyUser",
+                        et_title.getText().toString(), msgId, true, "11",
                         date, et_description.getText().toString(), chatID, status);
 
                 HashMap<String, Object> eventMap = convertToMap(event);
 
                 event.setId(firebaseConnection.addToFirestore("message", eventMap));
 
-                finishActivity(0);
+                dbStatements.insertMessage(event);
+
+                finish();
 
             }catch(NullPointerException npe){
-                // TODO: Info ausgeben, dass Werte nicht eingetragen sind z.B. Toast
+
+                npe.printStackTrace();
             }
         }else{
             // TODO: Update eines existierenden Events
@@ -199,7 +202,7 @@ public class EditEventActivity extends AppCompatActivity {
         eventMap.put("Date", event.getDate());
         eventMap.put("Description", event.getDescription());
         eventMap.put("ChatID", event.getChatid());
-        eventMap.put("Status", event.getStatus());
+        eventMap.put("Status", (int)event.getStatus());
 
         return eventMap;
     }
