@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
 
-    <androidx.cardview.widget.CardView
+
+
         android:id="@+id/li_ues_cv"
         style="@style/Widget.MaterialComponents.CardView"
         android:layout_width="match_parent"
@@ -22,26 +20,27 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_alignParentTop="true">
 
                 <TextView
                     android:id="@+id/li_ues_tvusername"
+                    style="@style/TextAppearance.MaterialComponents.Headline6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
-                    android:text="TextView"
-                    style="@style/TextAppearance.MaterialComponents.Headline6"/>
+                    android:text="TextView" />
 
                 <TextView
                     android:id="@+id/li_ues_tvstatus"
+                    style="@style/TextAppearance.MaterialComponents.Headline6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
-                    android:text="TextView"
-                    style="@style/TextAppearance.MaterialComponents.Headline6"/>
+                    android:paddingRight="20dp"
+                    android:text="TextView" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -49,7 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                tools:visibility="visible">
+                tools:visibility="gone">
 
                 <TextView
                     android:id="@+id/li_ues_tvreason"
@@ -57,11 +56,10 @@
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="TextView"
-                    tools:text="because i am stuipid" />
+                    tools:text="because i am stuipid"
+                    tools:visibility="visible" />
             </RelativeLayout>
 
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
-</LinearLayout>

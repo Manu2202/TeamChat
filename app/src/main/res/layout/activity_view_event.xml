@@ -90,27 +90,25 @@
                 style="@style/TextAppearance.MaterialComponents.Body1" />
 
 
-
-
             <Button
                 android:id="@+id/viewevent_btncancel"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="absagen"
-                android:layout_alignParentRight="true"
                 android:layout_below="@+id/viewevent_txtstatus"
-                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-                android:textSize="16dp"
-                />
+                android:layout_alignParentRight="true"
+                android:onClick="cancleDialog"
+                android:text="absagen"
+                android:textSize="16dp" />
 
             <Button
                 android:id="@+id/viewevent_btncomit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="zusagen"
-                android:layout_alignParentLeft="true"
                 android:layout_below="@+id/viewevent_txtstatus"
-                />
+                android:layout_alignParentLeft="true"
+                android:onClick="commit"
+                android:text="zusagen" />
 
             <TextView
                 android:id="@+id/viewevent_txtstatus"

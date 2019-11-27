@@ -32,7 +32,6 @@ public class DBStatements {
         dbConnection = new DBConnection(context);
     }
 
-
     public void updateChat(Chat chat) {
         //todo: BUG fix
 
@@ -87,7 +86,8 @@ public class DBStatements {
 
 
     }
-public boolean insertChat(Chat chat){
+
+    public boolean insertChat(Chat chat){
     boolean insertsuccesfull = true;
 
     SQLiteDatabase db = dbConnection.getWritableDatabase();
@@ -221,7 +221,7 @@ public boolean insertChat(Chat chat){
                         values = new ContentValues();
                         values.put(DBCreate.COL_EVENTUSER_FK_EVENT, message.getId());
                         values.put(DBCreate.COL_EVENTUSER_FK_USER, userId);
-                        values.put(DBCreate.COL_EVENTUSER_REASON, " ");
+                        values.put(DBCreate.COL_EVENTUSER_REASON, "-");
                         values.put(DBCreate.COL_EVENTUSER_STATUS, 0);
                         db.insertOrThrow(DBCreate.TABLE_EVENTUSER, null, values);
                     }
@@ -286,24 +286,19 @@ public boolean insertChat(Chat chat){
         db.beginTransaction();
 
         try {
-
-
             ContentValues values = new ContentValues();
-            //put values
 
-            values.put(DBCreate.COL_EVENTUSER_FK_USER, status.getUserId());
-            values.put(DBCreate.COL_EVENTUSER_FK_EVENT, status.getEventId());
             values.put(DBCreate.COL_EVENTUSER_STATUS, status.getStatus());
             values.put(DBCreate.COL_EVENTUSER_REASON, status.getReason());
 
-
-            db.insertOrThrow(DBCreate.TABLE_EVENTUSER, null, values);
+            db.update(DBCreate.TABLE_EVENTUSER, values,DBCreate.COL_EVENTUSER_ID+"=?",new String[]{status.getStatusId()+""});
 
             db.setTransactionSuccessful();
 
         } catch (Exception e) {
             insertsuccesfull = false;
-            Log.d("DB_Error class DBStatements:", "Unable to write User in db");
+            Log.d("DB_Error class DBStatements:", "Unable to update Userevent status in db");
+            e.printStackTrace();
         } finally {
             db.endTransaction();
         }
@@ -321,18 +316,18 @@ public boolean insertChat(Chat chat){
         try {
 
 
-            Cursor c = db.query(DBCreate.TABLE_EVENTUSER, new String[]{DBCreate.COL_EVENTUSER_FK_EVENT, DBCreate.COL_EVENTUSER_FK_USER, DBCreate.COL_EVENTUSER_REASON, DBCreate.COL_EVENTUSER_STATUS},
+            Cursor c = db.query(DBCreate.TABLE_EVENTUSER, new String[]{DBCreate.COL_EVENTUSER_ID,DBCreate.COL_EVENTUSER_FK_EVENT, DBCreate.COL_EVENTUSER_FK_USER, DBCreate.COL_EVENTUSER_REASON, DBCreate.COL_EVENTUSER_STATUS},
                     DBCreate.COL_EVENTUSER_FK_EVENT + "=?", new String[]{"" + eventId}, null, null, null);
             if (c.moveToFirst()) {
-
-                int event = c.getColumnIndex(DBCreate.COL_USER_G_ID);
-                int user = c.getColumnIndex(DBCreate.COL_USER_MAIL);
-                int reason = c.getColumnIndex(DBCreate.COL_USER_ACCNAME);
-                int status = c.getColumnIndex(DBCreate.COL_USER_NAME);
+                int id = c.getColumnIndex(DBCreate.COL_EVENTUSER_ID);
+                int event = c.getColumnIndex(DBCreate.COL_EVENTUSER_FK_EVENT);
+                int user = c.getColumnIndex(DBCreate.COL_EVENTUSER_FK_USER);
+                int reason = c.getColumnIndex(DBCreate.COL_EVENTUSER_REASON);
+                int status = c.getColumnIndex(DBCreate.COL_EVENTUSER_STATUS);
 
                 do {
 
-                    userEventStats.add(new UserEventStatus(c.getString(user), c.getInt(event), (byte) c.getInt(status), c.getString(reason)));
+                    userEventStats.add(new UserEventStatus(c.getInt(id),c.getString(user), c.getInt(event), (byte) c.getInt(status), c.getString(reason)));
 
                 } while (c.moveToNext());
 
@@ -348,7 +343,6 @@ public boolean insertChat(Chat chat){
 
         return userEventStats;
     }
-
     public UserEventStatus getUserEventStatus(String eventId, String userId) {
         UserEventStatus state = null;
         SQLiteDatabase db = dbConnection.getReadableDatabase();
@@ -357,17 +351,17 @@ public boolean insertChat(Chat chat){
         try {
 
 
-            Cursor c = db.query(DBCreate.TABLE_EVENTUSER, new String[]{DBCreate.COL_EVENTUSER_FK_EVENT, DBCreate.COL_EVENTUSER_FK_USER, DBCreate.COL_EVENTUSER_REASON, DBCreate.COL_EVENTUSER_STATUS},
-                    DBCreate.COL_EVENTUSER_FK_EVENT + "=?" + " AND " + DBCreate.COL_EVENTUSER_FK_USER + "=?", new String[]{eventId + "", userId}, null, null, null);
+            Cursor c = db.query(DBCreate.TABLE_EVENTUSER, new String[]{DBCreate.COL_EVENTUSER_ID,DBCreate.COL_EVENTUSER_FK_EVENT, DBCreate.COL_EVENTUSER_FK_USER, DBCreate.COL_EVENTUSER_REASON, DBCreate.COL_EVENTUSER_STATUS},
+                    DBCreate.COL_EVENTUSER_FK_EVENT + "=? AND " + DBCreate.COL_EVENTUSER_FK_USER + "=?", new String[]{eventId,userId}, null, null, null);
+            Log.d("getUserEventStatus","Cursor count: "+c.getCount());
             if (c.moveToFirst()) {
+                int id = c.getColumnIndex(DBCreate.COL_EVENTUSER_ID);
+                int event = c.getColumnIndex(DBCreate.COL_EVENTUSER_FK_EVENT);
+                int user = c.getColumnIndex(DBCreate.COL_EVENTUSER_FK_USER);
+                int reason = c.getColumnIndex(DBCreate.COL_EVENTUSER_REASON);
+                int status = c.getColumnIndex(DBCreate.COL_EVENTUSER_STATUS);
 
-                int event = c.getColumnIndex(DBCreate.COL_USER_G_ID);
-                int user = c.getColumnIndex(DBCreate.COL_USER_MAIL);
-                int reason = c.getColumnIndex(DBCreate.COL_USER_ACCNAME);
-                int status = c.getColumnIndex(DBCreate.COL_USER_NAME);
-
-
-                state = new UserEventStatus(c.getString(user), c.getInt(event), (byte) c.getInt(status), c.getString(reason));
+                state = new UserEventStatus(c.getInt(id),c.getString(user), c.getInt(event), (byte) c.getInt(status), c.getString(reason));
 
             }
 
@@ -376,6 +370,7 @@ public boolean insertChat(Chat chat){
 
         } catch (Exception e) {
             Log.d("DB_Error class DBStatements:", "Unable to read UserEventStatus from User " + userId + " from db");
+            e.printStackTrace();
         } finally {
             db.endTransaction();
         }
@@ -539,7 +534,6 @@ public boolean insertChat(Chat chat){
         return chat;
 
     }
-
 
 
     public ArrayList<Chat> getChat() {
@@ -742,7 +736,7 @@ public boolean insertChat(Chat chat){
         return events;
     }
 
-    public Message getLastMessage(String chatid) {
+    public Message getLastMessage(String chatId) {
         Message message = null;
         SQLiteDatabase db = dbConnection.getReadableDatabase();
         db.beginTransaction();
@@ -750,21 +744,21 @@ public boolean insertChat(Chat chat){
         try{
             Cursor c = db.rawQuery("SELECT * FROM " +DBCreate.TABLE_MESSAGE+" WHERE "+ DBCreate.COL_MESSAGE_FK_CHATID+"=? AND "+DBCreate.COL_MESSAGE_TIMESTAMP+
                     "=(SELECT MAX("+ DBCreate.COL_MESSAGE_TIMESTAMP+") FROM "+DBCreate.TABLE_MESSAGE+"" + " WHERE "+DBCreate.COL_MESSAGE_FK_CHATID+");"
-                    ,new String[] {chatid} );
+                    ,new String[] {chatId} );
     //     Cursor c=  db.query(DBCreate.TABLE_MESSAGE, null, DBCreate.COL_MESSAGE_TIMESTAMP+"=(" +
       //            "SELECT MAX("+ DBCreate.COL_MESSAGE_TIMESTAMP+" FROM "+DBCreate.TABLE_MESSAGE+" WHERE "+DBCreate.COL_MESSAGE_FK_CHATID+")" +
        //           ") AND "+DBCreate.COL_MESSAGE_FK_CHATID+"=?", new String[]{chatid}, null, null, null);
-           Log.d("getLasMessage", "Cursor count "+c.getCount()+"  ChatID "+chatid);
+           Log.d("getLasMessage", "Cursor count "+c.getCount()+"  ChatID "+chatId);
                if(c.moveToFirst()){
                    int id = c.getColumnIndex(DBCreate.COL_MESSAGE_ID);
-                   int chatId = c.getColumnIndex(DBCreate.COL_MESSAGE_FK_CHATID);
+                   int chatID = c.getColumnIndex(DBCreate.COL_MESSAGE_FK_CHATID);
                    int creator = c.getColumnIndex(DBCreate.COL_MESSAGE_FK_CREATOR);
                    int isEvent = c.getColumnIndex(DBCreate.COL_MESSAGE_ISEVENT);
                    int messageInt = c.getColumnIndex(DBCreate.COL_MESSAGE_MESSAGE);
                    int timestmp = c.getColumnIndex(DBCreate.COL_MESSAGE_TIMESTAMP);
 
 
-                   message = new Message(new Time(c.getInt(timestmp)), c.getString(messageInt), c.getString(id), (c.getInt(isEvent) == 1), c.getString(creator), c.getString(chatId));
+                   message = new Message(new Time(c.getInt(timestmp)), c.getString(messageInt), c.getString(id), (c.getInt(isEvent) == 1), c.getString(creator), c.getString(chatID));
                }
         }catch (Exception e){
             Log.d("DB_Error class DBStatements:", "Unable to read LastMessage from db");
@@ -776,6 +770,7 @@ public boolean insertChat(Chat chat){
 
         return message;
     }
+
 
 
 }

@@ -5,9 +5,13 @@ import de.swproj.teamchat.Connection.database.DBStatements;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.datamodell.chat.Event;
 import de.swproj.teamchat.datamodell.chat.UserEventStatus;
+import de.swproj.teamchat.view.adapter.AdapterUserEventStatus;
+import de.swproj.teamchat.view.dialogs.ReasonDialog;
 
+import android.app.usage.EventStats;
 import android.os.Bundle;
 import android.transition.Fade;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -15,9 +19,15 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class ViewEventActivity extends AppCompatActivity {
-  private DBStatements db;
+    private DBStatements db;
     private Event event;
-    String activeUser="abc";
+    private String activeUser="abc";
+    private ArrayList<UserEventStatus> userEventStates;
+    private UserEventStatus mystate;
+    private TextView tvStatus;
+    private  AdapterUserEventStatus adapter;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,27 +37,36 @@ public class ViewEventActivity extends AppCompatActivity {
         String id = getIntent().getStringExtra("eventID");
 
         event = db.getEvent(id);
-        //todo: enumeration with Status ids (byte to string)
 
-        UserEventStatus  userEventStatus= db.getUserEventStatus(id,activeUser);
+
+
 
        TextView tvCreator = findViewById(R.id.viewevent_tvcreator);
         TextView tvtime = findViewById(R.id.viewevent_tvtime);
         TextView tvName = findViewById(R.id.viewevent_tvname);
         TextView tvDate = findViewById(R.id.viewevent_tvdate);
         TextView tvDescripton = findViewById(R.id.viewevent_tvdescription);
-        TextView tvStatus = findViewById(R.id.viewevent_tvstatus);
+         tvStatus = findViewById(R.id.viewevent_tvstatus);
 
-         tvCreator.setText(event.getCreator());
+         tvCreator.setText(db.getUser(event.getCreator()).getAccountName());
         tvtime.setText(event.getTimeStamp().toString());
         tvDate.setText(event.getDate().toString());
         tvName.setText(event.getMessage());
         tvDescripton.setText(event.getDescription());
-        tvStatus.setText(event.getStatus()+"");
 
-        ArrayList<UserEventStatus> userEventStatuses = db.getUserEventStatus(id);
-        ListView lvStates = findViewById(R.id.viewevent_lvstates);
+        mystate=db.getUserEventStatus(id,activeUser);
+        tvStatus.setText(mystate.getStatusString());
+
+
+        //Get EventStatus and Print it in the List
+         userEventStates= db.getUserEventStatus(id);
+
+         Log.d("ViewEventActivity","State ojekts: "+userEventStates.size()+"  "+userEventStates.get(0).getUserId()+"  "+userEventStates.get(1).getUserId());
+       ListView  lvStates = findViewById(R.id.viewevent_lvstates);
         lvStates.setDivider(null);
+        adapter = new AdapterUserEventStatus(userEventStates,db);
+
+        lvStates.setAdapter(adapter);
 
 
 
@@ -60,5 +79,41 @@ public class ViewEventActivity extends AppCompatActivity {
         getWindow().setEnterTransition(fade);
         getWindow().setExitTransition(fade);
         // end of exclude
+
     }
+
+    public void commit(View view){
+        mystate.setReason("-");
+        mystate.setStatus((byte)1);
+        db.updateUserEventStatus(mystate);
+        tvStatus.setText(mystate.getStatusString());
+
+        repaintMyState(mystate);
+
+        //todo: send state to server
+    }
+
+    private void repaintMyState(UserEventStatus state){
+        int i=0;
+        boolean b =true;
+        while(i<userEventStates.size()&& b){
+            if(userEventStates.get(i).getUserId().equals(activeUser)){
+                userEventStates.set(i,state);
+                b=false;
+            }
+            i++;
+        }
+        adapter.notifyDataSetChanged();
+
+
+    }
+    public void cancleDialog(View view){
+        ReasonDialog rd = new ReasonDialog(this);
+        rd.show();
+        //todo: send state to sertver
+    }
+    public void cancleState(String reason){
+        Log.d("ViewEvent dialog","Reason: "+reason);
+    }
+
 }

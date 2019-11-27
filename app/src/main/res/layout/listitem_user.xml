@@ -46,6 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/li_user_accname"
         android:layout_toRightOf="@+id/li_user_fname"
+        android:paddingLeft="5dp"
         android:text="TextView" />
 
 </RelativeLayout>

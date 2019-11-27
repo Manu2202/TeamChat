@@ -54,11 +54,12 @@ public class MainActivity extends AppCompatActivity {
         //löscht alle eintäge beim Start
         db.dropAll();
 
-        db.insertUser(new User("11","sdjhdj","Horst","Horst","Idiot"));
-        db.insertUser(new User("abc","sdjhdj","ICH","Man","Derine"));
-        db.insertUser(new User("Gott","sdjhdj","Der Herr der Dinge","Gott","Herr"));
+        db.insertUser(new User("Gott","sdbjhdj","Der Herr der Dinge","Gott","Herr"));
+        db.insertUser(new User("11","sdjhnjhdj","Horster","Hors","tidiot"));
+        db.insertUser(new User("abc","sdjjunhdj","ICH","Man","Derine"));
+        db.insertUser(new User("Gott2","sdbjhdj","Der Herr der Dinge2","Gott2","Herr"));
         db.insertChat(new Chat("test",0xFF0C00F1,"123","11"));
-        db.updateChatMembers(new String[]{"11","Gott"},"123");
+        db.updateChatMembers(new String[]{"Gott","11","abc","Gott2"},"123");
 
       //  db.insertChat(new Chat("Labergruppe", 0xFFFB0B03, "394", "Gott"));
         db.insertChat(new Chat("Tetris esport Team", 0xFFFBB400, "3934", "Gott"));
@@ -71,14 +72,26 @@ public class MainActivity extends AppCompatActivity {
         db.insertChat(new Chat("Saufgruppe 5", 0xFF004888, "474", "Gott"));
 
         Date currentTime = Calendar.getInstance().getTime();
+
              Time time =new Time (currentTime.getTime());
         db.insertMessage(new Message(time,"Hallo, der horst ist da!!!","oho",false,"11","123"));
         time.setTime(currentTime.getTime()+5);
-
-    //    Time timeStamp, String message, String id, boolean isEvent, String creator, Date date, String description, String chatid, Byte status
         db.insertMessage(new Event(time,"Panik","546s",true,"11",currentTime,"hilfe ein virus","123",(byte)1));
         time.setTime(currentTime.getTime()+10);
-        db.insertMessage(new Message(time,"Cool ;D","o4546",false,"abc","123"));
+        db.insertMessage(new Message(time,"Coolbbb bfgtf ;D","o4454546",false,"abc","123"));
+        time.setTime(currentTime.getTime()+10);
+        db.insertMessage(new Message(time,"Cool  hu;D","o4584846",false,"11","123"));
+        time.setTime(currentTime.getTime()+10);
+        db.insertMessage(new Message(time,"Cool  huhu;D","o448784546",false,"Gott2","123"));
+        time.setTime(currentTime.getTime()+10);
+        db.insertMessage(new Message(time,"Cool ;D","o454846",false,"Gott","123"));
+        time.setTime(currentTime.getTime()+10);
+        db.insertMessage(new Message(time,"Ein Huhun ;D","o4115jn546",false,"abc","123"));
+
+        db.insertMessage(new Event(time,"TourdeFrance","4546s",true,"Gott",currentTime,"hilfe ein russ","123",(byte)1));
+        time.setTime(currentTime.getTime()+10);
+
+
         Log.d("Main TestDaten  ",db.getUser().size()+"");
         for(User user:db.getUser()){
             Log.d("User: ",user.getAccountName()+"");
