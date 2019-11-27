@@ -67,12 +67,7 @@ public class AdapterEvent extends BaseAdapter {
 
         TextView tvDate = convertView.findViewById(R.id.li_event_tvdate);
 
-        GregorianCalendar date = ev.getDate();
-        String dateString = FormatHelper.formatDate(date);
-        String timeString = FormatHelper.formatTime(date);
-
-
-        tvDate.setText(dateString + " @" + timeString + "Uhr");
+        tvDate.setText(FormatHelper.formatDate(ev.getDate()));
 
 
         return convertView;

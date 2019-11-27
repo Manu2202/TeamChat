@@ -8,9 +8,6 @@ package de.swproj.teamchat.helper;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
-
-import de.swproj.teamchat.datamodell.chat.Event;
 
 public class FormatHelper {
 
@@ -22,23 +19,21 @@ public class FormatHelper {
      *Convert the Calendar Date in a String to set the TextView for the Date
      */
     public static String formatDate(GregorianCalendar date){
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.YYYY");
-        sdf.setCalendar(date);
-        String dateFormatted = sdf.format(date.getTime());
+        // Format the Date
+        SimpleDateFormat sdfDate = new SimpleDateFormat("dd.MM.YYYY");
+        sdfDate.setCalendar(date);
+        String dateFormatted = sdfDate.format(date.getTime());
 
         // Getting and Setting the Dy of the week
         int dayOfWeek = date.get(Calendar.DAY_OF_WEEK);
         dateFormatted = DAYOFTHEWEEK[dayOfWeek-1] + ": " + dateFormatted;
 
-        return dateFormatted;
+        // Format the time
+        SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm");
+        sdfTime.setCalendar(date);
+        String timeFormatted = sdfTime.format(date.getTime()) + "Uhr";
+
+        return dateFormatted + " @" + timeFormatted;
     }
 
-    /*
-     * Convert the time out of the calendar into a string
-     */
-    public static String formatTime(GregorianCalendar date){
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-        sdf.setCalendar(date);
-        return sdf.format(date.getTime());
-    }
 }

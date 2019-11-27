@@ -28,8 +28,8 @@ public class EditChatActivity extends AppCompatActivity {
     private String chatId;
     private Chat chat;
 
-    private HashMap<String, User> allUser=new HashMap<String, User>();
-    private HashMap<String, User> groupMember=new HashMap<String,User>();
+    private HashMap<String, User> allUser = new HashMap<String, User>();
+    private HashMap<String, User> groupMember = new HashMap<String, User>();
 
     private DBStatements dbStatements;
     private FirebaseConnection firebaseConnection;
@@ -37,7 +37,7 @@ public class EditChatActivity extends AppCompatActivity {
     private TextInputEditText etChatName;
 
     private LinearLayout llUsers;
-    private int listdivider=0;
+    private int listdivider = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,7 @@ public class EditChatActivity extends AppCompatActivity {
         // Connect Firebase
         firebaseConnection = new FirebaseConnection();
 
-        etChatName = (TextInputEditText)findViewById(R.id.edit_chat_et_name);
+        etChatName = (TextInputEditText) findViewById(R.id.edit_chat_et_name);
         llUsers = findViewById(R.id.edit_chat_linear_layout);
 
         // Get own Intent
@@ -58,30 +58,30 @@ public class EditChatActivity extends AppCompatActivity {
         if (!chatId.equals("0")) {
             chat = dbStatements.getChat(chatId);
 
-            for(User user:dbStatements.getUsersOfChat(chatId)){
+            for (User user : dbStatements.getUsersOfChat(chatId)) {
 
-                groupMember.put(user.getGoogleId(),user);
+                groupMember.put(user.getGoogleId(), user);
             }
         }
 
-       getAllUsers();
+        getAllUsers();
         generateUserViews();
     }
 
-    private void getAllUsers(){
-        for (User user:dbStatements.getUser()) {
-            if(!groupMember.containsKey(user.getGoogleId()))
-                Log.d("EditChat ","Users "+user.getGoogleId());
-                allUser.put(user.getGoogleId(), user);
-            Log.d("EditChat 2","GetUser "+allUser.get(user.getGoogleId()).getGoogleId());
+    private void getAllUsers() {
+        for (User user : dbStatements.getUser()) {
+            if (!groupMember.containsKey(user.getGoogleId()))
+                Log.d("EditChat ", "Users " + user.getGoogleId());
+            allUser.put(user.getGoogleId(), user);
+            Log.d("EditChat 2", "GetUser " + allUser.get(user.getGoogleId()).getGoogleId());
         }
     }
 
     @SuppressLint("ResourceAsColor")
-    private void generateUserViews(){
+    private void generateUserViews() {
 
         LayoutInflater lf = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-       View convertView = lf.inflate(R.layout.listdivider_user, null, false);
+        View convertView = lf.inflate(R.layout.listdivider_user, null, false);
 
         TextView tvDividerLine = convertView.findViewById(R.id.listdivider_tvheadline);
 
@@ -91,13 +91,12 @@ public class EditChatActivity extends AppCompatActivity {
         llUsers.addView(convertView);
 
 
-        Set<String> userIds=groupMember.keySet();
-        Log.d("EditChat ","groupmembers "+userIds.size());
+        Set<String> userIds = groupMember.keySet();
+        Log.d("EditChat ", "groupmembers " + userIds.size());
 
-        for(String userId:userIds) {
-           llUsers.addView(generateUserView(groupMember.get(userId),1));
+        for (String userId : userIds) {
+            llUsers.addView(generateUserView(groupMember.get(userId), 1));
         }
-
 
 
         convertView = lf.inflate(R.layout.listdivider_user, null, false);
@@ -108,23 +107,22 @@ public class EditChatActivity extends AppCompatActivity {
         tvDividerLine.setTextColor(R.color.cancel_red);
         llUsers.addView(convertView);
 
-        listdivider=userIds.size()+1;
+        listdivider = userIds.size() + 1;
 
 
-      userIds=allUser.keySet();
+        userIds = allUser.keySet();
 
-        Log.d("EditChat ","groupmembers "+userIds.size());
-        for(String userId:userIds) {
-            Log.d("EditChat ","User "+userId);
-            llUsers.addView(generateUserView(allUser.get(userId),2));
+        Log.d("EditChat ", "groupmembers " + userIds.size());
+        for (String userId : userIds) {
+            Log.d("EditChat ", "User " + userId);
+            llUsers.addView(generateUserView(allUser.get(userId), 2));
         }
 
 
     }
 
 
-
-    private View generateUserView(User user, int list){
+    private View generateUserView(User user, int list) {
         View convertView = null;
 
         LayoutInflater lf = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -134,16 +132,15 @@ public class EditChatActivity extends AppCompatActivity {
         TextView tvAccName = convertView.findViewById(R.id.li_user_accname);
         TextView tvFName = convertView.findViewById(R.id.li_user_fname);
         TextView tvLName = convertView.findViewById(R.id.li_user_lname);
-        Log.d("EditChatActivity","acc: "+user.getAccountName());
-        tvIcon.setText(user.getAccountName().substring(0,1));
+        Log.d("EditChatActivity", "acc: " + user.getAccountName());
+        tvIcon.setText(user.getAccountName().substring(0, 1));
         tvAccName.setText(user.getAccountName());
         tvFName.setText(user.getFirstName());
         tvLName.setText(user.getName());
 
-        convertView.setOnClickListener(new clicklisten(list,user.getGoogleId()));
+        convertView.setOnClickListener(new clicklisten(list, user.getGoogleId()));
 
         return convertView;
-
 
 
     }
@@ -152,9 +149,9 @@ public class EditChatActivity extends AppCompatActivity {
         private int list;
         private String userID;
 
-        public clicklisten(int actList, String userID ) {
+        public clicklisten(int actList, String userID) {
             list = actList;
-            this.userID=userID;
+            this.userID = userID;
         }
 
         @Override
@@ -166,14 +163,14 @@ public class EditChatActivity extends AppCompatActivity {
                 llUsers.removeView(view);
                 llUsers.addView(view, listdivider);
                 listdivider--;
-                allUser.put(userID,groupMember.remove(userID));
+                allUser.put(userID, groupMember.remove(userID));
                 list = 2;
             } else {
                 TransitionManager.beginDelayedTransition(llUsers);
                 llUsers.removeView(view);
                 llUsers.addView(view, 1);
                 listdivider++;
-                groupMember.put(userID,allUser.remove(userID));
+                groupMember.put(userID, allUser.remove(userID));
                 list = 1;
             }
 
@@ -183,10 +180,8 @@ public class EditChatActivity extends AppCompatActivity {
     }
 
 
-
-
-    public void saveChanges(View view){
-        if (chatId.equals("0")){
+    public void saveChanges(View view) {
+        if (chatId.equals("0")) {
             //TODO: Eigener User ->ID Holen
             String dummyUserID = "ABC";
             Chat chat = new Chat(etChatName.getText().toString(), dummyUserID);
@@ -198,7 +193,7 @@ public class EditChatActivity extends AppCompatActivity {
         // TODO: Update exisiterenden Chat
     }
 
-    private HashMap<String, Object> convertToHashMap(Chat chat){
+    private HashMap<String, Object> convertToHashMap(Chat chat) {
         HashMap<String, Object> chatMap = new HashMap<>();
         chatMap.put("Name", chat.getName());
         chatMap.put("Color", chat.getColor());

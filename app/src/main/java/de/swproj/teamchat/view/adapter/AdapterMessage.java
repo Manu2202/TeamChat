@@ -10,8 +10,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -23,6 +21,7 @@ import de.swproj.teamchat.R;
 import de.swproj.teamchat.datamodell.chat.Event;
 import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.datamodell.chat.User;
+import de.swproj.teamchat.helper.FormatHelper;
 import de.swproj.teamchat.view.activities.ViewEventActivity;
 
 
@@ -95,9 +94,11 @@ public class AdapterMessage extends BaseAdapter {
 
 
             if (message.isEvent()) {
-                final Event event = db.getEvent(message.getId());
+                Event event = db.getEvent(message.getId());
                 TextView tvDate = convertView.findViewById(R.id.li_event_tvdate);
+                //todo: fix date in DBstatemants
 
+                tvDate.setText(FormatHelper.formatDate(event.getDate()));
                 final CardView cv = convertView.findViewById(R.id.li_message_cv);
 
 
@@ -106,7 +107,7 @@ public class AdapterMessage extends BaseAdapter {
                     public void onClick(View view) {
                         Intent intent = new Intent(activity, ViewEventActivity.class);
 
-                        Log.d("Adapter Message","Open eventview: "+message.getId());
+                        Log.d("Adapter Message","Open eventview: " + message.getId());
                         intent.putExtra("eventID", message.getId());
                         ActivityOptionsCompat op = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, (Pair<View, String>[])
                                 new Pair[]{new Pair<View, String>(cv, ViewCompat.getTransitionName(cv))});

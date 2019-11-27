@@ -22,7 +22,6 @@
         <activity android:name=".view.activities.EditEventActivity" />
         <activity android:name=".view.activities.EditChatActivity" />
         <activity android:name=".view.activities.ChatActivity" />
-        <activity android:name=".view.activities.GoogleProfileActivity" />
         <activity
             android:name=".view.activities.MainActivity"
             android:label="@string/app_name">
