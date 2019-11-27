@@ -3,6 +3,7 @@ package de.swproj.teamchat.view.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import de.swproj.teamchat.Connection.database.DBStatements;
+import de.swproj.teamchat.Connection.firebase.FirebaseConnection;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.datamodell.chat.Event;
 
@@ -48,7 +49,7 @@ public class EditEventActivity extends AppCompatActivity {
 
     private DatePickerDialog.OnDateSetListener dateSetListener;
     private TimePickerDialog.OnTimeSetListener timeSetListener;
-    private FirebaseFirestore firebaseDB;
+    private FirebaseConnection firebaseConnection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +57,7 @@ public class EditEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_event);
 
         // Connect Firebase
-        firebaseDB = FirebaseFirestore.getInstance();
+        firebaseConnection = new FirebaseConnection();
 
         // Initialize Local Database Statements
         dbStatements = new DBStatements(EditEventActivity.this);
@@ -184,24 +185,7 @@ public class EditEventActivity extends AppCompatActivity {
 
                 HashMap<String, Object> eventMap = convertToMap(event);
 
-                firebaseDB.collection("message")
-                        .add(eventMap)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                Log.d("Event", "DocumentSnapshot added with ID: " + documentReference.getId());
-                                event.setId(documentReference.getId());
-
-                                // Push the new Event in Local Database
-                                dbStatements.insertMessage(event);
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                                                  @Override
-                                                  public void onFailure(@NonNull Exception e) {
-                                                      Log.w("Event", "Error adding document", e);
-                                                  }
-                                              });
+                event.setId(firebaseConnection.addToFirestore("Message", eventMap));
 
                 finishActivity(0);
 

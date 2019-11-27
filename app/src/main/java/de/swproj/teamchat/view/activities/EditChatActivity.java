@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.transition.TransitionManager;
 import de.swproj.teamchat.Connection.database.DBStatements;
+import de.swproj.teamchat.Connection.firebase.FirebaseConnection;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.datamodell.chat.Chat;
 import de.swproj.teamchat.datamodell.chat.User;
@@ -36,7 +37,7 @@ public class EditChatActivity extends AppCompatActivity {
     private HashMap<String, User> groupMember=new HashMap<String,User>();
 
     private DBStatements dbStatements;
-    private FirebaseFirestore firebaseDB;
+    private FirebaseConnection firebaseConnection;
 
     private TextInputEditText etChatName;
 
@@ -50,7 +51,7 @@ public class EditChatActivity extends AppCompatActivity {
 
         dbStatements = new DBStatements(EditChatActivity.this);
         // Connect Firebase
-        firebaseDB = FirebaseFirestore.getInstance();
+        firebaseConnection = new FirebaseConnection();
 
         etChatName = (TextInputEditText)findViewById(R.id.edit_chat_et_name);
         llUsers = findViewById(R.id.edit_chat_linear_layout);
@@ -193,26 +194,11 @@ public class EditChatActivity extends AppCompatActivity {
         if (chatId.equals("0")){
             //TODO: Eigener User ->ID Holen
             String dummyUserID = "ABC";
-            final Chat chat = new Chat(etChatName.getText().toString(), dummyUserID);
+            Chat chat = new Chat(etChatName.getText().toString(), dummyUserID);
 
-            firebaseDB.collection("chat")
-                    .add(convertToHashMap(chat))
-                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                        @Override
-                        public void onSuccess(DocumentReference documentReference) {
-                            Log.d("Chat", "DocumentSnapshot added with ID: " + documentReference.getId());
-                            chat.setId(documentReference.getId());
+            chat.setId(firebaseConnection.addToFirestore("Chat", convertToHashMap(chat)));
 
-                            // Push the new Chat in Local Database
-                            dbStatements.updateChat(chat);
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.w("Chat", "Error adding document", e);
-                        }
-                    });
+            dbStatements.insertChat(chat);
         }
         // TODO: Update exisiterenden Chat
     }
