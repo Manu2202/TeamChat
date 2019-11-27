@@ -196,7 +196,7 @@ public class EditChatActivity extends AppCompatActivity {
             String dummyUserID = "ABC";
             Chat chat = new Chat(etChatName.getText().toString(), dummyUserID);
 
-            chat.setId(firebaseConnection.addToFirestore("Chat", convertToHashMap(chat)));
+            chat.setId(firebaseConnection.addToFirestore("chat", convertToHashMap(chat)));
 
             dbStatements.insertChat(chat);
         }

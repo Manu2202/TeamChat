@@ -185,7 +185,7 @@ public class EditEventActivity extends AppCompatActivity {
 
                 HashMap<String, Object> eventMap = convertToMap(event);
 
-                event.setId(firebaseConnection.addToFirestore("Message", eventMap));
+                event.setId(firebaseConnection.addToFirestore("message", eventMap));
 
                 finishActivity(0);
 
