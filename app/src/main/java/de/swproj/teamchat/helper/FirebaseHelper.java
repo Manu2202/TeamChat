@@ -5,10 +5,12 @@ package de.swproj.teamchat.helper;
  * For the project: TeamChat.
  */
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import de.swproj.teamchat.datamodell.chat.Chat;
 import de.swproj.teamchat.datamodell.chat.Event;
+import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.datamodell.chat.User;
 
 public class FirebaseHelper {

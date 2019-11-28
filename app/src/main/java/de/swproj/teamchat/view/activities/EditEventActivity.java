@@ -51,11 +51,11 @@ public class EditEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_event);
 
-        // Connect Firebase
-        firebaseConnection = new FirebaseConnection();
-
         // Initialize Local Database Statements
         dbStatements = new DBStatements(EditEventActivity.this);
+
+        // Connect Firebase
+        firebaseConnection = new FirebaseConnection(dbStatements);
 
         // Connect the Layout Components
         tv_selectDate = (TextView)findViewById(R.id.edit_event_tv_select_date);
@@ -95,7 +95,7 @@ public class EditEventActivity extends AppCompatActivity {
                         android.R.style.Theme_DeviceDefault_Dialog_MinWidth,
                         dateSetListener,
                         year, month, day);
-                //dateDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
                 dateDialog.show();
             }
         });
@@ -168,9 +168,7 @@ public class EditEventActivity extends AppCompatActivity {
                         et_title.getText().toString(), msgId, true, "11",
                         date, et_description.getText().toString(), chatID, status);
 
-                event.setId(firebaseConnection.addToFirestore("message", event));
-
-                dbStatements.insertMessage(event);
+                firebaseConnection.addToFirestore(event);
 
                 finish();
 
