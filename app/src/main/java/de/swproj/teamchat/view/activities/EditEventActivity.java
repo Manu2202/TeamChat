@@ -168,7 +168,7 @@ public class EditEventActivity extends AppCompatActivity {
                         et_title.getText().toString(), msgId, true, "11",
                         date, et_description.getText().toString(), chatID, status);
 
-                event.setId(firebaseConnection.addToFirestore("message", event));
+                event.setId(firebaseConnection.addToFirestore(event));
 
                 dbStatements.insertMessage(event);
 
