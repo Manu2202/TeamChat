@@ -46,7 +46,7 @@ public class EditChatActivity extends AppCompatActivity {
 
         dbStatements = new DBStatements(EditChatActivity.this);
         // Connect Firebase
-        firebaseConnection = new FirebaseConnection();
+        firebaseConnection = new FirebaseConnection(dbStatements);
 
         etChatName = (TextInputEditText) findViewById(R.id.edit_chat_et_name);
         llUsers = findViewById(R.id.edit_chat_linear_layout);
@@ -186,9 +186,8 @@ public class EditChatActivity extends AppCompatActivity {
             String dummyUserID = "11";
             Chat chat = new Chat(etChatName.getText().toString(), dummyUserID);
 
-            chat.setId(firebaseConnection.addToFirestore(chat));
+            firebaseConnection.addToFirestore(chat);
 
-            dbStatements.insertChat(chat);
         }else{
             // TODO: Update exisiterenden Chat
         }
