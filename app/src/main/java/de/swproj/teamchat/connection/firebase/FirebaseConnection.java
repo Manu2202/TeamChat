@@ -27,7 +27,7 @@ public class FirebaseConnection {
 
     private FirebaseFirestore firebaseDB;
     private DBStatements dbStatements;
-    private ArrayList<Message> messages;
+    private ArrayList<User> users;
 
     public FirebaseConnection(DBStatements dbStatements) {
         this.dbStatements = dbStatements;
@@ -71,12 +71,13 @@ public class FirebaseConnection {
     }
 
 
-    public void addToFirestore(User user) {
+    public void addToFirestore(final User user) {
         firebaseDB.collection("users").add(user)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d("Firebase", "addToFirebase with ID: " + documentReference.getId());
+                        dbStatements.insertUser(user);
                         // TODO: Muss was gemacht werden? User braucht keine ID aus Firebase?!
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -87,27 +88,23 @@ public class FirebaseConnection {
         });
     }
 
-    public ArrayList<Message> getMessages(String Chatid) {
-        messages = new ArrayList<>();
-        firebaseDB.collection("messages")
+    public ArrayList<User> getUsers() {
+        users = new ArrayList<>();
+        firebaseDB.collection("users")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                if (document.toObject(Event.class).isEvent()) {
-                                    messages.add(document.toObject(Event.class));
-                                } else {
-                                    messages.add(document.toObject(Message.class));
-                                }
+                                users.add(document.toObject(User.class));
                             }
                         } else {
                             Log.w("Firebase", "Error getting documents.", task.getException());
                         }
                     }
                 });
-        return messages;
+        return users;
     }
 
 }

@@ -22,13 +22,17 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import de.swproj.teamchat.R;
+import de.swproj.teamchat.connection.database.DBStatements;
+import de.swproj.teamchat.connection.firebase.FirebaseConnection;
+import de.swproj.teamchat.datamodell.chat.User;
 
 public class RegisterActivity extends AppCompatActivity {
     private TextInputLayout mName;
     private TextInputLayout mEmail;
     private TextInputLayout mPassword;
     private Button btn_create;
-
+    private FirebaseConnection fbconnect;
+    private DBStatements dbStatements;
     //Firebase Auth
     private FirebaseAuth mAuth;
 
@@ -43,6 +47,8 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+        dbStatements = new DBStatements(this);
+        fbconnect = new FirebaseConnection(dbStatements);
 
 
         mName=(TextInputLayout)findViewById(R.id.reg_display_name);
@@ -68,21 +74,21 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void register_user(String display_name, String email, String password) {
+    private void register_user(final String display_name, String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             mRegProgress.dismiss();
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            fbconnect.addToFirestore(new User(user.getUid(),user.getEmail(),user.getDisplayName(),user.getDisplayName(),user.getDisplayName()));
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("Firebase", "createUserWithEmail:success");
                             Intent mainIntent = new Intent(RegisterActivity.this, MainActivity.class);
                             startActivity(mainIntent);
                             finish();
-                            //FirebaseUser user = mAuth.getCurrentUser();
                         } else {
-
                             mRegProgress.hide();
                             // If sign in fails, display a message to the user.
                             Log.w("Firebase", "createUserWithEmail:failure", task.getException());
