@@ -5,6 +5,8 @@ package de.swproj.teamchat.connection.firebase;
  * For the project: TeamChat.
  */
 
+import android.util.Log;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
@@ -16,7 +18,6 @@ import androidx.annotation.NonNull;
 
 import de.swproj.teamchat.datamodell.chat.Chat;
 import de.swproj.teamchat.datamodell.chat.Event;
-import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.datamodell.chat.User;
 import de.swproj.teamchat.helper.FirebaseHelper;
 
@@ -31,11 +32,14 @@ public class FirebaseConnection {
     }
 
     public String addToFirestore(String collectionPath, Event event){
+        objectID = "Noch nicht hochgeladen";
         firebaseDB.collection(collectionPath).add(FirebaseHelper.convertToMap(event))
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
+                Log.d("Firebase", "onSuccess: ID: " + documentReference.getId());
                 objectID = documentReference.getId();
+                Log.d("Firebase", "ID aus Firebase: " + documentReference.getId() + ". ID in object ID: " + objectID);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -44,6 +48,7 @@ public class FirebaseConnection {
             }
         });
         // Return the Object ID of the entry of Firestore
+        Log.d("Firebase", "addToFirestore: ObjectID: " + objectID);
         return objectID;
     }
 

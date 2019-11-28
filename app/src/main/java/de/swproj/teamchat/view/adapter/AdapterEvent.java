@@ -8,8 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.R;
@@ -67,7 +65,7 @@ public class AdapterEvent extends BaseAdapter {
 
         TextView tvDate = convertView.findViewById(R.id.li_event_tvdate);
 
-        tvDate.setText(FormatHelper.formatDate(ev.getDate()));
+        tvDate.setText(FormatHelper.formatDateTime(ev.getDate()));
 
 
         return convertView;
