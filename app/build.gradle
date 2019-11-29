@@ -4,6 +4,7 @@ apply plugin: 'com.google.gms.google-services'
 android {
     compileSdkVersion 28
 
+
     signingConfigs {
         debug {
             storeFile file('..\\app\\dbgKey2.jks')

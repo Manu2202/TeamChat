@@ -28,7 +28,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="2dp"
         android:layout_toRightOf="@+id/li_user_icon"
-        android:text="TextView" />
+        android:text="AccName" />
 
     <TextView
         android:id="@+id/li_user_fname"
@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/li_user_accname"
         android:layout_toRightOf="@+id/li_user_icon"
-        android:text="TextView" />
+        android:text="Forname" />
 
     <TextView
         android:id="@+id/li_user_lname"
@@ -47,6 +47,6 @@
         android:layout_below="@+id/li_user_accname"
         android:layout_toRightOf="@+id/li_user_fname"
         android:paddingLeft="5dp"
-        android:text="TextView" />
+        android:text="LastName" />
 
 </RelativeLayout>

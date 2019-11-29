@@ -4,10 +4,10 @@ public class UserEventStatus {
     private String userId;
     private int eventId;
     private int statusId;
-    private byte status;
+    private int status;
     private String reason;
 
-    public UserEventStatus(int statusId,String userId, int messageId, byte status, String reason) {
+    public UserEventStatus(int statusId,String userId, int messageId, int status, String reason) {
         this.userId = userId;
         this.eventId = messageId;
         this.status = status;
@@ -27,7 +27,7 @@ public class UserEventStatus {
         return eventId;
     }
 
-    public byte getStatus() {
+    public int getStatus() {
         return status;
     }
 
@@ -44,7 +44,7 @@ public class UserEventStatus {
         }
         return "-";
     }
-    public void setStatus(byte status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 

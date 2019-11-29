@@ -24,12 +24,10 @@ public class AdapterChat extends BaseAdapter {
 
     private ArrayList<Chat> chats;
     private DBStatements db;
-  //  private AppCompatActivity activity;
 
     public AdapterChat(ArrayList<Chat> chats, DBStatements dbStatements) {
         this.chats = chats;
         db = dbStatements;
-    //    this.activity = activity;
     }
 
     @Override
@@ -53,36 +51,31 @@ public class AdapterChat extends BaseAdapter {
         Chat chat = chats.get(position);
 
 
-        // Removed to avoid repeating items (at the cost of memory + performance)
-        // if (convertView == null) {
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        convertView = inflater.inflate(R.layout.listitem_chat, null, false);
 
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.listitem_chat, null, false);
+        // Color
+        View colorBox = convertView.findViewById(R.id.list_color_box);
+        colorBox.setBackgroundColor(chat.getColor());
 
-            // Color
-            View colorBox = convertView.findViewById(R.id.list_color_box);
-            colorBox.setBackgroundColor(chat.getColor());
+        // Name
+        TextView chatName = (TextView) convertView.findViewById(R.id.chatListChatName);
+        chatName.setText(chat.getName());
 
-            // Name
-            TextView chatName = (TextView) convertView.findViewById(R.id.chatListChatName);
-            chatName.setText(chat.getName());
-
-            // Last message
-            TextView lastMessage = (TextView) convertView.findViewById(R.id.chatListLastMessage);
-            final Message lastMsg = db.getLastMessage(chat.getId());
+        // Last message
+        TextView lastMessage = (TextView) convertView.findViewById(R.id.chatListLastMessage);
+        final Message lastMsg = db.getLastMessage(chat.getId());
 
 
-            // Avoid NullpointerException if Chat is empty
-            if (lastMsg == null) {
-            } else {
-                lastMessage.setText(lastMsg.getMessage());
+        // Avoid NullpointerException if Chat is empty
+        if (lastMsg == null) {
+        } else {
+            lastMessage.setText(lastMsg.getMessage());
 
-                // Date
-                TextView messageDate = (TextView) convertView.findViewById(R.id.chatListLastMessageDate);
-                messageDate.setText(lastMsg.getTimeStamp().toString());
-            }
-
-
+            // Date
+            TextView messageDate = (TextView) convertView.findViewById(R.id.chatListLastMessageDate);
+            messageDate.setText(lastMsg.getTimeStamp().toString());
+        }
 
 
         return convertView;
