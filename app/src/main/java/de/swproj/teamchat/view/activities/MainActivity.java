@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         time.setTime(currentTime.getTime()+10);
         db.insertMessage(new Message(time,"Ein Huhun ;D","o4115jn546",false,"abc","123"));
 
-        db.insertMessage(new Event(time,"TourdeFrance","4546s",true,"Gott", new GregorianCalendar(2020, 10, 27, 9, 6),"hilfe ein russ","34",(byte)1));
+        db.insertMessage(new Event(time,"TourdeFrance","4546s",true,"Gott", new GregorianCalendar(2020, 10, 27, 9, 6),"hilfe ein russ","123",(byte)1));
         time.setTime(currentTime.getTime()+10);
 
         db.insertMessage(new Event(time,"Mars Tour","14546s",true,"emusk", new GregorianCalendar(2020, 10, 27, 9, 6),"colonize mars with me","123",(byte)1));
