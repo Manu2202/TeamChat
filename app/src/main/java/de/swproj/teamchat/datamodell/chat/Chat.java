@@ -35,7 +35,6 @@ public class Chat {
     }
 
     public void update() {
-
     }
 
     public String getName() {
