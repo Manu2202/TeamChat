@@ -53,7 +53,8 @@ public class MainActivity extends AppCompatActivity {
         db.insertUser(new User("11","sdjhnjhdj","Horster","Hors","tidiot"));
         db.insertUser(new User("abc","sdjjunhdj","ICH","Man","Derine"));
         db.insertUser(new User("Gott2","sdbjhdj","Der Herr der Dinge2","Gott2","Herr"));
-        db.insertChat(new Chat("test",0xFF0C00F1,"123","11"));
+        db.insertUser(new User("emusk","sdbf","Elon Musk","Musk","Elon"));
+        db.insertChat(new Chat("Gugel",0xFF0C00F1,"123","11"));
         db.updateChatMembers(new String[]{"Gott","11","abc","Gott2"},"123");
 
       //  db.insertChat(new Chat("Labergruppe", 0xFFFB0B03, "394", "Gott"));
@@ -84,8 +85,11 @@ public class MainActivity extends AppCompatActivity {
         time.setTime(currentTime.getTime()+10);
         db.insertMessage(new Message(time,"Ein Huhun ;D","o4115jn546",false,"abc","123"));
 
-        db.insertMessage(new Event(time,"TourdeFrance","4546s",true,"Gott", new GregorianCalendar(2020, 10, 27, 9, 6),"hilfe ein russ","123",(byte)1));
+        db.insertMessage(new Event(time,"TourdeFrance","4546s",true,"Gott", new GregorianCalendar(2020, 10, 27, 9, 6),"hilfe ein russ","34",(byte)1));
         time.setTime(currentTime.getTime()+10);
+
+        db.insertMessage(new Event(time,"Mars Tour","14546s",true,"emusk", new GregorianCalendar(2020, 10, 27, 9, 6),"colonize mars with me","123",(byte)1));
+        time.setTime(currentTime.getTime()+1555);
 
 
         Log.d("Main TestDaten  ",db.getUser().size()+"");
