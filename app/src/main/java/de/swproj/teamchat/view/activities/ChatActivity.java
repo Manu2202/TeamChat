@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.R;
+import de.swproj.teamchat.connection.firebase.services.TeamChatMessagingService;
 import de.swproj.teamchat.datamodell.chat.Chat;
 import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.view.adapter.AdapterMessage;
@@ -29,11 +30,15 @@ public class ChatActivity extends AppCompatActivity {
     private String chatID;
     public DBStatements db;
     private ArrayList<Message> messages;
+    private TeamChatMessagingService messagingService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+        messagingService = new TeamChatMessagingService();
+
         lvMessages = findViewById(R.id.lvMessages);
 
         etMessage = findViewById(R.id.etMessage);
@@ -67,11 +72,6 @@ public class ChatActivity extends AppCompatActivity {
      //   Time timeStamp, String message, boolean isEvent, User creator,int chatid
 
   //todo: send Message implementaion
-    }
-
-
-    public void createEvent(View view){
-        //todo: creat Event implementaion
     }
 
     @Override

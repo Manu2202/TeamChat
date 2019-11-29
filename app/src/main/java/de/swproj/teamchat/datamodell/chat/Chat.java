@@ -5,8 +5,6 @@ package de.swproj.teamchat.datamodell.chat;
  * For the project: TeamChat.
  */
 
-// Dies ist ein Test Kommentar
-
 public class Chat {
     private String name;
     private int color;
