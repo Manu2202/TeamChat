@@ -5,7 +5,7 @@ package de.swproj.teamchat.datamodell.chat;
  * For the project: TeamChat.
  */
 
-import java.util.HashSet;
+// Dies ist ein Test Kommentar
 
 public class Chat {
     private String name;
