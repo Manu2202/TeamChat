@@ -6,7 +6,7 @@ package de.swproj.teamchat.datamodell.chat;
  */
 
 public class User {
-
+    //Todo googleID in UserID und googleMail in Email umbenennen
     private String googleId;
     private String googleMail;
     private String accountName;

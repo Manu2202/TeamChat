@@ -326,7 +326,7 @@ public class DBStatements {
 
                 do {
 
-                    userEventStats.add(new UserEventStatus(c.getInt(id),c.getString(user), c.getInt(event), (byte) c.getInt(status), c.getString(reason)));
+                    userEventStats.add(new UserEventStatus(c.getInt(id),c.getString(user), c.getInt(event), c.getInt(status), c.getString(reason)));
 
                 } while (c.moveToNext());
 
@@ -360,7 +360,7 @@ public class DBStatements {
                 int reason = c.getColumnIndex(DBCreate.COL_EVENTUSER_REASON);
                 int status = c.getColumnIndex(DBCreate.COL_EVENTUSER_STATUS);
 
-                state = new UserEventStatus(c.getInt(id),c.getString(user), c.getInt(event), (byte) c.getInt(status), c.getString(reason));
+                state = new UserEventStatus(c.getInt(id),c.getString(user), c.getInt(event), c.getInt(status), c.getString(reason));
 
             }
 
@@ -672,13 +672,13 @@ public class DBStatements {
 
 
                     //public Event(Time timeStamp, String message, int id, boolean isEvent, String creatorID, Date date,
-                    //                          String description,int chatid, Byte status) {
+                    //                          String description,int chatid, int status) {
 
 
                     GregorianCalendar d = new GregorianCalendar();
                     d.setTime(new Date(Long.parseLong(c.getString(date))));
                     event = new Event(message.getTimeStamp(), message.getMessage(), message.getId(), true, message.getCreator(),
-                            d, c.getString(description), message.getChatid(), (byte) 0);
+                            d, c.getString(description), message.getChatid(), 0);
 
 
                 }

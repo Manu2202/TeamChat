@@ -28,6 +28,9 @@ import com.shobhitpuri.custombuttons.GoogleSignInButton;
 //import com.shobhitpuri.custombuttons.GoogleSignInButton;
 
 import de.swproj.teamchat.R;
+import de.swproj.teamchat.connection.database.DBStatements;
+import de.swproj.teamchat.connection.firebase.FirebaseConnection;
+import de.swproj.teamchat.datamodell.chat.User;
 
 public class StartActivity extends AppCompatActivity {
     // For Google SignIn //
@@ -37,6 +40,8 @@ public class StartActivity extends AppCompatActivity {
     int RC_SIGN_IN = 0;
 
     private FirebaseAuth mAuth;
+    private DBStatements dbStatements;
+    private FirebaseConnection fbconnect;
 
     /////////////////////
 
@@ -49,6 +54,8 @@ public class StartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_start);
 
         mAuth = FirebaseAuth.getInstance();
+        dbStatements = new DBStatements(this);
+        fbconnect = new FirebaseConnection(dbStatements);
         ///////// Google Sign In ////////////
 
         signInButton = findViewById(R.id.google_sign_in_button);
@@ -130,13 +137,19 @@ public class StartActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("Google SignIn", "signInWithCredential:success");
+                            //Check if User is New -> if true add to Database
+                            if (task.getResult().getAdditionalUserInfo().isNewUser()){
+                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                String name[] = user.getDisplayName().split(" ");
+                                fbconnect.addToFirestore(new User(user.getUid(),user.getEmail(),user.getDisplayName(),name[1],name[0]));
+                            }
+                            //Send to MainActivity
                             Intent mainIntent = new Intent(StartActivity.this, MainActivity.class);
                             mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(mainIntent);
                             finish();
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("Google SignIn", "signInWithCredential:success");
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("Google SignIn", "signInWithCredential:failure", task.getException());

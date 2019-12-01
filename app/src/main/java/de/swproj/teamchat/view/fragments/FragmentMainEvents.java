@@ -1,6 +1,7 @@
 package de.swproj.teamchat.view.fragments;
 
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -49,7 +50,9 @@ public class FragmentMainEvents extends ListFragment {
         super.onActivityCreated(savedInstanceState);
 
         ListView list = getListView();
-
+        int[] colors = {0xFF000000, 0xFF000000, 0xFF000000};
+        list.setDivider(new GradientDrawable(GradientDrawable.Orientation.RIGHT_LEFT, colors));
+        list.setDividerHeight(2);
         setListAdapter(adapterEvent);
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {

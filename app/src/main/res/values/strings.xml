@@ -16,4 +16,6 @@
     <string name="email">Email</string>
     <string name="logout">Logout</string>
     <string name="newEvent">Neues Event</string>
+    <string name="first_name">First Name</string>
+    <string name="reg_name">Name</string>
 </resources>

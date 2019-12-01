@@ -22,13 +22,18 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import de.swproj.teamchat.R;
+import de.swproj.teamchat.connection.database.DBStatements;
+import de.swproj.teamchat.connection.firebase.FirebaseConnection;
+import de.swproj.teamchat.datamodell.chat.User;
 
 public class RegisterActivity extends AppCompatActivity {
     private TextInputLayout mName;
+    private TextInputLayout mFirstName;
     private TextInputLayout mEmail;
     private TextInputLayout mPassword;
     private Button btn_create;
-
+    private FirebaseConnection fbconnect;
+    private DBStatements dbStatements;
     //Firebase Auth
     private FirebaseAuth mAuth;
 
@@ -43,9 +48,11 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+        dbStatements = new DBStatements(this);
+        fbconnect = new FirebaseConnection(dbStatements);
 
-
-        mName=(TextInputLayout)findViewById(R.id.reg_display_name);
+        mFirstName=(TextInputLayout)findViewById(R.id.reg_first_name);
+        mName=(TextInputLayout)findViewById(R.id.reg_name);
         mEmail=(TextInputLayout)findViewById(R.id.reg_email);
         mPassword=(TextInputLayout)findViewById(R.id.reg_password);
         btn_create=(Button)findViewById(R.id.btn_reg_create);
@@ -53,36 +60,37 @@ public class RegisterActivity extends AppCompatActivity {
         btn_create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String display_name = mName.getEditText().getText().toString();
+                String name = mName.getEditText().getText().toString();
+                String first_name = mFirstName.getEditText().getText().toString();
                 String email = mEmail.getEditText().getText().toString();
                 String password = mPassword.getEditText().getText().toString();
-                if(!TextUtils.isEmpty(display_name)|| !TextUtils.isEmpty(email) || !TextUtils.isEmpty(password)){
+                if(!TextUtils.isEmpty(first_name)|| !TextUtils.isEmpty(name) || !TextUtils.isEmpty(email) || !TextUtils.isEmpty(password)){
                     mRegProgress.setTitle("Registering User");
                     mRegProgress.setMessage("Please wait while we create your account");
                     mRegProgress.setCanceledOnTouchOutside(false);
                     mRegProgress.show();
-                    register_user(display_name,email,password);
+                    register_user(first_name,name,email,password);
                 }
 
             }
         });
     }
 
-    private void register_user(String display_name, String email, String password) {
+    private void register_user(final String first_name, final String name, String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             mRegProgress.dismiss();
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            fbconnect.addToFirestore(new User(user.getUid(),user.getEmail(),first_name+" "+name,name,first_name));
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("Firebase", "createUserWithEmail:success");
                             Intent mainIntent = new Intent(RegisterActivity.this, MainActivity.class);
                             startActivity(mainIntent);
                             finish();
-                            //FirebaseUser user = mAuth.getCurrentUser();
                         } else {
-
                             mRegProgress.hide();
                             // If sign in fails, display a message to the user.
                             Log.w("Firebase", "createUserWithEmail:failure", task.getException());

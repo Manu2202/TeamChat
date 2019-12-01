@@ -136,6 +136,8 @@ public class MainActivityTest {
     }
 
 
+
+
     @Test
     public void testDBStatementsChat() {
         for (int i = 0; i < testScale; i++) {

@@ -5,8 +5,6 @@ package de.swproj.teamchat.datamodell.chat;
  * For the project: TeamChat.
  */
 
-import java.util.HashSet;
-
 public class Chat {
     private String name;
     private int color;
@@ -35,7 +33,6 @@ public class Chat {
     }
 
     public void update() {
-
     }
 
     public String getName() {
