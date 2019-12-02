@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.ListFragment;
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.R;
+import de.swproj.teamchat.connection.firebase.FirebaseConnection;
 import de.swproj.teamchat.datamodell.chat.Chat;
 import de.swproj.teamchat.datamodell.chat.Event;
 import de.swproj.teamchat.datamodell.chat.Message;
@@ -108,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         db = new DBStatements(this);
-        setUpUI();
     }
     @Override
     public void onStart() {
@@ -118,6 +118,10 @@ public class MainActivity extends AppCompatActivity {
         if (currentUser == null){
             sendtoStart();
         }
+        else {
+            setUpUI();
+        }
+
     }
     private void sendtoStart() {
         Intent startIntent = new Intent(MainActivity.this, StartActivity.class);
