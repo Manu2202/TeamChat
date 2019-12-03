@@ -7,6 +7,7 @@ import androidx.fragment.app.ListFragment;
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.connection.firebase.FirebaseConnection;
+import de.swproj.teamchat.connection.firebase.services.TeamChatMessagingService;
 import de.swproj.teamchat.datamodell.chat.Chat;
 import de.swproj.teamchat.datamodell.chat.Event;
 import de.swproj.teamchat.datamodell.chat.Message;
@@ -15,7 +16,9 @@ import de.swproj.teamchat.view.fragments.FragmentMainChats;
 import de.swproj.teamchat.view.fragments.FragmentMainContacts;
 import de.swproj.teamchat.view.fragments.FragmentMainEvents;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -25,6 +28,7 @@ import android.widget.ListView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.sql.Time;
 import java.util.Calendar;
@@ -114,11 +118,16 @@ public class MainActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        final FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null){
+            Log.d("User-Problem","User is NULL going back to Start");
+            //TeamChatMessagingService.disableFCM();
             sendtoStart();
+
         }
         else {
+            TeamChatMessagingService.enableFCM();
+            Log.d("User-Problem", "Logged in as User"+ currentUser.getDisplayName()+ " with UID of:"+ currentUser.getUid());
             setUpUI();
         }
 
@@ -141,6 +150,11 @@ public class MainActivity extends AppCompatActivity {
         super.onOptionsItemSelected(item);
         switch(item.getItemId()){
             case R.id.btn_main_logout:
+                //delete Token from uID
+                if (FirebaseAuth.getInstance().getCurrentUser()!=null){
+                    FirebaseConnection.deleteToken(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                }
+                TeamChatMessagingService.disableFCM();
                 FirebaseAuth.getInstance().signOut();
                 sendtoStart();
                 break;

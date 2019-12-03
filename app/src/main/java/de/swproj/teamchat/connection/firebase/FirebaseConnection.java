@@ -1,38 +1,35 @@
 package de.swproj.teamchat.connection.firebase;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.util.Log;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
-import com.google.firebase.iid.FirebaseInstanceId;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
 
+import de.swproj.teamchat.R;
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.datamodell.chat.Chat;
-import de.swproj.teamchat.datamodell.chat.Event;
 import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.datamodell.chat.User;
-import de.swproj.teamchat.helper.FirebaseHelper;
 
 public class FirebaseConnection {
 
     private FirebaseFirestore firebaseDB;
     private DBStatements dbStatements;
 
-    public FirebaseConnection(DBStatements dbStatements) {
+    public FirebaseConnection(DBStatements dbStatements ) {
         this.dbStatements = dbStatements;
         // Connect Firebase
         firebaseDB = FirebaseFirestore.getInstance();
@@ -97,20 +94,39 @@ public class FirebaseConnection {
         });
          */
     }
-    public void updateToken(String token){
-        Log.d("Firebase Connection","Updating Token");
+    public static void updateToken(final String uID, String token){
+        Log.d("Firebase Connection","Updating Token...");
         Map<String, Object> data = new HashMap<>();
-        data.put("token", token);
-        firebaseDB.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid()).set(data, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+            data.put("token",token);
+
+        FirebaseFirestore.getInstance().collection("users").document(uID).set(data, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Log.d("Firebase Connection", "onSuccess: Token added for User "+ FirebaseAuth.getInstance().getCurrentUser().getUid());
+                Log.d("Firebase Connection", "onSuccess: Token added for User "+ uID);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d("Firebase connection", "onFailure: Token not added");
+                Log.d("Firebase Connection", "onFailure: Token not added");
             }
         });
+    }
+    public static void deleteToken(final String uID){
+        Log.d("Firebase Connection","Deleting Token...");
+        Map<String, Object> data = new HashMap<>();
+        data.put("token", FieldValue.delete());
+
+        FirebaseFirestore.getInstance().collection("users").document(uID).set(data, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d("Firebase Connection", "onSuccess: Token deleted for User "+ uID);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("Firebase Connection", "onFailure: Token not deleted");
+            }
+        });
+
     }
 }

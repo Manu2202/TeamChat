@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -25,6 +26,8 @@ import de.swproj.teamchat.R;
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.connection.firebase.FirebaseConnection;
 import de.swproj.teamchat.datamodell.chat.User;
+
+import static de.swproj.teamchat.view.activities.LoginActivity.PREFERENCE_FILE_KEY;
 
 public class RegisterActivity extends AppCompatActivity {
     private TextInputLayout mName;
@@ -84,6 +87,9 @@ public class RegisterActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             mRegProgress.dismiss();
                             FirebaseUser user = mAuth.getCurrentUser();
+                            String token=get_token();
+                            Log.d("Shared Pref","My FCM Token is:"+token+"with Username: "+FirebaseAuth.getInstance().getCurrentUser().getUid());
+                            FirebaseConnection.updateToken(FirebaseAuth.getInstance().getCurrentUser().getUid(),token);
                             fbconnect.addToFirestore(new User(user.getUid(),user.getEmail(),first_name+" "+name,name,first_name));
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("Firebase", "createUserWithEmail:success");
@@ -99,5 +105,11 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private String get_token(){
+        SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCE_FILE_KEY, MODE_PRIVATE);
+        return sharedPreferences.getString("Token","--noTokenAvailable--");
+
     }
 }
