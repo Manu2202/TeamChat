@@ -98,7 +98,19 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
         Intent intent = new Intent(this, TestActivity.class);
         intent.putExtras(bundle);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Creates an Intent for the Activity
+        Intent pendingIntent = new Intent(this, TestActivity.class);
+        // Sets the Activity to start in a new, empty task
+        pendingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        // Creates the PendingIntent
+        PendingIntent notifyPendingIntent =
+                PendingIntent.getActivity(
+                        this,
+                        0,
+                        pendingIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "noti Builder"/*getString(/*R.string.notification_channel_id)*/)
                 .setContentTitle(notification.getTitle())
@@ -106,7 +118,7 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
                 .setAutoCancel(true)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 //.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.win))
-                .setContentIntent(pendingIntent)
+                .setContentIntent(notifyPendingIntent)
                 .setContentInfo("Hello")
                 //.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                 .setColor(getColor(R.color.colorAccent))
@@ -133,7 +145,7 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
             assert notificationManager != null;
             notificationManager.createNotificationChannel(channel);
         }
-
+        //Todo Notification ID?
         assert notificationManager != null;
         notificationManager.notify(0, notificationBuilder.build());
     }

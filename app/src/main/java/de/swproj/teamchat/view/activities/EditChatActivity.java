@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -182,10 +183,7 @@ public class EditChatActivity extends AppCompatActivity {
 
     public void saveChanges(View view) {
         if (chatId.equals("0")) {
-            //TODO: Eigener User ->ID Holen
-            String dummyUserID = "11";
-            Chat chat = new Chat(etChatName.getText().toString(), dummyUserID);
-
+            Chat chat = new Chat(etChatName.getText().toString(), FirebaseAuth.getInstance().getCurrentUser().getUid());
             firebaseConnection.addToFirestore(chat);
 
         }else{

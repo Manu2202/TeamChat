@@ -30,7 +30,9 @@
             android:parentActivityName=".view.activities.StartActivity" />
         <activity android:name=".view.activities.LoginActivity" />
         <activity android:name=".view.activities.EditEventActivity" />
-        <activity android:name=".view.activities.EditChatActivity" />
+        <activity android:name=".view.activities.EditChatActivity"
+                  android:windowSoftInputMode="adjustPan"
+            />
         <activity android:name=".view.activities.ChatActivity" />
         <activity
             android:name=".view.activities.MainActivity"
