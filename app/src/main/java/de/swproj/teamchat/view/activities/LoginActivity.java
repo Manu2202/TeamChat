@@ -70,8 +70,8 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             mLoginProgress.dismiss();
+                            //Assign Token from Shared Preference
                             String token=get_token();
-                            Log.d("Shared Pref","My FCM Token is:"+token+"with Username: "+FirebaseAuth.getInstance().getCurrentUser().getUid());
                             FirebaseConnection.updateToken(FirebaseAuth.getInstance().getCurrentUser().getUid(),token);
                             Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
                             mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);

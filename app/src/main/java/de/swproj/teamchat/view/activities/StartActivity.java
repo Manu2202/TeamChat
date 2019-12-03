@@ -141,9 +141,8 @@ public class StartActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d("Google SignIn", "signInWithCredential:success");
+                            //Assign Token from Shared Preference
                             String token=get_token();
-                            Log.d("Shared Pref","My FCM Token is:"+token+"with Username: "+FirebaseAuth.getInstance().getCurrentUser().getUid());
                             FirebaseConnection.updateToken(FirebaseAuth.getInstance().getCurrentUser().getUid(),token);
                             //Check if User is New -> if true add to Database
                             if (task.getResult().getAdditionalUserInfo().isNewUser()){

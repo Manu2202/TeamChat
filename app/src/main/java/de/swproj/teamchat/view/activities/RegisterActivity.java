@@ -87,8 +87,8 @@ public class RegisterActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             mRegProgress.dismiss();
                             FirebaseUser user = mAuth.getCurrentUser();
+                            //Assign Token from Shared Preference
                             String token=get_token();
-                            Log.d("Shared Pref","My FCM Token is:"+token+"with Username: "+FirebaseAuth.getInstance().getCurrentUser().getUid());
                             FirebaseConnection.updateToken(FirebaseAuth.getInstance().getCurrentUser().getUid(),token);
                             fbconnect.addToFirestore(new User(user.getUid(),user.getEmail(),first_name+" "+name,name,first_name));
                             // Sign in success, update UI with the signed-in user's information
