@@ -185,10 +185,10 @@ public class EditChatActivity extends AppCompatActivity {
         if (chatId.equals("0")) {
             Chat chat = new Chat(etChatName.getText().toString(), FirebaseAuth.getInstance().getCurrentUser().getUid());
             firebaseConnection.addToFirestore(chat);
-
         }else{
             // TODO: Update exisiterenden Chat
         }
+        finish();
 
     }
 
