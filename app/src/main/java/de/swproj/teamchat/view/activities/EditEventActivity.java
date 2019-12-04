@@ -20,6 +20,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.sql.Time;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -168,11 +170,11 @@ public class EditEventActivity extends AppCompatActivity {
     public void onClickSaveChanges(View view){
         if (msgId.equals("0")){
             // Own created Event -> User automatically accepted
-            Byte status = 2;
+            int status = 2;
             try {
                 GregorianCalendar date = new GregorianCalendar(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute);
                 event = new Event(new Time(System.currentTimeMillis()),
-                        et_title.getText().toString(), msgId, true, "11",
+                        et_title.getText().toString(), msgId, true, FirebaseAuth.getInstance().getCurrentUser().getUid(),
                         date, et_description.getText().toString(), chatID, status);
 
                 firebaseConnection.addToFirestore(event);

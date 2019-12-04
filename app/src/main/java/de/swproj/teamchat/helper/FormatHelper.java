@@ -12,7 +12,7 @@ import java.util.GregorianCalendar;
 public class FormatHelper {
 
     private static final String[] DAYOFTHEWEEK = new String[]{
-            "So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"
+            "Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"
     };
 
     /*
@@ -23,17 +23,15 @@ public class FormatHelper {
         SimpleDateFormat sdfDate = new SimpleDateFormat("dd.MM.YYYY");
         sdfDate.setCalendar(date);
         String dateFormatted = sdfDate.format(date.getTime());
-
         // Getting and Setting the Dy of the week
         int dayOfWeek = date.get(Calendar.DAY_OF_WEEK);
-        dateFormatted = DAYOFTHEWEEK[dayOfWeek-1] + ": " + dateFormatted;
 
         // Format the time
         SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm");
         sdfTime.setCalendar(date);
-        String timeFormatted = sdfTime.format(date.getTime()) + "Uhr";
+        String timeFormatted = sdfTime.format(date.getTime()) + " Uhr";
 
-        return dateFormatted + " @" + timeFormatted;
+        return dateFormatted + "\n" + DAYOFTHEWEEK[dayOfWeek-1]+ " "+timeFormatted;
     }
 
     public static String formatTime(GregorianCalendar time){
