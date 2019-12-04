@@ -78,35 +78,35 @@
         android:id="@+id/edit_event_btn_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/save_green"
         android:onClick="onClickSaveChanges"
         android:text="Speichern"
-        android:backgroundTint="@color/save_green"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/edit_event_btn_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
+        android:layout_marginStart="24dp"
         android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/cancel_red"
         android:onClick="onClickCancel"
         android:text="Abbrechen"
-        android:backgroundTint="@color/cancel_red"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/edit_event_tv_select_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
         android:text="Datum"
-        android:textSize="20dp"
         android:textColor="@color/black"
+        android:textSize="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_event_tv_date_clock" />
 
@@ -114,12 +114,12 @@
         android:id="@+id/edit_event_tv_select_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
         android:text="Zeit"
-        android:textSize="20dp"
         android:textColor="@color/black"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_event_tv_select_date" />
+        android:textSize="20dp"
+        app:layout_constraintStart_toEndOf="@+id/edit_event_tv_select_date"
+        app:layout_constraintTop_toBottomOf="@+id/edit_event_tv_date_clock" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
