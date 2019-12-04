@@ -1,85 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/chatConstraintLayout"
+    android:id="@+id/chatRelativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
 
     <FrameLayout
         android:id="@+id/list_color_background"
-        android:layout_width="832dp"
-        android:layout_height="80dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:minWidth="50dp"
-        android:minHeight="50dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:minHeight="80dp" >
+
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/list_color_box"
         android:layout_width="12dp"
         android:layout_height="80dp"
         android:minWidth="50dp"
-        android:minHeight="50dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        android:minHeight="50dp" >
 
-    <TextView
-        android:id="@+id/chatListLastMessage"
-        android:layout_width="355dp"
-        android:layout_height="27dp"
-        android:layout_marginStart="16dp"
-        android:ellipsize="end"
-        android:maxLength="75"
-        android:maxLines="1"
-        android:text="Letzte Chat Message, und so sieht es aus wenn sie nicht ins Feld passt"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="16sp"
-        style="@style/TextAppearance.MaterialComponents.Subtitle2"
-        app:layout_constraintBottom_toTopOf="@+id/guideline2"
-        app:layout_constraintStart_toEndOf="@+id/list_color_box"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.773" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/chatListLastMessageDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="304dp"
-        android:layout_marginBottom="8dp"
-        android:text="17.11.2019"
-        style="@style/TextAppearance.MaterialComponents.Caption"
-        app:layout_constraintBottom_toTopOf="@+id/chatListLastMessage"
-        app:layout_constraintStart_toEndOf="@+id/list_color_box" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="8dp"
+        android:text="17.11.2019" />
+
+    <TextView
+        android:id="@+id/chatListLastMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/chatListChatName"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_toEndOf="@+id/list_color_box"
+        android:ellipsize="end"
+        android:maxLength="75"
+        android:maxLines="1"
+        android:text="Letzte Chat Message, und so sieht es aus wenn sie nicht ins Feld passt"
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/chatListChatName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Hier sollte ein Chatname stehen"
-        app:layout_constraintStart_toEndOf="@+id/list_color_box"
-        style="@style/TextAppearance.MaterialComponents.Subtitle1"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.07" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="80dp" />
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:textSize="18sp"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_toEndOf="@+id/list_color_box"
+        android:text="Hier sollte ein Chatname stehen" />
 
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>
