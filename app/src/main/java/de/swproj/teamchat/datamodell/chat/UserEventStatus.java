@@ -38,9 +38,9 @@ public class UserEventStatus {
     public String getStatusString(){
         switch (status) {
             case 1:
-                return "comited";
+                return "committed";
             case 2:
-                return "cancled";
+                return "cancelled";
         }
         return "-";
     }

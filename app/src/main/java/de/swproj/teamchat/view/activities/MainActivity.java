@@ -51,25 +51,27 @@ public class MainActivity extends AppCompatActivity {
     private void  addTestdat(){
 
         //löscht alle eintäge beim Start
-        db.dropAll();
+        //db.dropAll();
 
         db.insertUser(new User("Gott","sdbjhdj","Der Herr der Dinge","Gott","Herr"));
         db.insertUser(new User("11","sdjhnjhdj","Horster","Hors","tidiot"));
         db.insertUser(new User("abc","sdjjunhdj","ICH","Man","Derine"));
         db.insertUser(new User("Gott2","sdbjhdj","Der Herr der Dinge2","Gott2","Herr"));
         db.insertUser(new User("emusk","sdbf","Elon Musk","Musk","Elon"));
-        db.insertChat(new Chat("Gugel",0xFF0C00F1,"123","11"));
+        db.insertChat(new Chat("Gugel",(getResources().getIntArray(R.array.androidcolors))[0],"123","11"));
         db.updateChatMembers(new String[]{"Gott","11","abc","Gott2"},"123");
+        db.updateChatMembers(new String[]{"Gott","11","abc","Gott2"},"3434");
+
 
       //  db.insertChat(new Chat("Labergruppe", 0xFFFB0B03, "394", "Gott"));
-        db.insertChat(new Chat("Tetris esport Team", 0xFFFBB400, "3934", "Gott"));
-        db.insertChat(new Chat("Anonyme Alkoholiker", 0xFFB0FB03, "3954", "Gott"));
-        db.insertChat(new Chat("Öffentliche Alkoholiker", 0xFF00FB71, "3941", "Gott"));
-        db.insertChat(new Chat("Saufgruppe 1", 0xFF0C00F1, "3434", "Gott"));
-        db.insertChat(new Chat("Saufgruppe 2", 0xFF038814, "34", "Gott"));
-        db.insertChat(new Chat("Saufgruppe 3", 0xFF880E51, "3484", "Gott"));
-        db.insertChat(new Chat("Saufgruppe 4", 0xFF884318, "324", "Gott"));
-        db.insertChat(new Chat("Saufgruppe 5", 0xFF004888, "474", "Gott"));
+        db.insertChat(new Chat("Tetris esport Team", (getResources().getIntArray(R.array.androidcolors))[1], "3934", "Gott"));
+        db.insertChat(new Chat("Anonyme Alkoholiker", (getResources().getIntArray(R.array.androidcolors))[2], "3954", "Gott"));
+        db.insertChat(new Chat("Öffentliche Alkoholiker", (getResources().getIntArray(R.array.androidcolors))[3], "3941", "Gott"));
+        db.insertChat(new Chat("Saufgruppe 1", (getResources().getIntArray(R.array.androidcolors))[4], "3434", "Gott"));
+        db.insertChat(new Chat("Saufgruppe 2", (getResources().getIntArray(R.array.androidcolors))[5], "34", "Gott"));
+        db.insertChat(new Chat("Saufgruppe 3", (getResources().getIntArray(R.array.androidcolors))[6], "3484", "Gott"));
+        db.insertChat(new Chat("Saufgruppe 4", (getResources().getIntArray(R.array.androidcolors))[7], "324", "Gott"));
+        db.insertChat(new Chat("Saufgruppe 5", (getResources().getIntArray(R.array.androidcolors))[8], "474", "Gott"));
 
         Date currentTime = Calendar.getInstance().getTime();
         GregorianCalendar gc = new GregorianCalendar();
@@ -89,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         time.setTime(currentTime.getTime()+10);
         db.insertMessage(new Message(time,"Ein Huhun ;D","o4115jn546",false,"abc","123"));
 
-        db.insertMessage(new Event(time,"TourdeFrance","4546s",true,"Gott", new GregorianCalendar(2020, 10, 27, 9, 6),"hilfe ein russ","123",(byte)1));
+        db.insertMessage(new Event(time,"TourdeFrance","4546s",true,"Gott", new GregorianCalendar(2020, 10, 27, 9, 6),"hilfe ein russ","3434",(byte)1));
         time.setTime(currentTime.getTime()+10);
 
         db.insertMessage(new Event(time,"Mars Tour","14546s",true,"emusk", new GregorianCalendar(2020, 10, 27, 9, 6),"colonize mars with me","123",(byte)1));
@@ -223,5 +225,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 
 }

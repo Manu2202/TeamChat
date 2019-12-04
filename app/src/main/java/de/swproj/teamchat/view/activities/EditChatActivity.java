@@ -11,6 +11,7 @@ import de.swproj.teamchat.datamodell.chat.User;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.HashMap;
+import java.util.Random;
 import java.util.Set;
 
 public class EditChatActivity extends AppCompatActivity {
@@ -183,12 +185,15 @@ public class EditChatActivity extends AppCompatActivity {
 
     public void saveChanges(View view) {
         if (chatId.equals("0")) {
-            Chat chat = new Chat(etChatName.getText().toString(), FirebaseAuth.getInstance().getCurrentUser().getUid());
+            int[] androidColors = getResources().getIntArray((R.array.androidcolors));
+            int color =  androidColors[new Random().nextInt(androidColors.length)];
+            Chat chat = new Chat(etChatName.getText().toString(), FirebaseAuth.getInstance().getCurrentUser().getUid(),
+                    color);
             firebaseConnection.addToFirestore(chat);
-
         }else{
             // TODO: Update exisiterenden Chat
         }
+        finish();
 
     }
 

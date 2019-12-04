@@ -12,6 +12,7 @@ import org.junit.Test;
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.datamodell.chat.Chat;
+import de.swproj.teamchat.datamodell.chat.Event;
 import de.swproj.teamchat.datamodell.chat.User;
 
 import static org.junit.Assert.*;
@@ -42,6 +43,8 @@ public class MainActivityTest {
             if (i < testScale/2) {
                 //db.getChat(("1000" + i)).addChatMember("10" + i);
             }
+
+          //  db.insertMessage(new Event())
         }
 
     }
