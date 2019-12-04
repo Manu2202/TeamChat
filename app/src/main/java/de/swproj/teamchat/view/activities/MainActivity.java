@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
     private static Fragment lastSelectedFragment;
     private DBStatements db;
 
-
     //FirebaseAuth
     private FirebaseAuth mAuth;
 
