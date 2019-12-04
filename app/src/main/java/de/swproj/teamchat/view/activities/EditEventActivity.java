@@ -5,6 +5,7 @@ import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.connection.firebase.FirebaseConnection;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.datamodell.chat.Event;
+import de.swproj.teamchat.helper.FormatHelper;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -29,7 +30,7 @@ public class EditEventActivity extends AppCompatActivity {
     private Event event;
     private String msgId;
     private String chatID;
-    private Calendar cal;
+    private GregorianCalendar cal;
     private int selectedYear;
     private int selectedMonth;
     private int selectedDay;
@@ -57,11 +58,26 @@ public class EditEventActivity extends AppCompatActivity {
         // Connect Firebase
         firebaseConnection = new FirebaseConnection(dbStatements);
 
+        // Initialize the Calendar
+        cal = (GregorianCalendar)GregorianCalendar.getInstance();
+
+
         // Connect the Layout Components
         tv_selectDate = (TextView)findViewById(R.id.edit_event_tv_select_date);
         tv_selectTime = (TextView)findViewById(R.id.edit_event_tv_select_time);
         et_title = (EditText)findViewById(R.id.edit_event_et_title);
         et_description = (EditText)findViewById(R.id.edit_event_et_description);
+
+
+        tv_selectDate.setText(FormatHelper.formatDate(cal));
+        tv_selectTime.setText(FormatHelper.formatTime(cal));
+
+        // Initialize the int values for the time and date
+        selectedYear = cal.get(Calendar.YEAR);
+        selectedMonth = cal.get(Calendar.MONTH);
+        selectedDay = cal.get(Calendar.DAY_OF_MONTH);
+        selectedHour = cal.get(Calendar.HOUR_OF_DAY);
+        selectedMinute = cal.get(Calendar.MINUTE);
 
         // Call the Listener Method to intitalize them
         dateTimeOnClickListener();
@@ -76,25 +92,19 @@ public class EditEventActivity extends AppCompatActivity {
      * Private Method to set all Listener on the Date, Time and the Listener on the Dialogs
      */
     private void dateTimeOnClickListener(){
-        // Initialize the Calendar
-        cal = Calendar.getInstance();
+
 
         // Listener for the Date TextView
         tv_selectDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                // Initialize the Calendar
-                int year = cal.get(Calendar.YEAR);
-                int month = cal.get(Calendar.MONTH);
-                int day = cal.get(Calendar.DAY_OF_MONTH);
-
                 // Create the DatePicker Dialog
                 DatePickerDialog dateDialog = new DatePickerDialog(
                         EditEventActivity.this,
                         android.R.style.Theme_DeviceDefault_Dialog_MinWidth,
                         dateSetListener,
-                        year, month, day);
+                        selectedYear, selectedMonth, selectedDay);
 
                 dateDialog.show();
             }
@@ -119,15 +129,12 @@ public class EditEventActivity extends AppCompatActivity {
         tv_selectTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int hour = cal.get(Calendar.HOUR_OF_DAY);
-                int minute = cal.get(Calendar.MINUTE);
-
                 // Create the TimePicker Dialog
                 TimePickerDialog timeDialog = new TimePickerDialog(
                         EditEventActivity.this,
                         timeSetListener,
-                        hour, minute, true);
-                //timeDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        selectedHour, selectedMinute, true);
+
                 timeDialog.show();
             }
         });
@@ -183,6 +190,6 @@ public class EditEventActivity extends AppCompatActivity {
 
     public void onClickCancel(View view){
         // Just go back to the previous Activity, safe nothing
-        finishActivity(1);
+        finish();
     }
 }

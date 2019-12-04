@@ -1,6 +1,7 @@
 package de.swproj.teamchat.view.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -32,6 +33,8 @@ import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.connection.firebase.FirebaseConnection;
 import de.swproj.teamchat.datamodell.chat.User;
 
+import static de.swproj.teamchat.view.activities.LoginActivity.PREFERENCE_FILE_KEY;
+
 public class StartActivity extends AppCompatActivity {
     // For Google SignIn //
     //GoogleSignInButton signInButton;
@@ -56,7 +59,7 @@ public class StartActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         dbStatements = new DBStatements(this);
         fbconnect = new FirebaseConnection(dbStatements);
-        ///////// Google Sign In ////////////
+        ///////// Google Sign In ///////////
 
         signInButton = findViewById(R.id.google_sign_in_button);
 
@@ -138,7 +141,9 @@ public class StartActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d("Google SignIn", "signInWithCredential:success");
+                            //Assign Token from Shared Preference
+                            String token=get_token();
+                            FirebaseConnection.updateToken(FirebaseAuth.getInstance().getCurrentUser().getUid(),token);
                             //Check if User is New -> if true add to Database
                             if (task.getResult().getAdditionalUserInfo().isNewUser()){
                                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -161,6 +166,11 @@ public class StartActivity extends AppCompatActivity {
                         // ...
                     }
                 });
+    }
+    private String get_token(){
+        SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCE_FILE_KEY, MODE_PRIVATE);
+        return sharedPreferences.getString("Token","--noTokenAvailable--");
+
     }
 
 

@@ -7,16 +7,18 @@
 
     <TextView
         android:id="@+id/li_user_icon"
-        android:layout_width="50dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="4dp"
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
+        android:layout_marginLeft="4dp"
+        android:padding="2dp"
         android:background="@drawable/bg_letter"
         android:gravity="center"
-        android:text="V"
+        android:text="AA"
         android:textColor="@color/colorOnPrimary"
         android:textSize="40dp" />
 

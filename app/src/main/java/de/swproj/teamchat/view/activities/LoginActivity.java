@@ -4,7 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -17,9 +19,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import de.swproj.teamchat.R;
+import de.swproj.teamchat.connection.firebase.FirebaseConnection;
 
 public class LoginActivity extends AppCompatActivity {
     private TextInputLayout mLoginEmail;
@@ -27,6 +29,10 @@ public class LoginActivity extends AppCompatActivity {
     private Button mloginButton;
     private ProgressDialog mLoginProgress;
     private FirebaseAuth mAuth;
+    //Get shared Preference File Key
+    public static final String PREFERENCE_FILE_KEY = "FirebasePref_Token";
+    public static final String KEY="Token";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,12 +69,13 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             mLoginProgress.dismiss();
+                            //Assign Token from Shared Preference
+                            String token=get_token();
+                            FirebaseConnection.updateToken(FirebaseAuth.getInstance().getCurrentUser().getUid(),token);
                             Intent mainIntent = new Intent(LoginActivity.this, MainActivity.class);
                             mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(mainIntent);
                             finish();
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("Firebase", "signInWithEmail:success");
                         } else {
                             mLoginProgress.hide();
                             // If sign in fails, display a message to the user.
@@ -78,6 +85,11 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+    private String get_token(){
+        SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCE_FILE_KEY, MODE_PRIVATE);
+        return sharedPreferences.getString("Token","--noTokenAvailable--");
+
     }
 }
 
