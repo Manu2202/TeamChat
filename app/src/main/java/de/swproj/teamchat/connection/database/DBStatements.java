@@ -435,7 +435,7 @@ public class DBStatements {
         return user;
     }
 
-    public List<User> getUser() {
+    public ArrayList<User> getUser() {
         ArrayList<User> users = new ArrayList<>();
         SQLiteDatabase db = dbConnection.getReadableDatabase();
 

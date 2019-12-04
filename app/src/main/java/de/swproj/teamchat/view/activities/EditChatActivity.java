@@ -134,7 +134,7 @@ public class EditChatActivity extends AppCompatActivity {
         TextView tvFName = convertView.findViewById(R.id.li_user_fname);
         TextView tvLName = convertView.findViewById(R.id.li_user_lname);
         Log.d("EditChatActivity", "acc: " + user.getAccountName());
-        tvIcon.setText(user.getAccountName().substring(0, 1));
+        tvIcon.setText(user.getFirstName().toUpperCase().charAt(0) + "" + user.getName().toUpperCase().charAt(0));
         tvAccName.setText(user.getAccountName());
         tvFName.setText(user.getFirstName());
         tvLName.setText(user.getName());
