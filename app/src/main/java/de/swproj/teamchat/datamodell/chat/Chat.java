@@ -5,6 +5,12 @@ package de.swproj.teamchat.datamodell.chat;
  * For the project: TeamChat.
  */
 
+import android.content.res.Resources;
+
+import java.util.Random;
+
+import de.swproj.teamchat.R;
+
 public class Chat {
     private String name;
     private int color;
@@ -19,13 +25,13 @@ public class Chat {
 
     }
 
-    public Chat(String name, String admin) {
+    public Chat(String name, String admin, int color) {
         this.name = name;
-        this.color = 000000;
+        this.color = color;
         this.id = "0";
         this.admin = admin;
-
     }
+
 
 
     public void setId(String id) {
