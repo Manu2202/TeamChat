@@ -29,7 +29,7 @@ public class FirebaseConnection {
     private FirebaseFirestore firebaseDB;
     private DBStatements dbStatements;
 
-    public FirebaseConnection(DBStatements dbStatements ) {
+    public FirebaseConnection(DBStatements dbStatements) {
         this.dbStatements = dbStatements;
         // Connect Firebase
         firebaseDB = FirebaseFirestore.getInstance();
@@ -48,7 +48,7 @@ public class FirebaseConnection {
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-               addToFirestore(message);
+                addToFirestore(message);
             }
         });
     }
@@ -70,6 +70,7 @@ public class FirebaseConnection {
             }
         });
     }
+
     public void addToFirestore(final User user) {
         firebaseDB.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid()).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -79,27 +80,31 @@ public class FirebaseConnection {
             }
         });
     }
-    public void getUserbyID(String uID){
+
+    public void getUserByID(String uID) {
         firebaseDB.collection("users").document(uID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()){
+                if (task.isSuccessful()) {
                     DocumentSnapshot documentSnapshot = task.getResult();
-                    if (documentSnapshot.exists()){
-                        dbStatements.insertUser(documentSnapshot.toObject(User.class));
+                    if (documentSnapshot.exists()) {
+                        User firebaseUser = documentSnapshot.toObject(User.class);
+                        Log.d("FirebaseUser", firebaseUser.getAccountName() + ", " + firebaseUser.getGoogleMail());
+                        dbStatements.insertUser(firebaseUser);
                     }
                 }
             }
         });
     }
-    public static void updateToken(final String uID, String token){
+
+    public static void updateToken(final String uID, String token) {
         Map<String, Object> data = new HashMap<>();
-            data.put("token",token);
+        data.put("token", token);
 
         FirebaseFirestore.getInstance().collection("tokens").document(uID).set(data, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Log.d("Firestore FCM Token", "onSuccess: Token added for User "+ uID);
+                Log.d("Firestore FCM Token", "onSuccess: Token added for User " + uID);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -108,14 +113,15 @@ public class FirebaseConnection {
             }
         });
     }
-    public static void deleteToken(final String uID){
+
+    public static void deleteToken(final String uID) {
         Map<String, Object> data = new HashMap<>();
         data.put("token", FieldValue.delete());
 
         FirebaseFirestore.getInstance().collection("tokens").document(uID).set(data, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Log.d("Firestore FCM Token", "onSuccess: Token deleted for User "+ uID);
+                Log.d("Firestore FCM Token", "onSuccess: Token deleted for User " + uID);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
