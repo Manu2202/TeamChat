@@ -5,7 +5,7 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="8dp"
+    android:layout_marginBottom="2dp"
     tools:context=".view.activities.ChatActivity">
 
     <com.google.android.material.textfield.TextInputLayout
@@ -14,9 +14,11 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="0dp"
+        android:id="@+id/chat_layout_input"
         android:layout_toStartOf="@+id/btnSend"
         android:layout_toLeftOf="@+id/btnSend"
-        android:paddingLeft="8dp">
+        android:paddingLeft="8dp"
+        >
 
         <EditText
             android:id="@+id/etMessage"
@@ -31,13 +33,13 @@
         android:layout_width="match_parent"
 
         android:layout_height="match_parent"
-        android:layout_above="@+id/btnSend"
+        android:layout_above="@+id/chat_layout_input"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="2dp"
         android:divider="@android:color/transparent"
         android:dividerHeight="16dp"
         android:stackFromBottom="true" />

@@ -269,6 +269,7 @@ public class DBStatements {
         } catch (Exception e) {
             insertsuccesfull = false;
             Log.d("DB_Error class DBStatements:", "Unable to write User in db");
+            e.printStackTrace();
         } finally {
             db.endTransaction();
         }
