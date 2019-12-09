@@ -22,7 +22,9 @@ import android.widget.TextView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -191,6 +193,11 @@ public class EditChatActivity extends AppCompatActivity {
                     color);
             firebaseConnection.addToFirestore(chat);
         }else{
+            //Todo Only get User ids from Chat instead of Users
+            List<String> userIDs = new ArrayList<>();
+            userIDs.add("TODO get User ids instead of Users");
+            //userIDs = dbStatements.getUsersOfChat(chatId);
+            FirebaseConnection.updateUsers(chatId,userIDs);
             // TODO: Update exisiterenden Chat
         }
         finish();

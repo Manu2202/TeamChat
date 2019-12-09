@@ -14,7 +14,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
@@ -110,6 +112,22 @@ public class FirebaseConnection {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.d("Firestore FCM Token", "onFailure: Token not added");
+            }
+        });
+    }
+    public static void updateUsers(final String ChatID, List<String> users){
+        Map<String, Object> data = new HashMap<>();
+        data.put("users", users);
+
+        FirebaseFirestore.getInstance().collection("chats").document(ChatID).set(data, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d("Firestore Chat", "onSuccess:  Users added to Chat " + ChatID);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("Firestore Chat", "onFailure: Users not added to Chat");
             }
         });
     }
