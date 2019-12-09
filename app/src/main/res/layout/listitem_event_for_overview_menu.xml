@@ -28,7 +28,7 @@
             android:padding="4dp">
 
             <TextView
-                android:id="@+id/li_overview_groupname"
+                android:id="@+id/viewevent_tvcreator"
                 style="@style/TextAppearance.MaterialComponents.Overline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -43,12 +43,12 @@
                 android:id="@+id/li_overview_divider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_below="@+id/li_overview_groupname"
+                android:layout_below="@+id/viewevent_tvcreator"
                 android:background="@android:color/darker_gray"
                 android:padding="2dp" />
 
             <TextView
-                android:id="@+id/li_overview_eventtitle"
+                android:id="@+id/viewevent_tvtitle"
                 style="@style/TextAppearance.MaterialComponents.Headline5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -61,11 +61,11 @@
                 android:transitionName="top" />
 
             <TextView
-                android:id="@+id/li_overview_eventdesc"
+                android:id="@+id/viewevent_tvdescription"
                 style="@style/TextAppearance.AppCompat.Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/li_overview_eventtitle"
+                android:layout_below="@+id/viewevent_tvtitle"
                 android:layout_centerHorizontal="false"
                 android:layout_marginLeft="16dp"
                 android:layout_marginBottom="8dp"
@@ -81,16 +81,16 @@
                 android:id="@+id/li_icon_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/li_overview_eventdesc"
+                android:layout_below="@+id/viewevent_tvdescription"
                 android:layout_marginLeft="16dp"
                 android:src="@drawable/ic_event_white_24dp" />
 
             <TextView
-                android:id="@+id/li_overview_eventdate"
+                android:id="@+id/viewevent_tveveventdate"
                 style="@style/TextAppearance.MaterialComponents.Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/li_overview_eventdesc"
+                android:layout_below="@+id/viewevent_tvdescription"
                 android:layout_centerHorizontal="false"
                 android:layout_marginLeft="4dp"
                 android:layout_toEndOf="@id/li_icon_date"
@@ -101,17 +101,17 @@
                 android:id="@+id/li_icon_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/li_overview_eventdesc"
+                android:layout_below="@+id/viewevent_tvdescription"
                 android:layout_marginLeft="16dp"
-                android:layout_toEndOf="@id/li_overview_eventdate"
+                android:layout_toEndOf="@id/viewevent_tveveventdate"
                 android:src="@drawable/ic_access_time_white_24dp" />
 
             <TextView
-                android:id="@+id/li_overview_eventtime"
+                android:id="@+id/viewevent_tveventtime"
                 style="@style/TextAppearance.MaterialComponents.Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/li_overview_eventdesc"
+                android:layout_below="@+id/viewevent_tvdescription"
                 android:layout_centerHorizontal="false"
                 android:layout_marginLeft="4dp"
                 android:layout_toEndOf="@id/li_icon_time"

@@ -41,16 +41,18 @@ public class ViewEventActivity extends AppCompatActivity {
 
         TextView tvCreator = findViewById(R.id.viewevent_tvcreator);
         TextView tvtime = findViewById(R.id.viewevent_tvtime);
-        TextView tvName = findViewById(R.id.viewevent_tvname);
-        TextView tvDate = findViewById(R.id.viewevent_tvdate);
-        TextView tvDescripton = findViewById(R.id.viewevent_tvdescription);
+        TextView tvtitle = findViewById(R.id.viewevent_tvtitle);
+        TextView tvDate = findViewById(R.id.viewevent_tveveventdate);
+        TextView tvTime = findViewById(R.id.viewevent_tveventtime);
+        TextView tvDescription = findViewById(R.id.viewevent_tvdescription);
         tvStatus = findViewById(R.id.viewevent_tvstatus);
 
         tvCreator.setText(db.getUser(event.getCreator()).getAccountName());
         tvtime.setText(event.getTimeStamp().toString());
-        tvDate.setText(FormatHelper.formatDateTime(event.getDate()));
-        tvName.setText(event.getMessage());
-        tvDescripton.setText(event.getDescription());
+        tvDate.setText(FormatHelper.formatDate(event.getDate()));
+        tvTime.setText(FormatHelper.formatTime(event.getDate()));
+        tvtitle.setText(event.getMessage());
+        tvDescription.setText(event.getDescription());
 
         mystate = db.getUserEventStatus(id, activeUser);
         tvStatus.setText(mystate.getStatusString());
@@ -59,7 +61,7 @@ public class ViewEventActivity extends AppCompatActivity {
         //Get EventStatus and Print it in the List
         userEventStates = db.getUserEventStatus(id);
 
-        Log.d("ViewEventActivity", "State ojekts: " + userEventStates.size() + "  " + userEventStates.get(0).getUserId() + "  " + userEventStates.get(1).getUserId());
+        Log.d("ViewEventActivity", "State objects: " + userEventStates.size() + "  " + userEventStates.get(0).getUserId() + "  " + userEventStates.get(1).getUserId());
         ListView lvStates = findViewById(R.id.viewevent_lvstates);
         lvStates.setDivider(null);
         adapter = new AdapterUserEventStatus(userEventStates, db);

@@ -56,10 +56,10 @@ public class AdapterEvent extends BaseAdapter {
         convertView = inflater.inflate(R.layout.listitem_event_for_overview_menu, null, false);
 
 
-        TextView tvTitle = convertView.findViewById(R.id.li_overview_eventtitle);
-        TextView tvDate = convertView.findViewById(R.id.li_overview_eventdate);
-        TextView tvTime = convertView.findViewById(R.id.li_overview_eventtime);
-        TextView tvGroupname = convertView.findViewById(R.id.li_overview_groupname);
+        TextView tvTitle = convertView.findViewById(R.id.viewevent_tvtitle);
+        TextView tvDate = convertView.findViewById(R.id.viewevent_tveveventdate);
+        TextView tvTime = convertView.findViewById(R.id.viewevent_tveventtime);
+        TextView tvGroupname = convertView.findViewById(R.id.viewevent_tvcreator);
         tvTitle.setText(ev.getMessage());
         tvTime.setText(ev.getTimeStamp().toString());
 

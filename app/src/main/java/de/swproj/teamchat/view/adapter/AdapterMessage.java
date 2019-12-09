@@ -85,9 +85,9 @@ public class AdapterMessage extends BaseAdapter {
 
             }
             Log.d("MessageAdapter Message: ", message.getMessage()+"  "+message.getCreator());
-            TextView tvMessage = convertView.findViewById(R.id.li_overview_eventtitle);
-            TextView tvTime = convertView.findViewById(R.id.li_message_tvtime);
-            TextView tvUser = convertView.findViewById(R.id.li_overview_groupname);
+            TextView tvMessage = convertView.findViewById(R.id.viewevent_tvtitle);
+            TextView tvTime = convertView.findViewById(R.id.viewevent_tvtime);
+            TextView tvUser = convertView.findViewById(R.id.viewevent_tvcreator);
             tvMessage.setText(message.getMessage());
             tvTime.setText(message.getTimeStamp().toString());
             tvUser.setText(creator.getAccountName());
@@ -95,8 +95,8 @@ public class AdapterMessage extends BaseAdapter {
 
             if (message.isEvent()) {
                 Event event = db.getEvent(message.getId());
-                TextView tvEventDate = convertView.findViewById(R.id.li_overview_eventdate);
-                TextView tvEventTime = convertView.findViewById(R.id.li_overview_eventtime);
+                TextView tvEventDate = convertView.findViewById(R.id.viewevent_tveveventdate);
+                TextView tvEventTime = convertView.findViewById(R.id.viewevent_tveventtime);
                 //todo: fix date in DBstatemants
 
                 tvEventDate.setText(FormatHelper.formatDate(event.getDate()));
