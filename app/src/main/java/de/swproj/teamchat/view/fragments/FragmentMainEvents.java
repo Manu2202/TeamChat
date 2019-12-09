@@ -50,9 +50,10 @@ public class FragmentMainEvents extends ListFragment {
         super.onActivityCreated(savedInstanceState);
 
         ListView list = getListView();
-        int[] colors = {0xFF000000, 0xFF000000, 0xFF000000};
-        list.setDivider(new GradientDrawable(GradientDrawable.Orientation.RIGHT_LEFT, colors));
-        list.setDividerHeight(2);
+        //Todo: Add divider for each individual group
+        //int[] colors = {0xFF000000, 0xFF000000, 0xFF000000};
+        //list.setDivider(new GradientDrawable(GradientDrawable.Orientation.RIGHT_LEFT, colors));
+        //list.setDividerHeight(10);
         setListAdapter(adapterEvent);
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {

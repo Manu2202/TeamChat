@@ -56,22 +56,23 @@ public class AdapterEvent extends BaseAdapter {
         convertView = inflater.inflate(R.layout.listitem_event_for_overview_menu, null, false);
 
 
-        TextView tvMessage = convertView.findViewById(R.id.li_overview_eventtitle);
+        TextView tvTitle = convertView.findViewById(R.id.li_overview_eventtitle);
+        TextView tvDate = convertView.findViewById(R.id.li_overview_eventdate);
         TextView tvTime = convertView.findViewById(R.id.li_overview_eventtime);
-        TextView tvUser = convertView.findViewById(R.id.li_overview_eventcreator);
-        tvMessage.setText(ev.getMessage());
+        TextView tvGroupname = convertView.findViewById(R.id.li_overview_groupname);
+        tvTitle.setText(ev.getMessage());
         tvTime.setText(ev.getTimeStamp().toString());
 
         // Display name of group this event belongs to (this is the event overview, so
         // it makes more sense here to display the group name instead of the event creator name)
-        tvUser.setText(db.getChat(ev.getChatid()).getName());
+        tvGroupname.setText(db.getChat(ev.getChatid()).getName());
 
         // Display event creator name
        // tvUser.setText(ev.getCreator());
 
-        TextView tvDate = convertView.findViewById(R.id.li_overview_eventdate);
 
-        tvDate.setText(FormatHelper.formatDateTime(ev.getDate()));
+        tvTime.setText(FormatHelper.formatTime(ev.getDate()));
+        tvDate.setText(FormatHelper.formatDate(ev.getDate()));
 
 
         return convertView;

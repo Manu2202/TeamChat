@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private void  addTestdat(){
 
         //löscht alle eintäge beim Start
-        //db.dropAll();
+        db.dropAll();
 
         db.insertUser(new User("Gott","sdbjhdj","Der Herr der Dinge","Gott","Herr"));
         db.insertUser(new User("11","sdjhnjhdj","Horster","Hors","tidiot"));

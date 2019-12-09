@@ -47,7 +47,7 @@
                 style="@style/TextAppearance.MaterialComponents.Subtitle2" />
 
             <View
-                android:id="@+id/li_message_divider"
+                android:id="@+id/li_overview_divider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_below="@+id/viewevent_tvcreator"
@@ -58,7 +58,7 @@
                 android:id="@+id/viewevent_tvname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/li_message_divider"
+                android:layout_below="@+id/li_overview_divider"
                 android:transitionName="top"
                 android:text="Großes Besauffest"
                 style="@style/TextAppearance.MaterialComponents.Headline4" />
