@@ -191,7 +191,8 @@ public class EditChatActivity extends AppCompatActivity {
             int color =  androidColors[new Random().nextInt(androidColors.length)];
             Chat chat = new Chat(etChatName.getText().toString(), FirebaseAuth.getInstance().getCurrentUser().getUid(),
                     color);
-            firebaseConnection.addToFirestore(chat);
+            String[] userIDs = (String[])groupMember.keySet().toArray();
+            firebaseConnection.addToFirestore(chat, userIDs);
         }else{
             //Todo Only get User ids from Chat instead of Users
             List<String> userIDs = new ArrayList<>();
