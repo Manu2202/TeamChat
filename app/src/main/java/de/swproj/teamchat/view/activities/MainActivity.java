@@ -182,8 +182,9 @@ public class MainActivity extends AppCompatActivity {
         chatFragment = new FragmentMainChats();
         eventFragment = new FragmentMainEvents();
         contactFragment = new FragmentMainContacts();
+
         //---------------------------------------------------------------  Test
-        addTestdat();
+        //addTestdat();
 
 
 

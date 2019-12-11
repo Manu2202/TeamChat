@@ -60,4 +60,29 @@ public class FragmentMainChats extends ListFragment {
             }
         });
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // set a new Adapter -> QnD
+        ArrayList<Chat> c = db.getChat();
+
+        ListView list = getListView();
+
+
+
+        final AdapterChat chatAdapter = new AdapterChat(c, db);
+        setListAdapter(chatAdapter);
+
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent chatIntent = new Intent(getActivity(), ChatActivity.class);
+                Chat selectedItem = (Chat) chatAdapter.getItem(position);
+                chatIntent.putExtra("chatID", selectedItem.getId());
+                startActivityForResult(chatIntent, position);
+            }
+        });
+    }
 }
