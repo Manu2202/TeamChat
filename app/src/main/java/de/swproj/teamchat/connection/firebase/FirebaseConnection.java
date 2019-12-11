@@ -56,19 +56,21 @@ public class FirebaseConnection {
     }
 
 
-    public void addToFirestore(final Chat chat) {
+    public void addToFirestore(final Chat chat, final String[] userids) {
         firebaseDB.collection("chats").add(chat)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Log.d("Firestore Chat", "addToFirebase with ID: " + documentReference.getId());
-                        chat.setId(documentReference.getId());
+                        String chatid = documentReference.getId();
+                        Log.d("Firestore Chat", "addToFirebase with ID: " + chatid);
+                        updateUsers(chatid,userids);
+                        chat.setId(chatid);
                         dbStatements.insertChat(chat);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                addToFirestore(chat);
+                addToFirestore(chat,userids);
             }
         });
     }
@@ -115,7 +117,7 @@ public class FirebaseConnection {
             }
         });
     }
-    public static void updateUsers(final String ChatID, List<String> users){
+    public static void updateUsers(final String ChatID, String[] users){
         Map<String, Object> data = new HashMap<>();
         data.put("users", users);
 

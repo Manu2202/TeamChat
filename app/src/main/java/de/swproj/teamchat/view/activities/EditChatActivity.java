@@ -194,9 +194,7 @@ public class EditChatActivity extends AppCompatActivity {
             String[] userIDs = (String[])groupMember.keySet().toArray();
             firebaseConnection.addToFirestore(chat, userIDs);
         }else{
-            //Todo Only get User ids from Chat instead of Users
-            List<String> userIDs = new ArrayList<>();
-            userIDs.add("TODO get User ids instead of Users");
+            String[] userIDs = (String[])groupMember.keySet().toArray();
             //userIDs = dbStatements.getUsersOfChat(chatId);
             FirebaseConnection.updateUsers(chatId,userIDs);
             // TODO: Update exisiterenden Chat
