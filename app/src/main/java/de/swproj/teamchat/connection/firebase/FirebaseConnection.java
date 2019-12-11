@@ -56,7 +56,7 @@ public class FirebaseConnection {
     }
 
 
-    public void addToFirestore(final Chat chat, final String[] userids) {
+    public void addToFirestore(final Chat chat, final Object[] userids) {
         firebaseDB.collection("chats").add(chat)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
@@ -117,7 +117,7 @@ public class FirebaseConnection {
             }
         });
     }
-    public static void updateUsers(final String ChatID, String[] users){
+    public static void updateUsers(final String ChatID, Object[] users){
         Map<String, Object> data = new HashMap<>();
         data.put("users", users);
 
