@@ -18,7 +18,7 @@ public class FormatHelper {
     /*
      *Convert the Calendar Date in a String to set the TextView for the Date
      */
-    public static String formatDateTime(GregorianCalendar date){
+    public static String formatDateTime(GregorianCalendar date) {
         // Format the Date
         SimpleDateFormat sdfDate = new SimpleDateFormat("dd.MM.YYYY");
         sdfDate.setCalendar(date);
@@ -31,17 +31,17 @@ public class FormatHelper {
         sdfTime.setCalendar(date);
         String timeFormatted = sdfTime.format(date.getTime()) + " Uhr";
 
-        return dateFormatted + "\n" + DAYOFTHEWEEK[dayOfWeek-1]+ " "+timeFormatted;
+        return dateFormatted + "\n" + DAYOFTHEWEEK[dayOfWeek - 1] + " " + timeFormatted;
     }
 
-    public static String formatTime(GregorianCalendar time){
+    public static String formatTime(GregorianCalendar time) {
         // Format the time
         SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm");
         sdfTime.setCalendar(time);
         return sdfTime.format(time.getTime());
     }
 
-    public static String formatDate(GregorianCalendar date){
+    public static String formatDate(GregorianCalendar date) {
         SimpleDateFormat sdfDate = new SimpleDateFormat("dd.MM.YYYY");
         sdfDate.setCalendar(date);
         return sdfDate.format(date.getTime());
