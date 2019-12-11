@@ -191,10 +191,10 @@ public class EditChatActivity extends AppCompatActivity {
             int color =  androidColors[new Random().nextInt(androidColors.length)];
             Chat chat = new Chat(etChatName.getText().toString(), FirebaseAuth.getInstance().getCurrentUser().getUid(),
                     color);
-            Object[] userIDs = groupMember.keySet().toArray();
+            List<String> userIDs = new ArrayList<>(groupMember.keySet());
             firebaseConnection.addToFirestore(chat, userIDs);
         }else{
-            Object[] userIDs = groupMember.keySet().toArray();
+            List<String> userIDs = new ArrayList<>(groupMember.keySet());
             //userIDs = dbStatements.getUsersOfChat(chatId);
             FirebaseConnection.updateUsers(chatId,userIDs);
             // TODO: Update exisiterenden Chat

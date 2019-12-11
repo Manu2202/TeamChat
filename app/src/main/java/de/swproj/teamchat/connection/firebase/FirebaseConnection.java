@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import androidx.annotation.NonNull;
 
@@ -56,7 +57,7 @@ public class FirebaseConnection {
     }
 
 
-    public void addToFirestore(final Chat chat, final Object[] userids) {
+    public void addToFirestore(final Chat chat, final List<String> userids) {
         firebaseDB.collection("chats").add(chat)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
@@ -117,7 +118,7 @@ public class FirebaseConnection {
             }
         });
     }
-    public static void updateUsers(final String ChatID, Object[] users){
+    public static void updateUsers(final String ChatID, List<String> users){
         Map<String, Object> data = new HashMap<>();
         data.put("users", users);
 
