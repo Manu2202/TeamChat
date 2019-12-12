@@ -74,11 +74,16 @@ public class EditChatActivity extends AppCompatActivity {
     }
 
     private void getAllUsers() {
+        String selfUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         for (User user : dbStatements.getUser()) {
             if (!groupMember.containsKey(user.getGoogleId()))
                 Log.d("EditChat ", "Users " + user.getGoogleId());
-            allUser.put(user.getGoogleId(), user);
-            Log.d("EditChat 2", "GetUser " + allUser.get(user.getGoogleId()).getGoogleId());
+
+            // Check if user from DB is yourself -> skip, because yourself is admin
+            if (!selfUserID.equals(user.getGoogleId()))
+                allUser.put(user.getGoogleId(), user);
+            if(!allUser.isEmpty())
+                Log.d("EditChat 2", "GetUser " + allUser.get(user.getGoogleId()).getGoogleId());
         }
     }
 
@@ -198,7 +203,7 @@ public class EditChatActivity extends AppCompatActivity {
 
         }else{
             List<String> userIDs = new ArrayList<>(groupMember.keySet());
-            userIDs.add(FirebaseAuth.getInstance().getCurrentUser().getUid());
+            //userIDs.add(FirebaseAuth.getInstance().getCurrentUser().getUid());
             //userIDs = dbStatements.getUsersOfChat(chatId);
             FirebaseConnection.updateUsers(chatId,userIDs);
             // TODO: Update exisiterenden Chat
