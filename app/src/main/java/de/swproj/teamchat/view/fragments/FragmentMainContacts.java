@@ -49,9 +49,18 @@ public class FragmentMainContacts extends ListFragment {
         users = dbStatements.getUser();
         Log.d("Fragments:", "In Contact Fragment");
 
+
+
+
         setHasOptionsMenu(true);
 
-        return super.onCreateView(inflater, container, savedInstanceState);
+        // return super.onCreateView(inflater, container, savedInstanceState);
+
+        View v = super.onCreateView(inflater, container, savedInstanceState);
+        ViewGroup parent = (ViewGroup) inflater.inflate(R.layout.contactfragment_floatingactionbutton, container, false);
+        parent.addView(v, 0);
+        return parent;
+       // return view;
     }
 
     @Override
