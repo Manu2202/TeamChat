@@ -21,8 +21,10 @@ import androidx.annotation.NonNull;
 
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.datamodell.chat.Chat;
+import de.swproj.teamchat.datamodell.chat.Event;
 import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.datamodell.chat.User;
+import de.swproj.teamchat.helper.FirebaseHelper;
 
 public class FirebaseConnection {
 
@@ -37,7 +39,7 @@ public class FirebaseConnection {
 
 
     public void addToFirestore(final Message message) {
-        firebaseDB.collection("messages").add(message)
+        firebaseDB.collection("messages").add(FirebaseHelper.convertToMap(message))
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {

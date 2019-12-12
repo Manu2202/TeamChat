@@ -22,6 +22,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import java.io.IOException;
+import java.sql.Time;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
@@ -75,6 +76,13 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
     }
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+
+        //Parse isEvent and timestamp Strings back to boolean and sql.time
+        //Time time = Time.valueOf("");
+        //boolean isEvent = Boolean.parseBoolean("");
+
+
+
         super.onMessageReceived(remoteMessage);
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         Map<String, String> data = remoteMessage.getData();

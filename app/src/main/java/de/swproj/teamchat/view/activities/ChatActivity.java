@@ -80,7 +80,7 @@ public class ChatActivity extends AppCompatActivity {
         if (!etMessageString.isEmpty()) {
             Message message = new Message(new Time(System.currentTimeMillis()),
                     etMessageString, false,
-                    FirebaseAuth.getInstance().getCurrentUser().getUid(), chatID);
+                    FirebaseAuth.getInstance().getCurrentUser().getDisplayName(), chatID);
             firebaseConnection.addToFirestore(message);
             etMessage.setText("");
         }

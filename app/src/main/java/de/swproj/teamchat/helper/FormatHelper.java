@@ -5,6 +5,8 @@ package de.swproj.teamchat.helper;
  * For the project: TeamChat.
  */
 
+import java.sql.Time;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -33,7 +35,10 @@ public class FormatHelper {
 
         return dateFormatted + "\n" + DAYOFTHEWEEK[dayOfWeek - 1] + " " + timeFormatted;
     }
-
+    public static String formatTime(Time time){
+        DateFormat format = new SimpleDateFormat("HH:mm");
+        return format.format(time.getTime()); // 11:17
+    }
     public static String formatTime(GregorianCalendar time) {
         // Format the time
         SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm");
