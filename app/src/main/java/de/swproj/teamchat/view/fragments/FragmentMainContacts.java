@@ -12,7 +12,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
@@ -20,6 +22,8 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.ListFragment;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.connection.database.DBStatements;
@@ -27,8 +31,11 @@ import de.swproj.teamchat.connection.firebase.FirebaseConnection;
 import de.swproj.teamchat.connection.firebase.services.TeamChatMessagingService;
 import de.swproj.teamchat.datamodell.chat.User;
 import de.swproj.teamchat.view.activities.EditChatActivity;
+import de.swproj.teamchat.view.activities.MainActivity;
 import de.swproj.teamchat.view.activities.StartActivity;
 import de.swproj.teamchat.view.adapter.AdapterContact;
+import de.swproj.teamchat.view.dialogs.ReasonDialog;
+import de.swproj.teamchat.view.dialogs.UserSearchDialog;
 
 
 /*
@@ -40,6 +47,7 @@ public class FragmentMainContacts extends ListFragment {
 
     private DBStatements dbStatements;
     private ArrayList<User> users;
+    private FloatingActionButton fab;
 
     @Nullable
     @Override
@@ -50,17 +58,13 @@ public class FragmentMainContacts extends ListFragment {
         Log.d("Fragments:", "In Contact Fragment");
 
 
-
-
         setHasOptionsMenu(true);
-
-        // return super.onCreateView(inflater, container, savedInstanceState);
 
         View v = super.onCreateView(inflater, container, savedInstanceState);
         ViewGroup parent = (ViewGroup) inflater.inflate(R.layout.contactfragment_floatingactionbutton, container, false);
+
         parent.addView(v, 0);
         return parent;
-       // return view;
     }
 
     @Override
@@ -79,6 +83,20 @@ public class FragmentMainContacts extends ListFragment {
                 //TODO: Konfiguration des Click Listener auf der ListView
             }
         });
+
+
+        fab = (FloatingActionButton) getView().findViewById(R.id.userSearchFAB);
+        fab.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                UserSearchDialog userSearchDialog = new UserSearchDialog(getActivity());
+                userSearchDialog.show();
+
+            }
+        });
+
     }
 
 
@@ -106,4 +124,7 @@ public class FragmentMainContacts extends ListFragment {
         }
         return true;
     }
+
+
+
 }
