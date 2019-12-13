@@ -61,6 +61,7 @@ public class FormatHelper {
         DateFormat format = new SimpleDateFormat("HH:mm");
         return format.format(time.getTime()); // 11:17
     }
+
     public static String formatTime(GregorianCalendar time) {
         // Format the time
         SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm");
