@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.ListFragment;
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.R;
-import de.swproj.teamchat.connection.firebase.FirebaseConnection;
 import de.swproj.teamchat.connection.firebase.services.TeamChatMessagingService;
 import de.swproj.teamchat.datamodell.chat.Chat;
 import de.swproj.teamchat.datamodell.chat.Event;
@@ -19,7 +18,6 @@ import de.swproj.teamchat.view.fragments.FragmentMainEvents;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 

@@ -30,6 +30,9 @@ import androidx.core.app.NotificationCompat;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.connection.firebase.FirebaseConnection;
+import de.swproj.teamchat.datamodell.chat.Event;
+import de.swproj.teamchat.datamodell.chat.Message;
+import de.swproj.teamchat.helper.FormatHelper;
 import de.swproj.teamchat.view.activities.TestActivity;
 
 import static de.swproj.teamchat.view.activities.LoginActivity.PREFERENCE_FILE_KEY;
@@ -76,18 +79,37 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
     }
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-
-        //Parse isEvent and timestamp Strings back to boolean and sql.time
-        //Time time = Time.valueOf("");
-        //boolean isEvent = Boolean.parseBoolean("");
-
-
-
+        Log.d("Message recieved", "Message recieved");
         super.onMessageReceived(remoteMessage);
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         Map<String, String> data = remoteMessage.getData();
         Log.d("Messaging Service, Message FROM", remoteMessage.getFrom());
         sendNotification(notification, data);
+        save_message(notification,data);
+    }
+    private void save_message(RemoteMessage.Notification notification, Map<String, String> data){
+        if(Boolean.valueOf(data.get("isEvent"))) {
+            Event event= new Event(FormatHelper.formatTime(data.get("timestamp")),
+                    notification.getBody(),
+                    data.get("id"),
+                    Boolean.valueOf(data.get("isEvent")),
+                    data.get("creator"),
+                    FormatHelper.formatDate(data.get("date")),
+                    data.get("description"),
+                    data.get("chatid"),
+                    Integer.parseInt(data.get("status")));
+            Log.d("Message recieved", event.getMessage());
+            dbStatements.insertMessage(event);
+        }else {
+            Message msg = new Message(FormatHelper.formatTime(data.get("timestamp")),
+                    notification.getBody(),
+                    data.get("id"),
+                    Boolean.valueOf(data.get("isEvent")),
+                    data.get("creator"),
+                    data.get("chatid"));
+            Log.d("Message recieved", msg.getMessage());
+            dbStatements.insertMessage(msg);
+        }
     }
     private void save_token(final String token){
         //Get shared Preference
@@ -132,8 +154,8 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
                 .setColor(getColor(R.color.colorAccent))
                 .setLights(Color.RED, 1000, 300)
                 .setDefaults(Notification.DEFAULT_VIBRATE)
-                .setNumber(++numMessages);
-                //.setSmallIcon(R.drawable.ic_notification);
+                .setNumber(++numMessages)
+                .setSmallIcon(R.drawable.ic_access_time_white_24dp);
 
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
