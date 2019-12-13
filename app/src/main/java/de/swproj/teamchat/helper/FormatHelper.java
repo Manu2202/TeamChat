@@ -7,6 +7,7 @@ package de.swproj.teamchat.helper;
 
 import java.sql.Time;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -34,6 +35,27 @@ public class FormatHelper {
         String timeFormatted = sdfTime.format(date.getTime()) + " Uhr";
 
         return dateFormatted + "\n" + DAYOFTHEWEEK[dayOfWeek - 1] + " " + timeFormatted;
+    }
+    public static GregorianCalendar formatDate(String date){
+        SimpleDateFormat sdfDate = new SimpleDateFormat("dd.MM.YYYY");
+        GregorianCalendar greg_date=(GregorianCalendar)GregorianCalendar.getInstance();
+        try {
+            greg_date.setTime(sdfDate.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return greg_date;
+
+    }
+    public static Time formatTime(String time){
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        long ms = 0;
+        try {
+            ms = sdf.parse(time).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return new Time(ms);
     }
     public static String formatTime(Time time){
         DateFormat format = new SimpleDateFormat("HH:mm");

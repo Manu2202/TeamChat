@@ -38,19 +38,19 @@ public class FirebaseConnection {
     }
 
 
-    public void addToFirestore(final Message message) {
-        firebaseDB.collection("messages").add(FirebaseHelper.convertToMap(message))
+    public void addToFirestore(final Message message, final String title) {
+        firebaseDB.collection("messages").add(FirebaseHelper.convertToMap(message, title))
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d("Firestore Messages", "addToFirebase with ID: " + documentReference.getId());
                         message.setId(documentReference.getId());
-                        dbStatements.insertMessage(message);
+                        //dbStatements.insertMessage(message);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                addToFirestore(message);
+                addToFirestore(message, title);
             }
         });
     }

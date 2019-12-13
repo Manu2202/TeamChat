@@ -16,6 +16,9 @@ import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.util.Pair;
 import androidx.core.view.ViewCompat;
+
+import com.google.firebase.auth.FirebaseAuth;
+
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.datamodell.chat.Event;
@@ -34,7 +37,6 @@ public class AdapterMessage extends BaseAdapter {
 
     private ArrayList<Message> messages;
     private DBStatements db;
-    String authentictedUser = "abc";
     private AppCompatActivity activity;//todo: Get Authenticated user for send and show
 
     public AdapterMessage(ArrayList<Message> messages, DBStatements dbStatements, AppCompatActivity activity) {
@@ -76,7 +78,7 @@ public class AdapterMessage extends BaseAdapter {
 
                 LayoutInflater lf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 // todo: creator mit act user vergleichen
-                if (message.getCreator().equals(authentictedUser)) {
+                if (message.getCreator().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
                     convertView = lf.inflate(R.layout.listitem_message, null, false);
                 } else {
                     convertView = lf.inflate(R.layout.listitem_message2, null, false);
