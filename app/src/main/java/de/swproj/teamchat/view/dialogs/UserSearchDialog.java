@@ -3,7 +3,6 @@ package de.swproj.teamchat.view.dialogs;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,15 +11,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import org.w3c.dom.Text;
 
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.datamodell.chat.User;
+import de.swproj.teamchat.view.adapter.AdapterContact;
 
 public class UserSearchDialog extends Dialog implements
         android.view.View.OnClickListener {
@@ -46,13 +44,14 @@ public class UserSearchDialog extends Dialog implements
     private final int USER_WAS_FOUND = 2;
 
     private int searchResultValue = STILL_WAITING;
+    private AdapterContact adapter;
 
 
-    public UserSearchDialog(Activity activity){
+    public UserSearchDialog(Activity activity, AdapterContact adapter){
         super(activity);
         this.activity=activity;
+        this.adapter = adapter;
     }
-
 
 
     @SuppressLint("ResourceAsColor")
@@ -169,12 +168,20 @@ public class UserSearchDialog extends Dialog implements
                     // If a user was found, the Search-Button will add the user
                     if (searchButton.getText().equals("Add")) {
                         dbStatements.insertUser(foundUser);
+
+                        // Also loads user into current Listview and updates it
+                        // (might not best way to do this)
+                        // without this, User is only displayed if you leave Contact View
+                        // and come back
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                adapter.add(foundUser);
+                                adapter.notifyDataSetChanged();
+                            }
+                        });
+
                         foundUser = null;
-
-                        // TODO: Refresh contact list here
-                        // Found user is added to local database now, but will only show up
-                        // if contact list is closed and reopened
-
                         dismiss();
                     }
                 }
@@ -251,8 +258,6 @@ public class UserSearchDialog extends Dialog implements
                 break;
         }
     }
-
-
 
 
 }

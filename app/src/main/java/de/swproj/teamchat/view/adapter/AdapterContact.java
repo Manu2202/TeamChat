@@ -28,6 +28,10 @@ public class AdapterContact extends BaseAdapter {
         this.contacts = contacts;
     }
 
+    public void add(User user) {
+        contacts.add(user);
+    }
+
     @Override
     public int getCount() {
         return contacts.size();

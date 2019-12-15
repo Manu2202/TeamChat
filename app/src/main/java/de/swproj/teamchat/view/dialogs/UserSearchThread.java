@@ -108,7 +108,7 @@ public class UserSearchThread implements Runnable {
              // TODO: Implement User FireBaseDBgetUser(String username) : Extract User from Firebase Database
              // foundUserFromServer = FireBaseDBgetUser(username);
 
-             // TODO: Remove this dummy user if FireBaseDBgetUser is working
+             // TODO: Remove this dummy user once FireBaseDBgetUser is working
              // Dummy User for testing
              foundUserFromServer = new User("Dummy User", "dummy@user.de",
                      "Dummy User", "User", "Dummi");
