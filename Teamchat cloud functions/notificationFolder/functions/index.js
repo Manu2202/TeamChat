@@ -50,7 +50,7 @@ exports.sendGroupMessage = functions
                 //--Form Message Date--
 
                 //if message is event TODO
-                if (newValue.isEvent === "true") {
+                if (newValue.isEvent === 'true') {
                     const message = {
                         notification: {
                             title: newValue.title,
