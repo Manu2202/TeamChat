@@ -60,13 +60,13 @@ public class MainActivity extends AppCompatActivity {
 
         //  db.insertChat(new Chat("Labergruppe", 0xFFFB0B03, "394", "Gott"));
         db.insertChat(new Chat("Tetris esport Team", (getResources().getIntArray(R.array.androidcolors))[1], "3934", "Gott"));
-        db.insertChat(new Chat("Anonyme Alkoholiker", (getResources().getIntArray(R.array.androidcolors))[2], "3954", "Gott"));
-        db.insertChat(new Chat("Öffentliche Alkoholiker", (getResources().getIntArray(R.array.androidcolors))[3], "3941", "Gott"));
-        db.insertChat(new Chat("Saufgruppe 1", (getResources().getIntArray(R.array.androidcolors))[4], "3434", "Gott"));
-        db.insertChat(new Chat("Saufgruppe 2", (getResources().getIntArray(R.array.androidcolors))[5], "34", "Gott"));
-        db.insertChat(new Chat("Saufgruppe 3", (getResources().getIntArray(R.array.androidcolors))[6], "3484", "Gott"));
-        db.insertChat(new Chat("Saufgruppe 4", (getResources().getIntArray(R.array.androidcolors))[7], "324", "Gott"));
-        db.insertChat(new Chat("Saufgruppe 5", (getResources().getIntArray(R.array.androidcolors))[8], "474", "Gott"));
+        db.insertChat(new Chat("Tee Party", (getResources().getIntArray(R.array.androidcolors))[2], "3954", "Gott"));
+        db.insertChat(new Chat("Buchclub", (getResources().getIntArray(R.array.androidcolors))[3], "3941", "Gott"));
+        db.insertChat(new Chat("Golfclub", (getResources().getIntArray(R.array.androidcolors))[4], "3434", "Gott"));
+        db.insertChat(new Chat("Fußballclub", (getResources().getIntArray(R.array.androidcolors))[5], "34", "Gott"));
+        db.insertChat(new Chat("Squash-Club", (getResources().getIntArray(R.array.androidcolors))[6], "3484", "Gott"));
+        db.insertChat(new Chat("Tennis-Club", (getResources().getIntArray(R.array.androidcolors))[7], "324", "Gott"));
+        db.insertChat(new Chat("Eishockey-Club", (getResources().getIntArray(R.array.androidcolors))[8], "474", "Gott"));
 
         Date currentTime = Calendar.getInstance().getTime();
         GregorianCalendar gc = new GregorianCalendar();
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
         contactFragment = new FragmentMainContacts();
 
         //---------------------------------------------------------------  Test
-        //addTestdat();
+        addTestdat();
         //db.dropAll();
 
 
@@ -175,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
 
                     case R.id.nav_contacts:
                         selectedFragment = contactFragment;
-                        break;
+
                 }
                 lastSelectedFragment = selectedFragment;
 
