@@ -38,6 +38,8 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
     private static final String CHANNEL_DESC = "Firebase Cloud Messaging";
     private int numMessages = 0;
     private DBStatements dbStatements= new DBStatements(this);
+    FirebaseConnection fbconnect = new FirebaseConnection(dbStatements);
+
     @Override
     public void onNewToken(final String token) {
         Log.d("Messaging Service", "Refreshed token: " + token);
@@ -81,8 +83,20 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
         sendNotification(notification, data);
         save_message(notification,data);
     }
+    /**
+     * If app is in foreground, notification data comes from onMessageReceived
+     */
     private void save_message(RemoteMessage.Notification notification, Map<String, String> data){
+        if(Boolean.valueOf(data.get("isInvite"))){
+            //Got new Invite -> Check if Chat is new
+            String chatid = data.get("id");
+            if (dbStatements.getChat(chatid)==null){
+                //Chat is not in Database -> Get Chat from Firestore
+                fbconnect.saveChatbyID(chatid);
+            }
+        }
         if(Boolean.valueOf(data.get("isEvent"))) {
+            //New Event-----------------------------------------
             Event event= new Event(FormatHelper.formatTime(data.get("timestamp")),
                     notification.getBody(),
                     data.get("id"),
@@ -93,8 +107,10 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
                     data.get("chatid"),
                     Integer.parseInt(data.get("status")));
             Log.d("Save FCM Event from onMessageReceived", event.getMessage());
+            //Save in Database
             dbStatements.insertMessage(event);
         }else {
+            //New Message
             Message msg = new Message(FormatHelper.formatTime(data.get("timestamp")),
                     notification.getBody(),
                     data.get("id"),
@@ -102,6 +118,7 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
                     data.get("creator"),
                     data.get("chatid"));
             Log.d("Save FCM Message from onMessageReceived", msg.getMessage());
+            //Save in Database
             dbStatements.insertMessage(msg);
         }
     }

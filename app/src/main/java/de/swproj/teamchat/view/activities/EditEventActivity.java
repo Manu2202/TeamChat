@@ -176,8 +176,8 @@ public class EditEventActivity extends AppCompatActivity {
                 event = new Event(new Time(System.currentTimeMillis()),
                         et_title.getText().toString(), msgId, true, FirebaseAuth.getInstance().getCurrentUser().getUid(),
                         date, et_description.getText().toString(), chatID, status);
-
-                firebaseConnection.addToFirestore(event, FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+                //Push Event to Firebase
+                firebaseConnection.addToFirestore(event, FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),false);
 
                 finish();
 

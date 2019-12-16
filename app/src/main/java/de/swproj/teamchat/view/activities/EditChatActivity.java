@@ -205,7 +205,7 @@ public class EditChatActivity extends AppCompatActivity {
             List<String> userIDs = new ArrayList<>(groupMember.keySet());
             //userIDs.add(FirebaseAuth.getInstance().getCurrentUser().getUid());
             //userIDs = dbStatements.getUsersOfChat(chatId);
-            FirebaseConnection.updateUsers(chatId,userIDs);
+            firebaseConnection.updateUsers(chatId,chat.getName(),userIDs);
             // TODO: Update exisiterenden Chat
         }
         finish();

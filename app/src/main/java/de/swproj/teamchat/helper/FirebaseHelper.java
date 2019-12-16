@@ -7,7 +7,7 @@ import de.swproj.teamchat.datamodell.chat.Message;
 
 public class FirebaseHelper {
 
-public static HashMap<String,String> convertToMap(Message message, String title){
+public static HashMap<String,String> convertToMap(Message message, String title, boolean isInvite){
     HashMap<String,String> retMap= new HashMap<>();
     if(message.isEvent()){
         Event event = (Event)message;
@@ -16,6 +16,7 @@ public static HashMap<String,String> convertToMap(Message message, String title)
         retMap.put("status",String.valueOf(event.getStatus()));
     }
     retMap.put("chatid",message.getChatid());
+    retMap.put("isInvite", ((Boolean)isInvite).toString());
     retMap.put("creator",message.getCreator());
     retMap.put("title",title);
     retMap.put("message",message.getMessage());
