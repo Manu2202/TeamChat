@@ -7,10 +7,14 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.HashMap;
@@ -55,7 +59,6 @@ public class FirebaseConnection {
         });
     }
 
-
     public void addToFirestore(final Chat chat, final List<String> userids) {
         firebaseDB.collection("chats").add(chat)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -93,12 +96,33 @@ public class FirebaseConnection {
                     DocumentSnapshot documentSnapshot = task.getResult();
                     if (documentSnapshot.exists()) {
                         User firebaseUser = documentSnapshot.toObject(User.class);
+
                         Log.d("FirebaseUser", firebaseUser.getAccountName() + ", " + firebaseUser.getGoogleMail());
                         dbStatements.insertUser(firebaseUser);
                     }
                 }
             }
         });
+    }
+
+    public void getUserbyEmail(String email){
+        // Query against the collection WHERE (googleMail == given_email).
+        firebaseDB.collection("users").whereEqualTo("googleMail", email).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        User firebaseUser = document.toObject(User.class);
+
+                        Log.d("FirebaseUser", firebaseUser.getAccountName() + ", " + firebaseUser.getGoogleMail());
+                        dbStatements.insertUser(firebaseUser);
+                    }
+                } else {
+                    Log.d("Firebase User", "Error getting user: ", task.getException());
+                }
+            }
+        });
+
     }
 
     public static void updateToken(final String uID, String token) {
@@ -118,6 +142,7 @@ public class FirebaseConnection {
             }
         });
     }
+
     public static void updateUsers(final String ChatID, List<String> users){
         Map<String, Object> data = new HashMap<>();
         data.put("users", users);

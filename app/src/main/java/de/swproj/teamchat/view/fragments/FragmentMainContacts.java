@@ -12,8 +12,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.SignInMethodQueryResult;
 
 import java.util.ArrayList;
 
@@ -85,7 +88,6 @@ public class FragmentMainContacts extends ListFragment {
             {
                 UserSearchDialog userSearchDialog = new UserSearchDialog(getActivity(), adapterContact);
                 userSearchDialog.show();
-
             }
         });
 

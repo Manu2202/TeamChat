@@ -12,11 +12,18 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.SignInMethodQueryResult;
 
 
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.connection.database.DBStatements;
+import de.swproj.teamchat.connection.firebase.FirebaseConnection;
 import de.swproj.teamchat.datamodell.chat.User;
 import de.swproj.teamchat.view.adapter.AdapterContact;
 
@@ -36,6 +43,7 @@ public class UserSearchDialog extends Dialog implements
     private User foundUser;
     private FloatingActionButton fab;
     private DBStatements dbStatements;
+    private FirebaseConnection fbconnect;
     private UserSearchThread userSearchThread;
 
     private final int STILL_WAITING = -1;
@@ -62,6 +70,8 @@ public class UserSearchDialog extends Dialog implements
         setTitle("Search for User");
 
         this.dbStatements = new DBStatements(getContext());
+
+        fbconnect = new FirebaseConnection(dbStatements);
 
         // Button "Search" - Disabled until searchField has text
         searchButton = (Button)findViewById(R.id.dialog_userSearch_search_btn);
@@ -147,6 +157,16 @@ public class UserSearchDialog extends Dialog implements
                     // TODO: Extra task if you have nothing else to do:
                     // Check here if user already exists in local Database
                     // (but it looks like it will not be added if it already exists)
+
+                        //Check if Email exists for User in Auth
+                        FirebaseAuth.getInstance().fetchSignInMethodsForEmail("emailaddress@gmail.com").addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
+                                if(!task.getResult().getSignInMethods().isEmpty()){
+                                    fbconnect.getUserbyEmail("fabian.dittrich98@gmail.com");
+                                }
+                            }
+                        });
 
 
                     // Search is submitted
