@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,10 +16,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.SignInMethodQueryResult;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 
 import de.swproj.teamchat.R;
@@ -110,6 +115,46 @@ public class UserSearchDialog extends Dialog implements
             }
         });
 
+        //Check if Email exists for User in Auth------------------------------------------
+        FirebaseAuth.getInstance().fetchSignInMethodsForEmail("emailaddress@gmail.com").addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
+            @Override
+            public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
+                if(task.getResult().getSignInMethods().isEmpty()){ //Maybe catch Null Pointer
+                    //No User found but Connection is there
+                    Log.d("User Search", "User not found!");
+                }
+                else{
+                    String email_to_search = "fabian.dittrich98@gmail.com";
+                    //Get User from Firestore (gets saved in Database)
+                    FirebaseFirestore.getInstance().collection("users").whereEqualTo("googleMail", email_to_search).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    //Got User, anything related to this User has to be done inside here because its async ------->
+
+                                    User firebaseUser = document.toObject(User.class);
+
+                                    Log.d("FirebaseUser", firebaseUser.getAccountName() + ", " + firebaseUser.getGoogleMail());
+                                    dbStatements.insertUser(firebaseUser);
+                                    //<--------------------------------------
+                                }
+                            } else {
+                                Log.d("Firebase User", "Error getting user: ", task.getException());
+                            }
+                        }
+                    });
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("User Search", "Error in Connection to Firebase");
+                //No Connection to Database
+            }
+        });
+        //--------------------------------------------------
+
 
         // Progress Bar when a search is being started - Pops up when you start search
         progressBar = (ProgressBar)findViewById(R.id.dialog_userSearch_progressBar);
@@ -158,15 +203,6 @@ public class UserSearchDialog extends Dialog implements
                     // Check here if user already exists in local Database
                     // (but it looks like it will not be added if it already exists)
 
-                        //Check if Email exists for User in Auth
-                        FirebaseAuth.getInstance().fetchSignInMethodsForEmail("emailaddress@gmail.com").addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
-                                if(!task.getResult().getSignInMethods().isEmpty()){
-                                    fbconnect.getUserbyEmail("fabian.dittrich98@gmail.com");
-                                }
-                            }
-                        });
 
 
                     // Search is submitted
@@ -177,22 +213,20 @@ public class UserSearchDialog extends Dialog implements
                     progressBar.setVisibility(View.VISIBLE);
                     responseText.setVisibility(View.GONE);
 
-                    // Start Search Thread to connect to Firebase
-                    userSearchThread = new UserSearchThread(activity, getContext(),
-                            this.dbStatements, this, searchField.getText().toString());
-                    new Thread(userSearchThread).start();
-                    // Thread will call reactToSearchResult() once it's done.
+
+
 
                     }
                 } else {
                     // If a user was found, the Search-Button will add the user
                     if (searchButton.getText().equals("Add")) {
-                        dbStatements.insertUser(foundUser);
 
                         // Also loads user into current Listview and updates it
                         // (might not best way to do this)
                         // without this, User is only displayed if you leave Contact View
                         // and come back
+
+                        // Not needed when Live Refresh is active
                         activity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
