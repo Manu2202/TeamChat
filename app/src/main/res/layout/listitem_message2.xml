@@ -3,20 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/li_message_rl"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="50dp">
+    android:layout_height="wrap_content"
+    android:paddingLeft="50dp"
+    android:paddingBottom="4dp">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/li_message_cv"
         style="@style/Widget.MaterialComponents.CardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_margin="4dp"
         android:animateLayoutChanges="true"
         android:transitionName="cv"
         app:cardBackgroundColor="@color/colorPrimaryVariant"
         app:cardCornerRadius="8dp"
         app:cardElevation="1dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true"
         app:contentPadding="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,6 +32,7 @@
             android:padding="4dp">
 
             <TextView
+                android:textColor="@color/colorOnBackground"
                 android:id="@+id/viewevent_tvcreator"
                 style="@style/TextAppearance.MaterialComponents.Subtitle2"
                 android:layout_width="wrap_content"
@@ -49,6 +53,7 @@
                 android:text="18:19" />
 
             <TextView
+                android:textColor="@color/black"
                 android:id="@+id/viewevent_tvtitle"
                 style="@style/TextAppearance.MaterialComponents.Body1"
                 android:layout_width="wrap_content"

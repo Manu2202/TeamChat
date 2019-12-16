@@ -77,11 +77,11 @@ public class AdapterMessage extends BaseAdapter {
 
 
                 LayoutInflater lf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                // todo: creator mit act user vergleichen
+
                 if (message.getCreator().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-                    convertView = lf.inflate(R.layout.listitem_message, null, false);
-                } else {
                     convertView = lf.inflate(R.layout.listitem_message2, null, false);
+                } else {
+                    convertView = lf.inflate(R.layout.listitem_message, null, false);
                 }
 
 

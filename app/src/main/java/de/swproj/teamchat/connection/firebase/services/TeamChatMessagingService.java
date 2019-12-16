@@ -6,7 +6,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SearchRecentSuggestionsProvider;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.RingtoneManager;
@@ -15,17 +14,14 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import java.io.IOException;
-import java.sql.Time;
 import java.util.Map;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.connection.database.DBStatements;
@@ -33,17 +29,15 @@ import de.swproj.teamchat.connection.firebase.FirebaseConnection;
 import de.swproj.teamchat.datamodell.chat.Event;
 import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.helper.FormatHelper;
-import de.swproj.teamchat.view.activities.TestActivity;
+import de.swproj.teamchat.view.activities.MainActivity;
 
 import static de.swproj.teamchat.view.activities.LoginActivity.PREFERENCE_FILE_KEY;
 
 public class TeamChatMessagingService extends FirebaseMessagingService {
-    public static final String FCM_PARAM = "picture";
     private static final String CHANNEL_NAME = "FCM";
     private static final String CHANNEL_DESC = "Firebase Cloud Messaging";
     private int numMessages = 0;
     private DBStatements dbStatements= new DBStatements(this);
-    private FirebaseConnection fbconnenct = new FirebaseConnection(dbStatements);
     @Override
     public void onNewToken(final String token) {
         Log.d("Messaging Service", "Refreshed token: " + token);
@@ -79,7 +73,7 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
     }
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        Log.d("Message recieved", "Message recieved");
+        Log.d("Message received", "Message received");
         super.onMessageReceived(remoteMessage);
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         Map<String, String> data = remoteMessage.getData();
@@ -98,7 +92,7 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
                     data.get("description"),
                     data.get("chatid"),
                     Integer.parseInt(data.get("status")));
-            Log.d("Message recieved", event.getMessage());
+            Log.d("Save FCM Event from onMessageReceived", event.getMessage());
             dbStatements.insertMessage(event);
         }else {
             Message msg = new Message(FormatHelper.formatTime(data.get("timestamp")),
@@ -107,7 +101,7 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
                     Boolean.valueOf(data.get("isEvent")),
                     data.get("creator"),
                     data.get("chatid"));
-            Log.d("Message recieved", msg.getMessage());
+            Log.d("Save FCM Message from onMessageReceived", msg.getMessage());
             dbStatements.insertMessage(msg);
         }
     }
@@ -122,15 +116,16 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
     }
 
     private void sendNotification(RemoteMessage.Notification notification, Map<String, String> data) {
-        Bundle bundle = new Bundle();
-        bundle.putString(FCM_PARAM, data.get(FCM_PARAM));
+        //Bundle bundle = new Bundle();
+        Log.d("Message", "Got new Notification with mesage"+notification.getBody());
+        //bundle.putString("body", notification.getBody());
 
-        Intent intent = new Intent(this, TestActivity.class);
-        intent.putExtras(bundle);
+        Intent intent = new Intent(this, MainActivity.class);
+        //intent.putExtras(bundle);
 
 
         // Creates an Intent for the Activity
-        Intent pendingIntent = new Intent(this, TestActivity.class);
+        Intent pendingIntent = new Intent(this, MainActivity.class);
         // Sets the Activity to start in a new, empty task
         pendingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         // Creates the PendingIntent

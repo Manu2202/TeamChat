@@ -11,6 +11,7 @@ import de.swproj.teamchat.datamodell.chat.Chat;
 import de.swproj.teamchat.datamodell.chat.Event;
 import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.datamodell.chat.User;
+import de.swproj.teamchat.helper.FormatHelper;
 import de.swproj.teamchat.view.fragments.FragmentMainChats;
 import de.swproj.teamchat.view.fragments.FragmentMainContacts;
 import de.swproj.teamchat.view.fragments.FragmentMainEvents;
@@ -100,6 +101,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //Save FCM from Notification Intent
+        saveFCMtoDB();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +117,9 @@ public class MainActivity extends AppCompatActivity {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         db = new DBStatements(this);
+
+        //Save FCM from Notification Intent
+        saveFCMtoDB();
     }
 
     @Override
@@ -131,6 +142,46 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void saveFCMtoDB() {
+        Intent i = getIntent();
+        Bundle extras = i.getExtras();
+        if (extras != null) {
+            for (String key : extras.keySet()) {
+                Object value = extras.get(key);
+                Log.d("Save FCM from Intent", "Extras received from Intent at onCreate:  Key: " + key + " Value: " + value);
+            }
+
+            String message = extras.getString("message");
+            Log.d("Save FCM", "Message: "+message);
+            if (message!=null && message.length()>0) {
+                if(Boolean.valueOf((String) extras.get("isEvent"))) {
+                    Log.d("Save Fcm", "Save Event in Database");
+                    Event event= new Event(FormatHelper.formatTime(extras.getString("timestamp")),
+                            message,
+                            extras.getString("id"),
+                            Boolean.valueOf(extras.getString("isEvent")),
+                            extras.getString("creator"),
+                            FormatHelper.formatDate(extras.getString("date")),
+                            extras.getString("description"),
+                            extras.getString("chatid"),
+                            Integer.parseInt(extras.getString("status")));
+                    Log.d("Save FCM Event from onMessageReceived", event.getMessage());
+                    db.insertMessage(event);
+                }else {
+                    Log.d("Save Fcm", "Save Message in Database");
+                    Message msg = new Message(FormatHelper.formatTime(extras.getString("timestamp")),
+                            message,
+                            extras.getString("id"),
+                            Boolean.valueOf((String) extras.get("isEvent")),
+                            extras.getString("creator"),
+                            extras.getString("chatid"));
+                    db.insertMessage(msg);
+                }
+                getIntent().removeExtra("body");
+            }
+        }
+    }
+
 
     /*
      * Private Method to setup the fragements and the Bottom Navigation View
@@ -144,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
         contactFragment = new FragmentMainContacts();
 
         //---------------------------------------------------------------  Test
-        addTestdat();
+        //addTestdat();
         //db.dropAll();
 
 

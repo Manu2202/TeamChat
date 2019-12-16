@@ -43,7 +43,7 @@ public class FirebaseConnection {
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Log.d("Firestore Messages", "addToFirebase with ID: " + documentReference.getId());
+                        Log.d("Firestore Messages", "Message added to Firebase with ID: " + documentReference.getId());
                         message.setId(documentReference.getId());
                         //dbStatements.insertMessage(message);
                     }
@@ -62,7 +62,7 @@ public class FirebaseConnection {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         String chatid = documentReference.getId();
-                        Log.d("Firestore Chat", "addToFirebase with ID: " + chatid);
+                        Log.d("Firestore Chat", "Chat added to Firebase with ID: " + chatid);
                         updateUsers(chatid,userids);
                         chat.setId(chatid);
                         dbStatements.insertChat(chat);
@@ -109,7 +109,7 @@ public class FirebaseConnection {
         FirebaseFirestore.getInstance().collection("tokens").document(uID).set(data, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Log.d("Firestore FCM Token", "onSuccess: Token added for User " + uID);
+                Log.d("Firestore FCM Token", "Token added for User " + uID);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -125,7 +125,7 @@ public class FirebaseConnection {
         FirebaseFirestore.getInstance().collection("chats").document(ChatID).set(data, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Log.d("Firestore Chat", "onSuccess:  Users added to Chat " + ChatID);
+                Log.d("Firestore Chat", "Users added to Chat " + ChatID);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -144,7 +144,7 @@ public class FirebaseConnection {
         FirebaseFirestore.getInstance().collection("tokens").document(uID).set(data, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Log.d("Firestore FCM Token", "onSuccess: Token deleted for User " + uID);
+                Log.d("Firestore FCM Token", "Token deleted for User " + uID);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
