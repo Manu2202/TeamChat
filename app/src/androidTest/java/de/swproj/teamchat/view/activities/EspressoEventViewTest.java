@@ -38,6 +38,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.anything;
@@ -58,6 +59,16 @@ public class EspressoEventViewTest {
 
     private String groupName1 = "Espresso Gruppe 1";
 
+
+    /**
+     * This is a UI test. Espresso automatically performs actions on the UI and then makes assertions
+     * (for example, if a certain textview is displaying the correct text after you clicked a button)
+     *
+     * Log in before you start test - Bot cannot handle Google SignIn
+     */
+
+
+    // Prepares Database with Dummy Data - This is run automatically before every Test
     @Before
     public void setUp() throws Exception {
         mActivity = mActivityTestRule.getActivity();
@@ -78,8 +89,6 @@ public class EspressoEventViewTest {
         gc.setGregorianChange(new java.sql.Date(10000));
         Time time = new Time(currentTime.getTime());
         db.insertMessage(new Event(time, "Mars Tour", "14546s", true, "emusk", new GregorianCalendar(2020, 10, 27, 9, 6), "Colonize mars with me", "123", (byte) 1));
-
-
     }
 
 
@@ -127,4 +136,35 @@ public class EspressoEventViewTest {
             }
         };
     }
+
+    /**
+     * Opens first Chat group (which contains an event), opens the details on this event, confirms,
+     * then checks if the status says "Committed"
+     */
+
+    @Test
+    public void testEventDetailViewFromChat() {
+        DataInteraction relativeLayout = onData(anything()).inAdapterView(allOf(withId(android.R.id.list),
+                childAtPosition(withClassName(is("android.widget.FrameLayout")), 1)))
+                .atPosition(0);
+        relativeLayout.perform(click());
+
+        ViewInteraction cardView = onView(allOf(withId(R.id.li_message_cv),
+                        childAtPosition(withParent(withId(R.id.lvMessages)), 0), isDisplayed()));
+        cardView.perform(click());
+
+        ViewInteraction materialButton = onView(allOf(withId(R.id.viewevent_btncomit), withText("zusagen"),
+                        childAtPosition(childAtPosition(withId(R.id.li_message_cv),0),12),
+                        isDisplayed()));
+        materialButton.perform(click());
+
+        ViewInteraction textView = onView(allOf(withId(R.id.viewevent_tvstatus), withText("committed"),
+                        childAtPosition(childAtPosition(withId(R.id.li_message_cv),0),10),
+                        isDisplayed()));
+        textView.check(matches(withText("committed")));
+    }
+
+
+
+
 }
