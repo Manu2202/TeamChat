@@ -182,7 +182,7 @@ public class DBStatements {
             db.endTransaction();
         }
 
-        Log.d("InsertEVent: ",message.isEvent()+"");
+        Log.d("InsertEvent: ",message.isEvent()+"");
         if (message.isEvent()) {
             Event e = (Event) message;
             values = new ContentValues();

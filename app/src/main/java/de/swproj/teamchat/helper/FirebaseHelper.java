@@ -16,7 +16,7 @@ public static HashMap<String,String> convertToMap(Message message, String title,
         retMap.put("status",String.valueOf(event.getStatus()));
     }
     retMap.put("chatid",message.getChatid());
-    retMap.put("isInvite", ((Boolean)isInvite).toString());
+    retMap.put("isInvite", Boolean.toString(isInvite));
     retMap.put("creator",message.getCreator());
     retMap.put("title",title);
     retMap.put("message",message.getMessage());

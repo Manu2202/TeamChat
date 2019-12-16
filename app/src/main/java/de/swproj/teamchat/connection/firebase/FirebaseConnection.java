@@ -136,16 +136,23 @@ public class FirebaseConnection {
     }
 
     public void saveChatbyID(final String chatid){
-        firebaseDB.collection("chats").document(chatid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        firebaseDB.collection("chats").document(chatid)
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
-                    DocumentSnapshot documentSnapshot = task.getResult();
-                    if (documentSnapshot.exists()) {
-                        Chat firebasechat = documentSnapshot.toObject(Chat.class);
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d("Chat", "DocumentSnapshot data: " + document.getData());
+                        Map<String,Object> snapshot = document.getData();
+                        Chat firebasechat = new Chat((String)snapshot.get("name"),((Long)snapshot.get("color")).intValue(),(String)document.getId(),(String)snapshot.get("admin"));
                         Log.d("FirebaseChat", "Saved new Chat with chatid: "+chatid);
                         dbStatements.insertChat(firebasechat);
+                    } else {
+                        Log.d("Chat", "No such document");
                     }
+                } else {
+                    Log.d("Chat", "get failed with ", task.getException());
                 }
             }
         });

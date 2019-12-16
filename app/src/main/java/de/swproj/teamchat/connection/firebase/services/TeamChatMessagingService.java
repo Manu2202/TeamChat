@@ -87,10 +87,13 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
      * If app is in foreground, notification data comes from onMessageReceived
      */
     private void save_message(RemoteMessage.Notification notification, Map<String, String> data){
-        if(Boolean.valueOf(data.get("isInvite"))){
+
+        if(Boolean.parseBoolean(data.get("isInvite"))){
+            Log.d("Chat", "Got invite");
             //Got new Invite -> Check if Chat is new
-            String chatid = data.get("id");
+            String chatid = data.get("chatid");
             if (dbStatements.getChat(chatid)==null){
+                Log.d("Chat","Chat nicht vorhanden");
                 //Chat is not in Database -> Get Chat from Firestore
                 fbconnect.saveChatbyID(chatid);
             }

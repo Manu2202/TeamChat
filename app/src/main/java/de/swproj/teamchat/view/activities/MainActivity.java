@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = new DBStatements(this);
         fbconnect = new FirebaseConnection(db);
-
+        //fbconnect.saveUserByID("gTiVTJ7cjORANbGUw2hpPHZfG122");
 
         //Save FCM from Notification Intent
         saveFCMtoDB();
@@ -160,10 +160,12 @@ public class MainActivity extends AppCompatActivity {
             Log.d("Save FCM", "Message: "+message);
 
             if (message!=null && message.length()>0) {
-                if(Boolean.valueOf(extras.getString("isInvite"))){
+                if(Boolean.parseBoolean(extras.getString("isInvite"))){
+                    Log.d("Chat", "Got invite");
                     //Got new Invite -> Check if Chat is new
-                    String chatid = extras.getString("id");
+                    String chatid = extras.getString("chatid");
                     if (db.getChat(chatid)==null){
+                        Log.d("Chat","chat nicht vorhanden");
                         //Chat is not in Database -> Get Chat from Firestore
                         fbconnect.saveChatbyID(chatid);
                     }
