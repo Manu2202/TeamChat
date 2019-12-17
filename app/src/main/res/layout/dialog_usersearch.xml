@@ -21,7 +21,9 @@
             android:ems="10"
             android:selectAllOnFocus="true"
             android:textIsSelectable="true"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            android:inputType="textEmailAddress"
+            />
 
         <TextView
             android:id="@+id/dialog_userSearch_response_tv"

@@ -436,6 +436,56 @@ public class DBStatements {
         return user;
     }
 
+    public User getUserByEmail(String googleMail) {
+        User user = null;
+        SQLiteDatabase db = dbConnection.getReadableDatabase();
+        db.beginTransaction();
+
+        try {
+            Cursor c = db.query(DBCreate.TABLE_USER, new String[]{DBCreate.COL_USER_G_ID, DBCreate.COL_USER_MAIL, DBCreate.COL_USER_ACCNAME, DBCreate.COL_USER_FIRSTNAME, DBCreate.COL_USER_NAME},
+                    DBCreate.COL_USER_MAIL + "=?", new String[]{googleMail}, null, null, null);
+            if (c.moveToFirst()) {
+
+                int id = c.getColumnIndex(DBCreate.COL_USER_G_ID);
+                int mail = c.getColumnIndex(DBCreate.COL_USER_MAIL);
+                int acc = c.getColumnIndex(DBCreate.COL_USER_ACCNAME);
+                int name = c.getColumnIndex(DBCreate.COL_USER_NAME);
+                int fname = c.getColumnIndex(DBCreate.COL_USER_FIRSTNAME);
+
+                user = new User(c.getString(id), c.getString(mail), c.getString(acc), c.getString(name), c.getString(fname));
+            }
+        } catch (Exception e) {
+            Log.d("DB_Error class DBStatements:", "Unable to read User " + googleMail + " from db");
+            e.printStackTrace();
+        } finally {
+            db.endTransaction();
+        }
+
+        return user;
+    }
+
+    public boolean getUserEmailExists(String googleMail) {
+        SQLiteDatabase db = dbConnection.getReadableDatabase();
+        db.beginTransaction();
+
+        try {
+            Cursor c = db.query(DBCreate.TABLE_USER, new String[]{DBCreate.COL_USER_G_ID, DBCreate.COL_USER_MAIL, DBCreate.COL_USER_ACCNAME, DBCreate.COL_USER_FIRSTNAME, DBCreate.COL_USER_NAME},
+                    DBCreate.COL_USER_MAIL + "=?", new String[]{googleMail}, null, null, null);
+            if (c.getCount() <= 0) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (Exception e) {
+            Log.d("DB_Error class DBStatements:", "Unable to read User " + googleMail + " from db");
+            e.printStackTrace();
+        } finally {
+            db.endTransaction();
+        }
+
+        return false;
+    }
+
     public ArrayList<User> getUser() {
         ArrayList<User> users = new ArrayList<>();
         SQLiteDatabase db = dbConnection.getReadableDatabase();
@@ -769,7 +819,5 @@ public class DBStatements {
 
         return message;
     }
-
-
 
 }
