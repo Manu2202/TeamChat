@@ -6,8 +6,7 @@ admin.initializeApp(functions.config().firebase);
 
 const db = admin.firestore();
 
-let registrationTokens = new Array();
-let message;
+
 //Firestore Trigger on Message create
 exports.sendGroupMessage = functions
     .region('europe-west1')
@@ -21,7 +20,7 @@ exports.sendGroupMessage = functions
 
         //Get UserIds from Chat
         let chatRef = db.collection('chats').doc(newValue.chatid);
-        chatRef.get()
+        let chat=chatRef.get()
             .then(doc => {
                 if (!doc.exists) {
                     throw new Error("No such chat with chat!");
@@ -37,6 +36,7 @@ exports.sendGroupMessage = functions
                 if (snapshot.empty) {
                     throw new Error("No matching documents for UserID query.");
                 }
+                let registrationTokens = new Array();
 
                 snapshot.forEach(doc => {
                     //Push Token in RegistrationToken Array
@@ -47,11 +47,11 @@ exports.sendGroupMessage = functions
                     }
                 });
 
-                //--Form Message Date--
+                //--Form Message--
+                let message;
 
-                //if message is event TODO
                 if (newValue.isEvent === 'true') {
-                    const message = {
+                      message = {
                         notification: {
                             title: newValue.title,
                             body: newValue.message
@@ -60,6 +60,7 @@ exports.sendGroupMessage = functions
                             id: context.params.messageID,
                             message: newValue.message,
                             chatid: newValue.chatid,
+                            isInvite: newValue.isInvite,
                             isEvent: newValue.isEvent,
                             creator: newValue.creator,
                             timestamp: newValue.timestamp,
@@ -69,8 +70,9 @@ exports.sendGroupMessage = functions
                         },
                         tokens: registrationTokens,
                     }
-                } else {
-                    const message = {
+                }
+                else {
+                      message = {
                         notification: {
                             title: newValue.title,
                             body: newValue.message
@@ -79,6 +81,7 @@ exports.sendGroupMessage = functions
                             id: context.params.messageID,
                             message: newValue.message,
                             chatid: newValue.chatid,
+                            isInvite: newValue.isInvite,
                             isEvent: newValue.isEvent,
                             creator: newValue.creator,
                             timestamp: newValue.timestamp
@@ -90,8 +93,8 @@ exports.sendGroupMessage = functions
                 //Send Message via Multicast
                 //???What if Tokens empty???
                 //Maybe make new Trigger on createToken for Users without Token
-
-                return admin.messaging().sendMulticast(message);
+                const payload = message;
+                return admin.messaging().sendMulticast(payload);
             })
             .then((response) => {
                 if (response.failureCount > 0) {
