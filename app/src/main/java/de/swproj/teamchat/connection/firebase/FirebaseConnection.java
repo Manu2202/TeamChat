@@ -46,7 +46,7 @@ public class FirebaseConnection {
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d("Firestore Messages", "Message added to Firebase with ID: " + documentReference.getId());
                         message.setId(documentReference.getId());
-                        //dbStatements.insertMessage(message);
+                        dbStatements.insertMessage(message);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override

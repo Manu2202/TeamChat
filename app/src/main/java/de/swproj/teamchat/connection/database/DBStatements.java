@@ -354,13 +354,13 @@ public class DBStatements {
             Cursor c = db.query(DBCreate.TABLE_EVENTUSER, new String[]{DBCreate.COL_EVENTUSER_ID,DBCreate.COL_EVENTUSER_FK_EVENT, DBCreate.COL_EVENTUSER_FK_USER, DBCreate.COL_EVENTUSER_REASON, DBCreate.COL_EVENTUSER_STATUS},
                     DBCreate.COL_EVENTUSER_FK_EVENT + "=? AND " + DBCreate.COL_EVENTUSER_FK_USER + "=?", new String[]{eventId,userId}, null, null, null);
             Log.d("getUserEventStatus","Cursor count: "+c.getCount());
+            Log.d("getUserEventStatus","Cursor:"+c.moveToFirst());
             if (c.moveToFirst()) {
                 int id = c.getColumnIndex(DBCreate.COL_EVENTUSER_ID);
                 int event = c.getColumnIndex(DBCreate.COL_EVENTUSER_FK_EVENT);
                 int user = c.getColumnIndex(DBCreate.COL_EVENTUSER_FK_USER);
                 int reason = c.getColumnIndex(DBCreate.COL_EVENTUSER_REASON);
                 int status = c.getColumnIndex(DBCreate.COL_EVENTUSER_STATUS);
-
                 state = new UserEventStatus(c.getInt(id),c.getString(user), c.getInt(event), c.getInt(status), c.getString(reason));
 
             }

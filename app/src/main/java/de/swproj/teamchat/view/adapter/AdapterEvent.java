@@ -60,6 +60,7 @@ public class AdapterEvent extends BaseAdapter {
         TextView tvDate = convertView.findViewById(R.id.viewevent_tveveventdate);
         TextView tvTime = convertView.findViewById(R.id.viewevent_tveventtime);
         TextView tvGroupname = convertView.findViewById(R.id.viewevent_tvcreator);
+        TextView tvDescription = convertView.findViewById(R.id.viewevent_tvdescription);
         tvTitle.setText(ev.getMessage());
         tvTime.setText(ev.getTimeStamp().toString());
 
@@ -70,7 +71,7 @@ public class AdapterEvent extends BaseAdapter {
         // Display event creator name
        // tvUser.setText(ev.getCreator());
 
-
+        tvDescription.setText(ev.getDescription());
         tvTime.setText(FormatHelper.formatTime(ev.getDate()));
         tvDate.setText(FormatHelper.formatDate(ev.getDate()));
 

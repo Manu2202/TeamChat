@@ -99,8 +99,10 @@ public class AdapterMessage extends BaseAdapter {
                 Event event = db.getEvent(message.getId());
                 TextView tvEventDate = convertView.findViewById(R.id.viewevent_tveveventdate);
                 TextView tvEventTime = convertView.findViewById(R.id.viewevent_tveventtime);
+                TextView tv_Description = convertView.findViewById(R.id.viewevent_tvdescription);
                 //todo: fix date in DBstatemants
 
+                tv_Description.setText(event.getDescription());
                 tvEventDate.setText(FormatHelper.formatDate(event.getDate()));
                 tvEventTime.setText(FormatHelper.formatTime(event.getDate()));
                 final CardView cv = convertView.findViewById(R.id.li_message_cv);

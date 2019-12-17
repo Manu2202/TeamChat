@@ -170,7 +170,7 @@ public class EditEventActivity extends AppCompatActivity {
     public void onClickSaveChanges(View view){
         if (msgId.equals("0")){
             // Own created Event -> User automatically accepted
-            int status = 2;
+            int status = 1;
             try {
                 GregorianCalendar date = new GregorianCalendar(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute);
                 event = new Event(new Time(System.currentTimeMillis()),

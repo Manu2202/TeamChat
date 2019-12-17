@@ -158,8 +158,8 @@ public class MainActivity extends AppCompatActivity {
             //Got new Intent extras from Notification
             String message = extras.getString("message");
             Log.d("Save FCM", "Message: "+message);
-
-            if (message!=null && message.length()>0) {
+            if (message!=null && message.length()>0 && db.getMessage(extras.getString("id"))==null) {
+                //Message is new and relevant
                 if(Boolean.parseBoolean(extras.getString("isInvite"))){
                     Log.d("Chat", "Got invite");
                     //Got new Invite -> Check if Chat is new
@@ -182,8 +182,8 @@ public class MainActivity extends AppCompatActivity {
                             FormatHelper.formatDate(extras.getString("date")),
                             extras.getString("description"),
                             extras.getString("chatid"),
-                            Integer.parseInt(extras.getString("status")));
-                    Log.d("Save FCM Event from Intent", event.getMessage());
+                            extras.getInt("status"));
+                    Log.d("Save FCM Event from Intent", event.getMessage() + "Status: "+event.getStatus());
 
                     //Insert in Database
                     db.insertMessage(event);

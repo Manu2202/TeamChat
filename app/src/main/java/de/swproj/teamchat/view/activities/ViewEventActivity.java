@@ -16,12 +16,14 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.ArrayList;
 
 public class ViewEventActivity extends AppCompatActivity {
     private DBStatements db;
     private Event event;
-    private String activeUser = "abc";
+    private String activeUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
     private ArrayList<UserEventStatus> userEventStates;
     private UserEventStatus mystate;
     private TextView tvStatus;
@@ -53,8 +55,9 @@ public class ViewEventActivity extends AppCompatActivity {
         tvTime.setText(FormatHelper.formatTime(event.getDate()));
         tvtitle.setText(event.getMessage());
         tvDescription.setText(event.getDescription());
-
+        Log.d("MYLOG","ID: "+id+" User: "+activeUser);
         mystate = db.getUserEventStatus(id, activeUser);
+        Log.d("getUserEventStatus",mystate.getReason());
         tvStatus.setText(mystate.getStatusString());
 
 
@@ -83,7 +86,7 @@ public class ViewEventActivity extends AppCompatActivity {
 
     public void commit(View view) {
         mystate.setReason("-");
-        mystate.setStatus((byte) 1);
+        mystate.setStatus(1);
         db.updateUserEventStatus(mystate);
         tvStatus.setText(mystate.getStatusString());
 
