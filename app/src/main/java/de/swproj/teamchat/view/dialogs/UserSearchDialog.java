@@ -8,9 +8,12 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -21,9 +24,14 @@ import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.connection.firebase.FirebaseConnection;
+import de.swproj.teamchat.datamodell.chat.Event;
 import de.swproj.teamchat.datamodell.chat.User;
 import de.swproj.teamchat.view.adapter.AdapterContact;
 
@@ -40,7 +48,12 @@ public class UserSearchDialog extends Dialog implements
     private TextView userFName;
     private TextView userAccName;
     private TextView responseText;
-    private User foundUser;
+    private AdapterContact adapterContact;
+    private ScrollView searchResultsScrollView;
+    private ListView searchResults;
+   // private User foundUser;         // to be replaced by an array for multiple search results
+    private ArrayList<User> searchResultUsers = new ArrayList<User>();
+
     private DBStatements dbStatements;
     private FirebaseConnection fbconnect;
 
@@ -82,6 +95,42 @@ public class UserSearchDialog extends Dialog implements
         searchField = (EditText)findViewById(R.id.dialog_userSearch_name_et);
         searchField.setVisibility(View.VISIBLE);
 
+        searchResultsScrollView = (ScrollView)findViewById(R.id.userSearch_results_scrollview);
+        searchResultsScrollView.setVisibility(View.GONE);
+        searchResults = (ListView)findViewById(R.id.userSearch_resultList);
+        adapterContact = new AdapterContact(searchResultUsers);
+        searchResults.setAdapter(adapterContact);
+
+        /*
+        searchResultUsers.add(new User("emusk", "sdbf", "Elon Musk", "Musk", "Elon"));
+        searchResultUsers.add(new User("emuskDerZweite", "sdbf", "Elon Musk der Zweite", "Musk", "Elon"));
+        searchResultUsers.add(new User("emuskDerDritte", "sdbf", "Elon Musk der Dritte", "Musk", "Elon"));
+        */
+
+
+        searchResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                final User selectedUser = (User)adapterContact.getItem(position);
+
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        adapter.add(selectedUser);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+
+                dbStatements.insertUser(selectedUser);
+                searchResultUsers.remove(selectedUser);
+                adapterContact.notifyDataSetChanged();
+
+                if (searchResultUsers.size() <= 0) {
+                    dismiss();
+                }
+
+            }
+        });
 
         // As long as search field is empty, search button cannot be pressed
         searchField.addTextChangedListener(new TextWatcher() {
@@ -128,9 +177,9 @@ public class UserSearchDialog extends Dialog implements
         userAccName.setVisibility(View.GONE);
 
 
-        // Text when no user was found or Database collection failedl
+        // Text when no user was found or Database collection failed
         responseText = (TextView)findViewById(R.id.dialog_userSearch_response_tv);
-        responseText.setText("Enter User Email Address");
+        responseText.setText("Enter user email address or first name");
         responseText.setVisibility(View.VISIBLE);
 
     }
@@ -140,34 +189,37 @@ public class UserSearchDialog extends Dialog implements
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.dialog_userSearch_search_btn:
-                if (foundUser == null) {
+                if (searchResultUsers.size() <= 0) {
                     if(searchField.getText().toString().equals("")){
-                    responseText.setText("Enter User Email Address");
+                    responseText.setText("Enter user email address or first name");
                     responseText.setVisibility(View.VISIBLE);
                     } else {
-                        String enteredEmail = searchField.getText().toString();
+                        String enteredQuery = searchField.getText().toString();
 
-                        if (dbStatements.getUserEmailExists(enteredEmail)) {
+                        if (dbStatements.getUserEmailExists(enteredQuery)) {
                             responseText.setText("User already in list ("
-                                    + dbStatements.getUserByEmail(enteredEmail).getAccountName() + ")");
+                                    + dbStatements.getUserByEmail(enteredQuery).getAccountName() + ")");
                             responseText.setVisibility(View.VISIBLE);
                         } else {
                             // Search is submitted
                             // Prepare UI
                             searchButton.setEnabled(false);
                             searchButton.setText("Searching");
-                            searchField.setVisibility(View.GONE);
+                            searchField.setText("");
                             progressBar.setVisibility(View.VISIBLE);
-                            responseText.setVisibility(View.GONE);
+                            responseText.setText("");
+                            searchField.setVisibility(View.GONE);
 
-                            // TODO: Prevent app from crashing if enteredEmail is not a valid Email address
-
-                            queryDBbyEmail(enteredEmail);
+                            if (enteredQuery.contains("@")) {
+                                queryDBbyEmail(enteredQuery);
+                            } else {
+                                queryFirebaseByFirstname(enteredQuery);
+                            }
                         }
                     }
                 } else {
                     // If a user was found, the Search-Button will add the user
-                    if (searchButton.getText().equals("Add")) {
+                    if (searchButton.getText().equals("Add all")) {
 
                         // Also loads user into current Listview and updates it
                         // (might not best way to do this)
@@ -175,16 +227,21 @@ public class UserSearchDialog extends Dialog implements
                         // and come back
 
                         // Not needed when Live Refresh is active
+
                         activity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                adapter.add(foundUser);
-                                adapter.notifyDataSetChanged();
+                                for (User u : searchResultUsers) {
+                                    adapter.add(u);
+                                }
+                                    adapter.notifyDataSetChanged();
                             }
                         });
 
-                        dbStatements.insertUser(foundUser);
-                        foundUser = null;
+                        for (User u : searchResultUsers) {
+                            dbStatements.insertUser(u);
+                        }
+
                         dismiss();
                     }
                 }
@@ -221,33 +278,51 @@ public class UserSearchDialog extends Dialog implements
             // Firebase Server responded, but could not find User with that name in Database
             case USER_DOES_NOT_EXIST:
                 progressBar.setVisibility(View.GONE);
-                responseText.setText("Email address was not found");
+                responseText.setText("User unknown");
                 responseText.setVisibility(View.VISIBLE);
                 searchButton.setText("Search");
                 searchButton.setEnabled(true);
                 searchField.setText("");
                 searchField.setVisibility(View.VISIBLE);
-                foundUser = null;
+               // foundUser = null;
                 break;
 
             // Firebase Server successfully sent User Data to us
             case USER_WAS_FOUND:
+                searchResultsScrollView.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
                 searchField.setVisibility(View.INVISIBLE);
 
+                /*
                 userLName.setText(foundUser.getName());
                 userFName.setText(foundUser.getFirstName());
                 userAccName.setText(foundUser.getAccountName());
 
+
                 String foundUserInitials = foundUser.getFirstName().toUpperCase().charAt(0) + "" +
                         foundUser.getName().toUpperCase().charAt(0);
+
+
                 userIcon.setText(foundUserInitials);
                 userIcon.setVisibility(View.VISIBLE);
                 userLName.setVisibility(View.VISIBLE);
                 userFName.setVisibility(View.VISIBLE);
                 userAccName.setVisibility(View.VISIBLE);
 
-                searchButton.setText("Add");
+                 */
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        /*
+                        for (User u : searchResultUsers) {
+                            adapter.add(u);
+                        }
+
+                         */
+                        adapterContact.notifyDataSetChanged();
+                    }
+                });
+                searchButton.setText("Add all");
                 searchButton.setEnabled(true);
                 break;
         }
@@ -277,10 +352,14 @@ public class UserSearchDialog extends Dialog implements
                                     User firebaseUser = document.toObject(User.class);
                                     Log.d("FirebaseUser", firebaseUser.getAccountName() + ", " + firebaseUser.getGoogleMail());
                                     // dbStatements.insertUser(firebaseUser);
-                                    foundUser = firebaseUser;
-                                    reactToSearchResult(USER_WAS_FOUND);
+                                    searchResultUsers.add(firebaseUser);
                                     //<--------------------------------------
                                 }
+                                searchResultUsers.add(new User("emusk", "sdbf", "Elon Musk", "Musk", "Elon"));
+                                searchResultUsers.add(new User("emuskDerZweite", "sdbf", "Elon Musk der Zweite", "Musk", "Elon"));
+                                searchResultUsers.add(new User("emuskDerDritte", "sdbf", "Elon Musk der Dritte", "Musk", "Elon"));
+
+                                reactToSearchResult(USER_WAS_FOUND);
                             } else {
                                 Log.d("Firebase User", "Error getting user: ", task.getException());
                             }
@@ -298,5 +377,54 @@ public class UserSearchDialog extends Dialog implements
         });
         //--------------------------------------------------
     }
+
+    private void queryFirebaseByFirstname(String firstName) {
+        //Check if Email exists for User in Auth------------------------------------------
+        final String userFirstName = firstName;
+
+        // TODO: Need a Firebase interface that checks for First Name, not Email
+        FirebaseAuth.getInstance().fetchSignInMethodsForEmail(userFirstName).addOnCompleteListener(new OnCompleteListener<SignInMethodQueryResult>() {
+            @Override
+            public void onComplete(@NonNull Task<SignInMethodQueryResult> task) {
+                if (task.getResult().getSignInMethods().isEmpty()) { //Maybe catch Null Pointer
+                    //No User found but Connection is there
+                    reactToSearchResult(USER_DOES_NOT_EXIST);
+                    Log.d("User Search", "User not found!");
+                } else {
+                    String name_to_search = userFirstName;
+                    //Get User from Firestore (gets saved in Database)
+                    FirebaseFirestore.getInstance().collection("users").whereEqualTo("firstName", userFirstName).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    //Got User, anything related to this User has to be done inside here because its async ------->
+
+                                    User firebaseUser = document.toObject(User.class);
+                                    Log.d("FirebaseUser", firebaseUser.getAccountName() + ", " + firebaseUser.getFirstName());
+                                    // dbStatements.insertUser(firebaseUser);
+                                    searchResultUsers.add(firebaseUser);
+                                    //<--------------------------------------
+                                }
+
+                                reactToSearchResult(USER_WAS_FOUND);
+                            } else {
+                                Log.d("Firebase User", "Error getting user: ", task.getException());
+                            }
+                        }
+                    });
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e("User Search", "Error in Connection to Firebase");
+                //No Connection to Database
+                reactToSearchResult(USER_WAS_NOT_SEARCHED_FOR);
+            }
+        });
+        //--------------------------------------------------
+    }
+
 
 }
