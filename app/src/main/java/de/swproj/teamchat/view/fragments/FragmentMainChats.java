@@ -38,6 +38,7 @@ import de.swproj.teamchat.view.adapter.AdapterChat;
 public class FragmentMainChats extends ListFragment {
     private DBStatements db;
     private ArrayList<Chat> chats;
+    private MenuItem deleteButton;
 
     @Nullable
     @Override
@@ -51,12 +52,12 @@ public class FragmentMainChats extends ListFragment {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
         ListView list = getListView();
-
 
         final AdapterChat chatAdapter = new AdapterChat(chats, db);
         setListAdapter(chatAdapter);
@@ -70,14 +71,33 @@ public class FragmentMainChats extends ListFragment {
                 startActivityForResult(chatIntent, position);
             }
         });
+
+        list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view,
+                                           int position, long arg3) {
+                // TODO: Mark item as selected, so deleteButton can delete selected items
+                // Delete Button has no function yet
+                 deleteButton.setVisible(true);
+
+                return false;
+            }
+
+        });
+
     }
 
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main_chat_menu, menu);
+        menu.findItem(R.id.btn_chat_menu_delete).setVisible(false);
+        deleteButton = menu.findItem(R.id.btn_chat_menu_delete);
+
         super.onCreateOptionsMenu(menu, inflater);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
