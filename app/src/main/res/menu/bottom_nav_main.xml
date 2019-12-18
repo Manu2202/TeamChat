@@ -5,19 +5,19 @@
     <item
         android:id="@+id/nav_chats"
         android:icon="@drawable/ic_chat_main"
-        android:title="Chats"/>
+        android:title="@string/nav_chats"/>
 
     <!-- Item für den Event Reiter -->
     <item
         android:id="@+id/nav_events"
         android:icon="@drawable/ic_event_main"
-        android:title="Events"/>
+        android:title="@string/nav_events"/>
 
     <!-- Item für den Kontakte Reiter -->
     <item
         android:id="@+id/nav_contacts"
         android:icon="@drawable/ic_contacts_main"
-        android:title="Kontakte"/>
+        android:title="@string/nav_contacts"/>
 
 
 </menu>

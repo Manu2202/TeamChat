@@ -17,10 +17,15 @@
     <string name="logout">Logout</string>
 
     <!-- Strings related to Chats -->
-    <string name="newEvent">Neues Event</string>
-    <string name="editChat">Chat bearbeiten</string>
+    <string name="newEvent">Create Event</string>
+    <string name="editChat">Edit Chat</string>
 
     <!-- Strings related to User -->
     <string name="first_name">First Name</string>
     <string name="reg_name">Name</string>
+    <string name="nav_chats">Chats</string>
+    <string name="nav_events">Events</string>
+    <string name="nav_contacts">Contacts</string>
+
+
 </resources>
