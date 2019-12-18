@@ -89,12 +89,16 @@
         android:text="LastName"
         android:visibility="gone" />
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:id="@+id/userSearch_SPACE"/>
+
     <ScrollView
         android:id="@+id/userSearch_results_scrollview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:maxHeight="200dp"
-
+        android:layout_below="@+id/userSearch_SPACE"
         android:visibility="visible">
 
         <LinearLayout
@@ -106,7 +110,7 @@
             <ListView
                 android:id="@+id/userSearch_resultList"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:visibility="visible" />
         </LinearLayout>
     </ScrollView>
@@ -117,19 +121,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/userSearch_results_scrollview"
-        android:layout_marginTop="1dp"
+        android:layout_marginTop="-1dp"
         android:ems="10"
         android:inputType="textEmailAddress"
         android:selectAllOnFocus="true"
         android:textIsSelectable="true"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/dialog_userSearch_response_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/userSearch_results_scrollview"
-        android:layout_marginTop="44dp"
+        android:layout_below="@+id/dialog_userSearch_name_et"
+        android:layout_marginTop="0dp"
         android:gravity="center"
         android:text="TextView"
         android:textIsSelectable="false"
@@ -140,8 +144,8 @@
         style="?android:attr/progressBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/dialog_userSearch_name_et"
-        android:layout_marginBottom="-18dp"
+        android:layout_below="@+id/dialog_userSearch_search_btn"
+        android:layout_marginTop="-84dp"
         android:visibility="visible" />
 
 </RelativeLayout>
