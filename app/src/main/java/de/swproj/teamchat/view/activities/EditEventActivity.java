@@ -61,14 +61,14 @@ public class EditEventActivity extends AppCompatActivity {
         firebaseConnection = new FirebaseConnection(dbStatements);
 
         // Initialize the Calendar
-        cal = (GregorianCalendar)GregorianCalendar.getInstance();
+        cal = (GregorianCalendar) GregorianCalendar.getInstance();
 
 
         // Connect the Layout Components
-        tv_selectDate = (TextView)findViewById(R.id.edit_event_tv_select_date);
-        tv_selectTime = (TextView)findViewById(R.id.edit_event_tv_select_time);
-        et_title = (EditText)findViewById(R.id.edit_event_et_title);
-        et_description = (EditText)findViewById(R.id.edit_event_et_description);
+        tv_selectDate = (TextView) findViewById(R.id.edit_event_tv_select_date);
+        tv_selectTime = (TextView) findViewById(R.id.edit_event_tv_select_time);
+        et_title = (EditText) findViewById(R.id.edit_event_et_title);
+        et_description = (EditText) findViewById(R.id.edit_event_et_description);
 
 
         tv_selectDate.setText(FormatHelper.formatDate(cal));
@@ -93,7 +93,7 @@ public class EditEventActivity extends AppCompatActivity {
     /*
      * Private Method to set all Listener on the Date, Time and the Listener on the Dialogs
      */
-    private void dateTimeOnClickListener(){
+    private void dateTimeOnClickListener() {
 
 
         // Listener for the Date TextView
@@ -116,7 +116,7 @@ public class EditEventActivity extends AppCompatActivity {
         dateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                month = month +1;  // Month starts at '0'
+                month = month + 1;  // Month starts at '0'
                 String date = dayOfMonth + "." + month + "." + year;
                 tv_selectDate.setText(date);
 
@@ -148,11 +148,11 @@ public class EditEventActivity extends AppCompatActivity {
                 String hour;
                 String min;
                 // Format the hour and min
-                if(hourOfDay < 10)
+                if (hourOfDay < 10)
                     hour = "0" + hourOfDay;
                 else
                     hour = "" + hourOfDay;
-                if(minute < 10)
+                if (minute < 10)
                     min = "0" + minute;
                 else
                     min = "" + minute;
@@ -167,8 +167,8 @@ public class EditEventActivity extends AppCompatActivity {
         };
     }
 
-    public void onClickSaveChanges(View view){
-        if (msgId.equals("0")){
+    public void onClickSaveChanges(View view) {
+        if (msgId.equals("0")) {
             // Own created Event -> User automatically accepted
             int status = 1;
             try {
@@ -177,20 +177,22 @@ public class EditEventActivity extends AppCompatActivity {
                         et_title.getText().toString(), msgId, true, FirebaseAuth.getInstance().getCurrentUser().getUid(),
                         date, et_description.getText().toString(), chatID, status);
                 //Push Event to Firebase
-                firebaseConnection.addToFirestore(event, FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),false);
+                firebaseConnection.addToFirestore(event,
+                        FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),
+                        false, false);
 
                 finish();
 
-            }catch(NullPointerException npe){
+            } catch (NullPointerException npe) {
 
                 npe.printStackTrace();
             }
-        }else{
+        } else {
             // TODO: Update eines existierenden Events
         }
     }
 
-    public void onClickCancel(View view){
+    public void onClickCancel(View view) {
         // Just go back to the previous Activity, safe nothing
         finish();
     }

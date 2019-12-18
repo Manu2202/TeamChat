@@ -3,7 +3,9 @@ package de.swproj.teamchat.view.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.R;
+import de.swproj.teamchat.connection.firebase.FirebaseConnection;
 import de.swproj.teamchat.datamodell.chat.Event;
+import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.datamodell.chat.UserEventStatus;
 import de.swproj.teamchat.helper.FormatHelper;
 import de.swproj.teamchat.view.adapter.AdapterUserEventStatus;
@@ -21,6 +23,7 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.sql.Time;
 import java.util.ArrayList;
 
 public class ViewEventActivity extends AppCompatActivity {
@@ -31,6 +34,7 @@ public class ViewEventActivity extends AppCompatActivity {
     private UserEventStatus mystate;
     private TextView tvStatus;
     private AdapterUserEventStatus adapter;
+    private FirebaseConnection fbConnection;
 
 
     @Override
@@ -39,6 +43,7 @@ public class ViewEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_event);
 
         db = new DBStatements(this);
+        fbConnection = new FirebaseConnection(db);
         String id = getIntent().getStringExtra("eventID");
 
         event = db.getEvent(id);
@@ -96,6 +101,14 @@ public class ViewEventActivity extends AppCompatActivity {
         repaintMyState(mystate);
 
         //todo: send state to server
+        // sendToFB: eventTitle + userEventStatus
+        String message = FirebaseAuth.getInstance().getCurrentUser().getDisplayName().split(" ")[0]
+                + " " + mystate.getStatusString();
+
+        fbConnection.addToFirestore(new Message(new Time(System.currentTimeMillis()),
+                message, false,
+                FirebaseAuth.getInstance().getCurrentUser().getUid(), event.getChatid()),
+                event.getMessage(), false, true);
     }
 
     private void repaintMyState(UserEventStatus state) {
@@ -117,11 +130,14 @@ public class ViewEventActivity extends AppCompatActivity {
         ReasonDialog rd = new ReasonDialog(this);
         rd.show();
         //todo: send state to sertver
+
+        // sendToFB: eventTitle + userEventStatus
     }
 
     public void cancleState(String reason) {
         Log.d("ViewEvent dialog", "Reason: " + reason);
     }
+
 
     /*
      * On Click Method to send Event directly to phone calendar

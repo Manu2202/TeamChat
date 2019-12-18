@@ -12,7 +12,7 @@ public class UserEventStatus {
         this.eventId = messageId;
         this.status = status;
         this.reason = reason;
-        this.statusId=statusId;
+        this.statusId = statusId;
     }
 
     public int getStatusId() {

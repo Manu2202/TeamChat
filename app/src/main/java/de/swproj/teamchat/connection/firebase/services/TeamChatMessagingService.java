@@ -28,6 +28,7 @@ import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.connection.firebase.FirebaseConnection;
 import de.swproj.teamchat.datamodell.chat.Event;
 import de.swproj.teamchat.datamodell.chat.Message;
+import de.swproj.teamchat.datamodell.chat.UserEventStatus;
 import de.swproj.teamchat.helper.FormatHelper;
 import de.swproj.teamchat.view.activities.MainActivity;
 
@@ -37,7 +38,7 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
     private static final String CHANNEL_NAME = "FCM";
     private static final String CHANNEL_DESC = "Firebase Cloud Messaging";
     private int numMessages = 0;
-    private DBStatements dbStatements= new DBStatements(this);
+    private DBStatements dbStatements = new DBStatements(this);
     FirebaseConnection fbconnect = new FirebaseConnection(dbStatements);
 
     @Override
@@ -46,18 +47,19 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the
         // Instance ID token to your app server.
-        if(FirebaseAuth.getInstance().getCurrentUser()!=null) {
-            FirebaseConnection.updateToken(FirebaseAuth.getInstance().getCurrentUser().getUid(),token);
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            FirebaseConnection.updateToken(FirebaseAuth.getInstance().getCurrentUser().getUid(), token);
         }
         //Store Token in Shared Prefs. If User is logged back in we can continue.
         save_token(token);
     }
-    public static void enableFCM(){
+
+    public static void enableFCM() {
         // Enable FCM via enable Auto-init service which generate new token and receive in FCMService
         FirebaseMessaging.getInstance().setAutoInitEnabled(true);
     }
 
-    public static void disableFCM(){
+    public static void disableFCM() {
         // Disable auto init
         FirebaseMessaging.getInstance().setAutoInitEnabled(false);
         new Thread(new Runnable() {
@@ -73,6 +75,7 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
             }
         }).start();
     }
+
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.d("Message received", "Message received");
@@ -81,13 +84,14 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
         Map<String, String> data = remoteMessage.getData();
         Log.d("Messaging Service, Message FROM", remoteMessage.getFrom());
         sendNotification(notification, data);
-        save_message(notification,data);
+        save_message(notification, data);
     }
+
     /**
      * If app is in foreground, notification data comes from onMessageReceived
      */
-    private void save_message(RemoteMessage.Notification notification, Map<String, String> data){
-        if (notification.getBody()!=null && notification.getBody().length()>0 && dbStatements.getMessage(data.get("id"))==null) {
+    private void save_message(RemoteMessage.Notification notification, Map<String, String> data) {
+        if (notification.getBody() != null && notification.getBody().length() > 0 && dbStatements.getMessage(data.get("id")) == null) {
             if (Boolean.parseBoolean(data.get("isInvite"))) {
                 Log.d("Chat", "Got invite");
                 //Got new Invite -> Check if Chat is new
@@ -109,24 +113,42 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
                         data.get("description"),
                         data.get("chatid"),
                         Integer.parseInt(data.get("status")));
-                Log.d("Save FCM Event from onMessageReceived", event.getMessage() + "Status:" + event.getStatus());
+                Log.d("Save FCM Event from onMessageReceived", event.getMessage() +
+                        "Status:" + event.getStatus());
                 //Save in Database
                 dbStatements.insertMessage(event);
-            } else {
-                //New Message
-                Message msg = new Message(FormatHelper.formatTime(data.get("timestamp")),
-                        notification.getBody(),
-                        data.get("id"),
-                        Boolean.valueOf(data.get("isEvent")),
-                        data.get("creator"),
-                        data.get("chatid"));
-                Log.d("Save FCM Message from onMessageReceived", msg.getMessage());
-                //Save in Database
-                dbStatements.insertMessage(msg);
+
+            } else if (Boolean.valueOf(data.get("isEventUpdate"))) {
+                String userID = data.get("creator");
+                String eventID = data.get("id");
+                UserEventStatus userEventStatus = dbStatements.getUserEventStatus(eventID, userID);
+                String status = notification.getBody();
+                status = status.split(" ")[1];
+                int intStatus = 0;
+                if (status.equals("committed"))
+                    intStatus = 1;
+                else if (status.equals("cancelled"))
+                    intStatus = 2;
+                userEventStatus.setStatus(intStatus);
+
+                dbStatements.updateUserEventStatus(userEventStatus);
             }
+
+        } else {
+            //New Message
+            Message msg = new Message(FormatHelper.formatTime(data.get("timestamp")),
+                    notification.getBody(),
+                    data.get("id"),
+                    Boolean.valueOf(data.get("isEvent")),
+                    data.get("creator"),
+                    data.get("chatid"));
+            Log.d("Save FCM Message from onMessageReceived", msg.getMessage());
+            //Save in Database
+            dbStatements.insertMessage(msg);
         }
     }
-    private void save_token(final String token){
+
+    private void save_token(final String token) {
         //Get shared Preference
         SharedPreferences sharedPref = this.getSharedPreferences(
                 PREFERENCE_FILE_KEY, MODE_PRIVATE);
@@ -138,7 +160,7 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
 
     private void sendNotification(RemoteMessage.Notification notification, Map<String, String> data) {
         //Bundle bundle = new Bundle();
-        Log.d("Message", "Got new Notification with mesage"+notification.getBody());
+        Log.d("Message", "Got new Notification with mesage" + notification.getBody());
         //bundle.putString("body", notification.getBody());
 
         Intent intent = new Intent(this, MainActivity.class);

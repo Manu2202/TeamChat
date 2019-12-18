@@ -81,7 +81,9 @@ public class ChatActivity extends AppCompatActivity {
             Message message = new Message(new Time(System.currentTimeMillis()),
                     etMessageString, false,
                     FirebaseAuth.getInstance().getCurrentUser().getUid(), chatID);
-            firebaseConnection.addToFirestore(message,FirebaseAuth.getInstance().getCurrentUser().getDisplayName(), false);
+            firebaseConnection.addToFirestore(message,
+                    FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),
+                    false, false);
             etMessage.setText("");
         }
     }
