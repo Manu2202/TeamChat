@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    style="@style/Theme.MaterialComponents.Dialog">
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/dialog_userSearch_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:paddingLeft="8dp"
+        android:visibility="visible">
+
+        <EditText
+            android:id="@+id/dialog_userSearch_name_et"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:selectAllOnFocus="true"
+            android:textIsSelectable="true"
+            android:visibility="invisible"
+            android:inputType="textEmailAddress"
+            />
+
+        <TextView
+            android:id="@+id/dialog_userSearch_response_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="TextView"
+            android:textIsSelectable="false"
+            android:visibility="visible" />
+
+        <ProgressBar
+            android:id="@+id/dialog_userSearch_progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/dialog_userSearch_search_btn"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dialog_userSearch_name"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="2dp"
+        android:layout_marginRight="5dp"
+        android:cursorVisible="false"
+        android:enabled="false"
+        android:text="Search"
+        android:visibility="visible" />
+
+    <Button
+        android:id="@+id/dialog_userSearch_cancel_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dialog_userSearch_name"
+        android:layout_alignParentLeft="true"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_marginTop="2dp"
+        android:layout_marginLeft="5dp"
+        android:text="Cancel" />
+
+    <TextView
+        android:id="@+id/userSearch_user_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/bg_letter"
+        android:gravity="center"
+        android:padding="2dp"
+        android:text="AA"
+        android:textColor="@color/colorOnPrimary"
+        android:textSize="40dp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/userSearch_user_accname"
+        style="@style/TextAppearance.MaterialComponents.Headline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="2dp"
+        android:layout_toRightOf="@+id/userSearch_user_icon"
+        android:text="AccName"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/userSearch_user_fname"
+        style="@style/TextAppearance.MaterialComponents.Body1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/userSearch_user_accname"
+        android:layout_toRightOf="@+id/userSearch_user_icon"
+        android:text="Forname"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/userSearch_user_lname"
+        style="@style/TextAppearance.MaterialComponents.Body1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/userSearch_user_accname"
+        android:layout_toRightOf="@+id/userSearch_user_fname"
+        android:paddingLeft="5dp"
+        android:text="LastName"
+        android:visibility="gone" />
+
+</RelativeLayout>

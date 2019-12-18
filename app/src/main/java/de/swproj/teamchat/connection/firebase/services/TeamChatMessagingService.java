@@ -6,7 +6,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SearchRecentSuggestionsProvider;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.RingtoneManager;
@@ -15,7 +14,6 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -24,22 +22,24 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.io.IOException;
 import java.util.Map;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.connection.firebase.FirebaseConnection;
-import de.swproj.teamchat.view.activities.TestActivity;
+import de.swproj.teamchat.datamodell.chat.Event;
+import de.swproj.teamchat.datamodell.chat.Message;
+import de.swproj.teamchat.helper.FormatHelper;
+import de.swproj.teamchat.view.activities.MainActivity;
 
 import static de.swproj.teamchat.view.activities.LoginActivity.PREFERENCE_FILE_KEY;
 
 public class TeamChatMessagingService extends FirebaseMessagingService {
-    public static final String FCM_PARAM = "picture";
     private static final String CHANNEL_NAME = "FCM";
     private static final String CHANNEL_DESC = "Firebase Cloud Messaging";
     private int numMessages = 0;
     private DBStatements dbStatements= new DBStatements(this);
-    private FirebaseConnection fbconnenct = new FirebaseConnection(dbStatements);
+    FirebaseConnection fbconnect = new FirebaseConnection(dbStatements);
+
     @Override
     public void onNewToken(final String token) {
         Log.d("Messaging Service", "Refreshed token: " + token);
@@ -75,11 +75,56 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
     }
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+        Log.d("Message received", "Message received");
         super.onMessageReceived(remoteMessage);
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         Map<String, String> data = remoteMessage.getData();
         Log.d("Messaging Service, Message FROM", remoteMessage.getFrom());
         sendNotification(notification, data);
+        save_message(notification,data);
+    }
+    /**
+     * If app is in foreground, notification data comes from onMessageReceived
+     */
+    private void save_message(RemoteMessage.Notification notification, Map<String, String> data){
+        if (notification.getBody()!=null && notification.getBody().length()>0 && dbStatements.getMessage(data.get("id"))==null) {
+            if (Boolean.parseBoolean(data.get("isInvite"))) {
+                Log.d("Chat", "Got invite");
+                //Got new Invite -> Check if Chat is new
+                String chatid = data.get("chatid");
+                if (dbStatements.getChat(chatid) == null) {
+                    Log.d("Chat", "Chat nicht vorhanden");
+                    //Chat is not in Database -> Get Chat from Firestore
+                    fbconnect.saveChatbyID(chatid);
+                }
+            }
+            if (Boolean.valueOf(data.get("isEvent"))) {
+                //New Event-----------------------------------------
+                Event event = new Event(FormatHelper.formatTime(data.get("timestamp")),
+                        notification.getBody(),
+                        data.get("id"),
+                        Boolean.valueOf(data.get("isEvent")),
+                        data.get("creator"),
+                        FormatHelper.formatDate(data.get("date")),
+                        data.get("description"),
+                        data.get("chatid"),
+                        Integer.parseInt(data.get("status")));
+                Log.d("Save FCM Event from onMessageReceived", event.getMessage() + "Status:" + event.getStatus());
+                //Save in Database
+                dbStatements.insertMessage(event);
+            } else {
+                //New Message
+                Message msg = new Message(FormatHelper.formatTime(data.get("timestamp")),
+                        notification.getBody(),
+                        data.get("id"),
+                        Boolean.valueOf(data.get("isEvent")),
+                        data.get("creator"),
+                        data.get("chatid"));
+                Log.d("Save FCM Message from onMessageReceived", msg.getMessage());
+                //Save in Database
+                dbStatements.insertMessage(msg);
+            }
+        }
     }
     private void save_token(final String token){
         //Get shared Preference
@@ -92,15 +137,16 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
     }
 
     private void sendNotification(RemoteMessage.Notification notification, Map<String, String> data) {
-        Bundle bundle = new Bundle();
-        bundle.putString(FCM_PARAM, data.get(FCM_PARAM));
+        //Bundle bundle = new Bundle();
+        Log.d("Message", "Got new Notification with mesage"+notification.getBody());
+        //bundle.putString("body", notification.getBody());
 
-        Intent intent = new Intent(this, TestActivity.class);
-        intent.putExtras(bundle);
+        Intent intent = new Intent(this, MainActivity.class);
+        //intent.putExtras(bundle);
 
 
         // Creates an Intent for the Activity
-        Intent pendingIntent = new Intent(this, TestActivity.class);
+        Intent pendingIntent = new Intent(this, MainActivity.class);
         // Sets the Activity to start in a new, empty task
         pendingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         // Creates the PendingIntent
@@ -124,8 +170,8 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
                 .setColor(getColor(R.color.colorAccent))
                 .setLights(Color.RED, 1000, 300)
                 .setDefaults(Notification.DEFAULT_VIBRATE)
-                .setNumber(++numMessages);
-                //.setSmallIcon(R.drawable.ic_notification);
+                .setNumber(++numMessages)
+                .setSmallIcon(R.drawable.ic_access_time_white_24dp);
 
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

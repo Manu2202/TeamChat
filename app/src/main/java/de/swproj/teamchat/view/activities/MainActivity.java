@@ -12,23 +12,20 @@ import de.swproj.teamchat.datamodell.chat.Chat;
 import de.swproj.teamchat.datamodell.chat.Event;
 import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.datamodell.chat.User;
+import de.swproj.teamchat.helper.FormatHelper;
 import de.swproj.teamchat.view.fragments.FragmentMainChats;
 import de.swproj.teamchat.view.fragments.FragmentMainContacts;
 import de.swproj.teamchat.view.fragments.FragmentMainEvents;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.sql.Time;
 import java.util.Calendar;
@@ -44,67 +41,75 @@ public class MainActivity extends AppCompatActivity {
     private ListFragment contactFragment;
     private static Fragment lastSelectedFragment;
     private DBStatements db;
+    private FirebaseConnection fbconnect;
 
     //FirebaseAuth
     private FirebaseAuth mAuth;
 
-    private void  addTestdat(){
+    private void addTestdat() {
 
         //löscht alle eintäge beim Start
-        //db.dropAll();
+        db.dropAll();
 
-        db.insertUser(new User("Gott","sdbjhdj","Der Herr der Dinge","Gott","Herr"));
-        db.insertUser(new User("11","sdjhnjhdj","Horster","Hors","tidiot"));
-        db.insertUser(new User("abc","sdjjunhdj","ICH","Man","Derine"));
-        db.insertUser(new User("Gott2","sdbjhdj","Der Herr der Dinge2","Gott2","Herr"));
-        db.insertUser(new User("emusk","sdbf","Elon Musk","Musk","Elon"));
-        db.insertChat(new Chat("Gugel",(getResources().getIntArray(R.array.androidcolors))[0],"123","11"));
-        db.updateChatMembers(new String[]{"Gott","11","abc","Gott2"},"123");
-        db.updateChatMembers(new String[]{"Gott","11","abc","Gott2"},"3434");
+        db.insertUser(new User("Gott", "sdbjhdj", "Der Herr der Dinge", "Gott", "Herr"));
+        db.insertUser(new User("11", "sdjhnjhdj", "Horster", "Hors", "tidiot"));
+        db.insertUser(new User("abc", "sdjjunhdj", "ICH", "Man", "Derine"));
+        db.insertUser(new User("Gott2", "sdbjhdj", "Der Herr der Dinge2", "Gott2", "Herr"));
+        db.insertUser(new User("emusk", "sdbf", "Elon Musk", "Musk", "Elon"));
+        db.insertChat(new Chat("Gugel", (getResources().getIntArray(R.array.androidcolors))[0], "123", "11"));
+        db.updateChatMembers(new String[]{"Gott", "11", "abc", "Gott2"}, "123");
+        db.updateChatMembers(new String[]{"Gott", "11", "abc", "Gott2"}, "3434");
 
 
-      //  db.insertChat(new Chat("Labergruppe", 0xFFFB0B03, "394", "Gott"));
+        //  db.insertChat(new Chat("Labergruppe", 0xFFFB0B03, "394", "Gott"));
         db.insertChat(new Chat("Tetris esport Team", (getResources().getIntArray(R.array.androidcolors))[1], "3934", "Gott"));
-        db.insertChat(new Chat("Anonyme Alkoholiker", (getResources().getIntArray(R.array.androidcolors))[2], "3954", "Gott"));
-        db.insertChat(new Chat("Öffentliche Alkoholiker", (getResources().getIntArray(R.array.androidcolors))[3], "3941", "Gott"));
-        db.insertChat(new Chat("Saufgruppe 1", (getResources().getIntArray(R.array.androidcolors))[4], "3434", "Gott"));
-        db.insertChat(new Chat("Saufgruppe 2", (getResources().getIntArray(R.array.androidcolors))[5], "34", "Gott"));
-        db.insertChat(new Chat("Saufgruppe 3", (getResources().getIntArray(R.array.androidcolors))[6], "3484", "Gott"));
-        db.insertChat(new Chat("Saufgruppe 4", (getResources().getIntArray(R.array.androidcolors))[7], "324", "Gott"));
-        db.insertChat(new Chat("Saufgruppe 5", (getResources().getIntArray(R.array.androidcolors))[8], "474", "Gott"));
+        db.insertChat(new Chat("Tee Party", (getResources().getIntArray(R.array.androidcolors))[2], "3954", "Gott"));
+        db.insertChat(new Chat("Buchclub", (getResources().getIntArray(R.array.androidcolors))[3], "3941", "Gott"));
+        db.insertChat(new Chat("Golfclub", (getResources().getIntArray(R.array.androidcolors))[4], "3434", "Gott"));
+        db.insertChat(new Chat("Fußballclub", (getResources().getIntArray(R.array.androidcolors))[5], "34", "Gott"));
+        db.insertChat(new Chat("Squash-Club", (getResources().getIntArray(R.array.androidcolors))[6], "3484", "Gott"));
+        db.insertChat(new Chat("Tennis-Club", (getResources().getIntArray(R.array.androidcolors))[7], "324", "Gott"));
+        db.insertChat(new Chat("Eishockey-Club", (getResources().getIntArray(R.array.androidcolors))[8], "474", "Gott"));
 
         Date currentTime = Calendar.getInstance().getTime();
         GregorianCalendar gc = new GregorianCalendar();
         gc.setGregorianChange(new java.sql.Date(849494994));
-             Time time =new Time (currentTime.getTime());
-        db.insertMessage(new Message(time,"Hallo, der horst ist da!!!","oho",false,"11","123"));
-        time.setTime(currentTime.getTime()+5);
-        db.insertMessage(new Event(time,"Panik","546s",true,"11",gc,"hilfe ein virus","123",(byte)1));
-        time.setTime(currentTime.getTime()+10);
-        db.insertMessage(new Message(time,"Coolbbb bfgtf ;D","o4454546",false,"abc","123"));
-        time.setTime(currentTime.getTime()+10);
-        db.insertMessage(new Message(time,"Cool  hu;D","o4584846",false,"11","123"));
-        time.setTime(currentTime.getTime()+10);
-        db.insertMessage(new Message(time,"Cool  huhu;D","o448784546",false,"Gott2","123"));
-        time.setTime(currentTime.getTime()+10);
-        db.insertMessage(new Message(time,"Cool ;D","o454846",false,"Gott","123"));
-        time.setTime(currentTime.getTime()+10);
-        db.insertMessage(new Message(time,"Ein Huhun ;D","o4115jn546",false,"abc","123"));
+        Time time = new Time(currentTime.getTime());
+        db.insertMessage(new Message(time, "Hallo, der horst ist da!!!", "oho", false, "11", "123"));
+        time.setTime(currentTime.getTime() + 5);
+        db.insertMessage(new Event(time, "Panik", "546s", true, "11", gc, "hilfe ein virus", "123", (byte) 1));
+        time.setTime(currentTime.getTime() + 10);
+        db.insertMessage(new Message(time, "Coolbbb bfgtf ;D", "o4454546", false, "abc", "123"));
+        time.setTime(currentTime.getTime() + 10);
+        db.insertMessage(new Message(time, "Cool  hu;D", "o4584846", false, "11", "123"));
+        time.setTime(currentTime.getTime() + 10);
+        db.insertMessage(new Message(time, "Cool  huhu;D", "o448784546", false, "Gott2", "123"));
+        time.setTime(currentTime.getTime() + 10);
+        db.insertMessage(new Message(time, "Cool ;D", "o454846", false, "Gott", "123"));
+        time.setTime(currentTime.getTime() + 10);
+        db.insertMessage(new Message(time, "Ein Huhun ;D", "o4115jn546", false, "abc", "123"));
 
-        db.insertMessage(new Event(time,"TourdeFrance","4546s",true,"Gott", new GregorianCalendar(2020, 10, 27, 9, 6),"hilfe ein russ","3434",(byte)1));
-        time.setTime(currentTime.getTime()+10);
+        db.insertMessage(new Event(time, "TourdeFrance", "4546s", true, "Gott", new GregorianCalendar(2020, 10, 27, 9, 6), "hilfe ein russ", "3434", (byte) 1));
+        time.setTime(currentTime.getTime() + 10);
 
-        db.insertMessage(new Event(time,"Mars Tour","14546s",true,"emusk", new GregorianCalendar(2020, 10, 27, 9, 6),"colonize mars with me","123",(byte)1));
-        time.setTime(currentTime.getTime()+1555);
+        db.insertMessage(new Event(time, "Mars Tour", "14546s", true, "emusk", new GregorianCalendar(2020, 10, 27, 9, 6), "colonize mars with me", "123", (byte) 1));
+        time.setTime(currentTime.getTime() + 1555);
 
 
-        Log.d("Main TestDaten  ",db.getUser().size()+"");
-        for(User user:db.getUser()){
-            Log.d("User: ",user.getAccountName()+"");
+        Log.d("Main TestDaten  ", db.getUser().size() + "");
+        for (User user : db.getUser()) {
+            Log.d("User: ", user.getAccountName() + "");
         }
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        //Save FCM from Notification Intent
+        saveFCMtoDB();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,84 +119,116 @@ public class MainActivity extends AppCompatActivity {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
         db = new DBStatements(this);
+        fbconnect = new FirebaseConnection(db);
+        //fbconnect.saveUserByID("gTiVTJ7cjORANbGUw2hpPHZfG122");
+
+        //Save FCM from Notification Intent
+        saveFCMtoDB();
     }
+
     @Override
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         final FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser == null){
-            Log.d("User-Problem","User is NULL going back to Start");
+        if (currentUser == null) {
+            Log.d("User-Problem", "User is NULL going back to Start");
             //TeamChatMessagingService.disableFCM();
-            sendtoStart();
+            Intent startIntent = new Intent(MainActivity.this, StartActivity.class);
+            startActivity(startIntent);
+            finish();
 
-        }
-        else {
+        } else {
             TeamChatMessagingService.enableFCM();
-            Log.d("User-Problem", "Logged in as User"+ currentUser.getDisplayName()+ " with UID of:"+ currentUser.getUid());
+            Log.d("User-Problem", "Logged in as User" + currentUser.getDisplayName() + " with UID of:" + currentUser.getUid());
             setUpUI();
         }
 
     }
-    private void sendtoStart() {
-        Intent startIntent = new Intent(MainActivity.this, StartActivity.class);
-        startActivity(startIntent);
-        finish();
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        super.onOptionsItemSelected(item);
-        switch(item.getItemId()){
-            case R.id.btn_main_logout:
-                //delete Token from uID
-                if (FirebaseAuth.getInstance().getCurrentUser()!=null){
-                    FirebaseConnection.deleteToken(FirebaseAuth.getInstance().getCurrentUser().getUid());
+    /**
+     * If app is in background notification data comes from Intent
+     * Has to be handled in the Launcher Activity
+     * (or other predefined Activity)
+     */
+    private void saveFCMtoDB() {
+        Intent i = getIntent();
+        Bundle extras = i.getExtras();
+        if (extras != null) {
+            //Got new Intent extras from Notification
+            String message = extras.getString("message");
+            Log.d("Save FCM", "Message: "+message);
+            if (message!=null && message.length()>0 && db.getMessage(extras.getString("id"))==null) {
+                //Message is new and relevant
+                if(Boolean.parseBoolean(extras.getString("isInvite"))){
+                    Log.d("Chat", "Got invite");
+                    //Got new Invite -> Check if Chat is new
+                    String chatid = extras.getString("chatid");
+                    if (db.getChat(chatid)==null){
+                        Log.d("Chat","chat nicht vorhanden");
+                        //Chat is not in Database -> Get Chat from Firestore
+                        fbconnect.saveChatbyID(chatid);
+                    }
                 }
-                TeamChatMessagingService.disableFCM();
-                FirebaseAuth.getInstance().signOut();
-                sendtoStart();
-                break;
+                if(Boolean.valueOf(extras.getString("isEvent"))) {
+                    //New Event received--------------------------------
+                    Log.d("Save Fcm", "Save Event in Database");
 
-            case R.id.btn_main_new_chat:
-                Intent createChatIntent = new Intent(this, EditChatActivity.class);
-                // ID = 0 -> new Chat
-                createChatIntent.putExtra("ID", "0");
-                startActivity(createChatIntent);
-                break;
+                    Event event= new Event(FormatHelper.formatTime(extras.getString("timestamp")),
+                            message,
+                            extras.getString("id"),
+                            Boolean.valueOf(extras.getString("isEvent")),
+                            extras.getString("creator"),
+                            FormatHelper.formatDate(extras.getString("date")),
+                            extras.getString("description"),
+                            extras.getString("chatid"),
+                            extras.getInt("status"));
+                    Log.d("Save FCM Event from Intent", event.getMessage() + "Status: "+event.getStatus());
+
+                    //Insert in Database
+                    db.insertMessage(event);
+                    }else {
+                    //New Message received-------------------------------
+                    Log.d("Save Fcm", "Save Message in Database");
+
+                    Message msg = new Message(FormatHelper.formatTime(extras.getString("timestamp")),
+                            message,
+                            extras.getString("id"),
+                            Boolean.valueOf((String) extras.get("isEvent")),
+                            extras.getString("creator"),
+                            extras.getString("chatid"));
+                    Log.d("Save FCM Message from Intent", msg.getMessage());
+
+                    //Insert in Database
+                    db.insertMessage(msg);
+                }
+                //TODO: necessary to delete?
+                getIntent().removeExtra("body");
+            }
         }
-
-        return true;
     }
 
-
-    /*
+    /**
      * Private Method to setup the fragements and the Bottom Navigation View
      */
-    private void setUpUI(){
+    private void setUpUI() {
         // Set the BottomNavigationView
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav_main);
         // Initialize the Listfragments only when Activity is created
         chatFragment = new FragmentMainChats();
         eventFragment = new FragmentMainEvents();
         contactFragment = new FragmentMainContacts();
-        //---------------------------------------------------------------  Test
-        addTestdat();
 
+        //---------------------------------------------------------------  Test
+        //addTestdat();
+        //db.dropAll();
 
 
         //Set Up the first Fragment, if lastSelectedFragment is NULL, else use this
-        if(lastSelectedFragment == null){
+        if (lastSelectedFragment == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container_main, chatFragment).commit();
-        }else{
+        } else {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container_main, lastSelectedFragment).commit();
         }
@@ -203,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 Fragment selectedFragment = null;
 
-                switch(menuItem.getItemId()) {
+                switch (menuItem.getItemId()) {
                     case R.id.nav_chats:
                         selectedFragment = chatFragment;
                         break;
@@ -214,14 +251,14 @@ public class MainActivity extends AppCompatActivity {
 
                     case R.id.nav_contacts:
                         selectedFragment = contactFragment;
-                        break;
+
                 }
                 lastSelectedFragment = selectedFragment;
 
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container_main, selectedFragment).commit();
 
-            return true;
+                return true;
             }
         });
     }

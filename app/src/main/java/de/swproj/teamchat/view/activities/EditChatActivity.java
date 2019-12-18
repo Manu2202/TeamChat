@@ -22,7 +22,9 @@ import android.widget.TextView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -30,6 +32,7 @@ public class EditChatActivity extends AppCompatActivity {
 
     private String chatId;
     private Chat chat;
+    private boolean isAdmin;
 
     private HashMap<String, User> allUser = new HashMap<String, User>();
     private HashMap<String, User> groupMember = new HashMap<String, User>();
@@ -57,12 +60,14 @@ public class EditChatActivity extends AppCompatActivity {
         // Get own Intent
         Intent ownIntent = getIntent();
         chatId = ownIntent.getStringExtra("ID");
+        String adminID = ownIntent.getStringExtra("admin");
+
+        isAdmin = adminID.equals(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         if (!chatId.equals("0")) {
             chat = dbStatements.getChat(chatId);
-
+            etChatName.setText(chat.getName());
             for (User user : dbStatements.getUsersOfChat(chatId)) {
-
                 groupMember.put(user.getGoogleId(), user);
             }
         }
@@ -72,11 +77,16 @@ public class EditChatActivity extends AppCompatActivity {
     }
 
     private void getAllUsers() {
+        String selfUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         for (User user : dbStatements.getUser()) {
             if (!groupMember.containsKey(user.getGoogleId()))
                 Log.d("EditChat ", "Users " + user.getGoogleId());
-            allUser.put(user.getGoogleId(), user);
-            Log.d("EditChat 2", "GetUser " + allUser.get(user.getGoogleId()).getGoogleId());
+
+            // Check if user from DB is yourself -> skip, because yourself is admin
+            if (!selfUserID.equals(user.getGoogleId()))
+                allUser.put(user.getGoogleId(), user);
+            if(!allUser.isEmpty())
+                Log.d("EditChat 2", "GetUser " + allUser.get(user.getGoogleId()).getGoogleId());
         }
     }
 
@@ -141,7 +151,8 @@ public class EditChatActivity extends AppCompatActivity {
         tvFName.setText(user.getFirstName());
         tvLName.setText(user.getName());
 
-        convertView.setOnClickListener(new clicklisten(list, user.getGoogleId()));
+        if(isAdmin)  // Check if current User is Admin -> able to change User
+            convertView.setOnClickListener(new clicklisten(list, user.getGoogleId()));
 
         return convertView;
 
@@ -149,6 +160,7 @@ public class EditChatActivity extends AppCompatActivity {
     }
 
     class clicklisten implements View.OnClickListener {
+
         private int list;
         private String userID;
 
@@ -185,12 +197,20 @@ public class EditChatActivity extends AppCompatActivity {
 
     public void saveChanges(View view) {
         if (chatId.equals("0")) {
+
             int[] androidColors = getResources().getIntArray((R.array.androidcolors));
             int color =  androidColors[new Random().nextInt(androidColors.length)];
             Chat chat = new Chat(etChatName.getText().toString(), FirebaseAuth.getInstance().getCurrentUser().getUid(),
                     color);
-            firebaseConnection.addToFirestore(chat);
+            List<String> userIDs = new ArrayList<>(groupMember.keySet());
+            userIDs.add(FirebaseAuth.getInstance().getCurrentUser().getUid());
+            firebaseConnection.addToFirestore(chat, userIDs);
+
         }else{
+            List<String> userIDs = new ArrayList<>(groupMember.keySet());
+            //userIDs.add(FirebaseAuth.getInstance().getCurrentUser().getUid());
+            //userIDs = dbStatements.getUsersOfChat(chatId);
+            firebaseConnection.updateUsers(chatId,chat.getName(),userIDs);
             // TODO: Update exisiterenden Chat
         }
         finish();

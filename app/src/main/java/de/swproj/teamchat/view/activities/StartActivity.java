@@ -148,6 +148,7 @@ public class StartActivity extends AppCompatActivity {
                             if (task.getResult().getAdditionalUserInfo().isNewUser()){
                                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                                 String name[] = user.getDisplayName().split(" ");
+                                //TODO name not defined only forename
                                 fbconnect.addToFirestore(new User(user.getUid(),user.getEmail(),user.getDisplayName(),name[1],name[0]));
                             }
                             //Send to MainActivity

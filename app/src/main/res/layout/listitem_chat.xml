@@ -12,16 +12,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minWidth="50dp"
-        android:minHeight="80dp" >
+        android:minHeight="70dp">
 
     </FrameLayout>
 
     <FrameLayout
         android:id="@+id/list_color_box"
-        android:layout_width="12dp"
-        android:layout_height="80dp"
+        android:layout_width="10dp"
+        android:layout_height="70dp"
         android:minWidth="50dp"
-        android:minHeight="50dp" >
+        android:minHeight="50dp">
 
     </FrameLayout>
 
@@ -30,9 +30,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
-        android:text="17.11.2019" />
+        android:layout_marginEnd="8dp"
+        android:textSize="14sp"
+        android:text="17.11.2019"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
 
     <TextView
         android:id="@+id/chatListLastMessage"
@@ -40,25 +42,26 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/chatListChatName"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="6dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginTop="12dp"
+        android:textSize="16sp"
         android:layout_toEndOf="@+id/list_color_box"
         android:ellipsize="end"
         android:maxLength="75"
         android:maxLines="1"
-        android:text="Letzte Chat Message, und so sieht es aus wenn sie nicht ins Feld passt"
-        android:textSize="16sp" />
+        android:text="Letzte Chat Message, und so sieht es aus wenn sie nicht ins Feld passt" />
 
     <TextView
         android:id="@+id/chatListChatName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:textSize="18sp"
-        android:textColor="@color/colorPrimaryDark"
+        android:layout_marginTop="5dp"
         android:layout_toEndOf="@+id/list_color_box"
-        android:text="Hier sollte ein Chatname stehen" />
+        android:text="Hier sollte ein Chatname stehen"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="18sp" />
 
 
 </RelativeLayout>

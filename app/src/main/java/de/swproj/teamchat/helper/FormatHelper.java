@@ -5,6 +5,9 @@ package de.swproj.teamchat.helper;
  * For the project: TeamChat.
  */
 
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -18,7 +21,7 @@ public class FormatHelper {
     /*
      *Convert the Calendar Date in a String to set the TextView for the Date
      */
-    public static String formatDateTime(GregorianCalendar date){
+    public static String formatDateTime(GregorianCalendar date) {
         // Format the Date
         SimpleDateFormat sdfDate = new SimpleDateFormat("dd.MM.YYYY");
         sdfDate.setCalendar(date);
@@ -31,17 +34,42 @@ public class FormatHelper {
         sdfTime.setCalendar(date);
         String timeFormatted = sdfTime.format(date.getTime()) + " Uhr";
 
-        return dateFormatted + "\n" + DAYOFTHEWEEK[dayOfWeek-1]+ " "+timeFormatted;
+        return dateFormatted + "\n" + DAYOFTHEWEEK[dayOfWeek - 1] + " " + timeFormatted;
+    }
+    public static GregorianCalendar formatDate(String date){
+        SimpleDateFormat sdfDate = new SimpleDateFormat("dd.MM.YYYY");
+        GregorianCalendar greg_date=(GregorianCalendar)GregorianCalendar.getInstance();
+        try {
+            greg_date.setTime(sdfDate.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return greg_date;
+
+    }
+    public static Time formatTime(String time){
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+        long ms = 0;
+        try {
+            ms = sdf.parse(time).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return new Time(ms);
+    }
+    public static String formatTime(Time time){
+        DateFormat format = new SimpleDateFormat("HH:mm");
+        return format.format(time.getTime()); // 11:17
     }
 
-    public static String formatTime(GregorianCalendar time){
+    public static String formatTime(GregorianCalendar time) {
         // Format the time
         SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm");
         sdfTime.setCalendar(time);
         return sdfTime.format(time.getTime());
     }
 
-    public static String formatDate(GregorianCalendar date){
+    public static String formatDate(GregorianCalendar date) {
         SimpleDateFormat sdfDate = new SimpleDateFormat("dd.MM.YYYY");
         sdfDate.setCalendar(date);
         return sdfDate.format(date.getTime());

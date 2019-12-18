@@ -7,137 +7,202 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/li_message_cv"
+        style="@style/Widget.MaterialComponents.CardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+
+        android:layout_marginBottom="8dp"
+
+        android:transitionName="cv"
+        app:cardBackgroundColor="@color/colorPrimary"
         app:cardCornerRadius="8dp"
+        app:contentPadding="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        style="@style/Widget.MaterialComponents.CardView"
-
-        android:transitionName="cv">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="4dp"
-            >
+            android:padding="4dp">
 
             <TextView
                 android:id="@+id/viewevent_tvcreator"
+                style="@style/TextAppearance.MaterialComponents.Subtitle2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="8dp"
                 android:text="username"
-                style="@style/TextAppearance.MaterialComponents.Subtitle2"
-                android:transitionName="2"
-                />
+                android:textColor="#f8f8f8"
+                android:transitionName="2" />
 
             <TextView
                 android:id="@+id/viewevent_tvtime"
+                style="@style/TextAppearance.MaterialComponents.Caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="8dp"
                 android:text="18:19"
-                style="@style/TextAppearance.MaterialComponents.Subtitle2" />
+                android:textColor="#f8f8f8" />
 
             <View
-                android:id="@+id/li_message_divider"
+                android:id="@+id/li_overview_divider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_below="@+id/viewevent_tvcreator"
-                android:padding="2dp"
-                android:background="@android:color/darker_gray"/>
+                android:background="@android:color/darker_gray"
+                android:padding="2dp" />
 
             <TextView
-                android:id="@+id/viewevent_tvname"
+                android:id="@+id/viewevent_tvtitle"
+                style="@style/TextAppearance.MaterialComponents.Headline5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/li_message_divider"
-                android:transitionName="top"
-                android:text="Großes Besauffest"
-                style="@style/TextAppearance.MaterialComponents.Headline4" />
-
-
-            <TextView
-                android:id="@+id/viewevent_tvdate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/viewevent_tvname"
-                android:text="11.11.11 18:30 Uhr"
-                style="@style/TextAppearance.MaterialComponents.Headline5" />
-
-
-            <TextView
-                android:id="@+id/viewevent_txtdescription"
-                style="@style/TextAppearance.MaterialComponents.Headline6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/viewevent_tvdate"
-                android:text="Description:" />
+                android:layout_below="@+id/li_overview_divider"
+                android:layout_centerHorizontal="false"
+                android:layout_marginLeft="16dp"
+                android:layout_marginBottom="8dp"
+                android:text="Termin"
+                android:textColor="#fcfcfc"
+                android:transitionName="top" />
 
             <TextView
                 android:id="@+id/viewevent_tvdescription"
+                style="@style/TextAppearance.AppCompat.Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/viewevent_txtdescription"
-                android:text="Lets meet an kill peobple, all perseon should have fun. So come together and sing!!! "
-                style="@style/TextAppearance.MaterialComponents.Body1" />
+                android:layout_below="@+id/viewevent_tvtitle"
+                android:layout_centerHorizontal="false"
+                android:layout_marginLeft="16dp"
+                android:layout_marginBottom="8dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="Das ist eine lange standard description, welche über zwei Zeilen geht. Die Punkte signalisieren, dass der Text weitergehen soll."
+                android:textColor="#fcfcfc"
+                android:textSize="14sp"
+                android:transitionName="top" />
 
+
+            <ImageView
+                android:id="@+id/li_icon_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/viewevent_tvdescription"
+                android:layout_marginLeft="16dp"
+                android:src="@drawable/ic_event_white_24dp" />
+
+            <TextView
+                android:id="@+id/viewevent_tveveventdate"
+                style="@style/TextAppearance.MaterialComponents.Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/viewevent_tvdescription"
+                android:layout_centerHorizontal="false"
+                android:layout_marginLeft="4dp"
+                android:layout_toEndOf="@id/li_icon_date"
+                android:text="11.11.19"
+                android:textColor="#fcfcfc" />
+
+            <ImageView
+                android:id="@+id/li_icon_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/viewevent_tvdescription"
+                android:layout_marginLeft="16dp"
+                android:layout_toEndOf="@id/viewevent_tveveventdate"
+                android:src="@drawable/ic_access_time_white_24dp" />
+
+            <TextView
+                android:id="@+id/viewevent_tveventtime"
+                style="@style/TextAppearance.MaterialComponents.Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/viewevent_tvdescription"
+                android:layout_centerHorizontal="false"
+                android:layout_marginLeft="4dp"
+                android:layout_toEndOf="@id/li_icon_time"
+                android:text="18:30 Uhr"
+                android:textColor="#fcfcfc" />
+
+            <TextView
+                android:id="@+id/viewevent_txtstatus"
+                style="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/li_icon_date"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:text="Dein Status: "
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/viewevent_tvstatus"
+                style="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/li_icon_date"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_toRightOf="@id/viewevent_txtstatus"
+                android:text="zugesagt"
+                android:textSize="16sp"
+                android:textStyle="italic" />
 
             <Button
                 android:id="@+id/viewevent_btncancel"
                 style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/viewevent_txtstatus"
+                android:layout_below="@id/viewevent_tvstatus"
                 android:layout_alignParentRight="true"
+                android:layout_marginRight="4dp"
                 android:onClick="cancleDialog"
                 android:text="absagen"
-                android:textSize="16dp" />
+                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/viewevent_btncomit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/viewevent_txtstatus"
+                android:layout_below="@id/viewevent_tvstatus"
                 android:layout_alignParentLeft="true"
+                android:layout_marginLeft="16dp"
                 android:onClick="commit"
                 android:text="zusagen" />
-
-            <TextView
-                android:id="@+id/viewevent_txtstatus"
-                style="@style/TextAppearance.MaterialComponents.Headline6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/viewevent_tvdescription"
-                android:text="Your Status: " />
-
-            <TextView
-                android:id="@+id/viewevent_tvstatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/viewevent_txtstatus"
-                android:text="zugesagt"
-                android:layout_below="@+id/viewevent_tvdescription"
-                style="@style/TextAppearance.MaterialComponents.Headline6"
-                />
-
-            <ListView
-                android:id="@+id/viewevent_lvstates"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/viewevent_btncomit" />
 
 
         </RelativeLayout>
 
 
-
     </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/tv_users_comitted"
+        style="@style/TextAppearance.MaterialComponents.Subtitle2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/li_message_cv"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Status aller User"
+        android:textColor="@color/design_default_color_primary_dark"
+        android:textSize="18dp" />
+
+    <ListView
+        android:id="@+id/viewevent_lvstates"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_users_comitted"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp" />
 </RelativeLayout>

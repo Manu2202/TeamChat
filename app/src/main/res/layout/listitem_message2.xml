@@ -3,23 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/li_message_rl"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="50dp">
+    android:layout_height="wrap_content"
+    android:paddingLeft="50dp"
+    android:paddingBottom="4dp">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/li_message_cv"
         style="@style/Widget.MaterialComponents.CardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_margin="4dp"
         android:animateLayoutChanges="true"
         android:transitionName="cv"
+        app:cardBackgroundColor="@color/colorPrimaryVariant"
         app:cardCornerRadius="8dp"
+        app:cardElevation="1dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true"
+        app:contentPadding="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:cardBackgroundColor="@color/colorPrimaryVariant"
-       >
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <RelativeLayout
@@ -28,19 +32,19 @@
             android:padding="4dp">
 
             <TextView
-                android:id="@+id/li_message_tvcreator"
+                android:textColor="@color/colorOnBackground"
+                android:id="@+id/viewevent_tvcreator"
                 style="@style/TextAppearance.MaterialComponents.Subtitle2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="8dp"
-                android:text="username"
-                />
+                android:text="username" />
 
             <TextView
-                android:id="@+id/li_message_tvtime"
-                style="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:id="@+id/viewevent_tvtime"
+                style="@style/TextAppearance.MaterialComponents.Caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -48,22 +52,14 @@
                 android:layout_marginLeft="8dp"
                 android:text="18:19" />
 
-            <View
-                android:id="@+id/li_message_divider"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_below="@+id/li_message_tvcreator"
-                android:background="@color/colorPrimaryDark"
-
-                android:padding="2dp" />
-
             <TextView
-                android:id="@+id/li_message_tvmessage"
+                android:textColor="@color/black"
+                android:id="@+id/viewevent_tvtitle"
                 style="@style/TextAppearance.MaterialComponents.Body1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/li_message_divider"
-                android:layout_marginTop="4dp"
+                android:layout_below="@id/viewevent_tvcreator"
+                android:layout_marginTop="6dp"
                 android:text="Halllo und Tag auch wollte nur mal schreiben." />
 
 

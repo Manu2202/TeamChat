@@ -16,6 +16,9 @@ import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.util.Pair;
 import androidx.core.view.ViewCompat;
+
+import com.google.firebase.auth.FirebaseAuth;
+
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.datamodell.chat.Event;
@@ -34,7 +37,6 @@ public class AdapterMessage extends BaseAdapter {
 
     private ArrayList<Message> messages;
     private DBStatements db;
-    String authentictedUser = "abc";
     private AppCompatActivity activity;//todo: Get Authenticated user for send and show
 
     public AdapterMessage(ArrayList<Message> messages, DBStatements dbStatements, AppCompatActivity activity) {
@@ -75,19 +77,19 @@ public class AdapterMessage extends BaseAdapter {
 
 
                 LayoutInflater lf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                // todo: creator mit act user vergleichen
-                if (message.getCreator().equals(authentictedUser)) {
-                    convertView = lf.inflate(R.layout.listitem_message, null, false);
-                } else {
+
+                if (message.getCreator().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
                     convertView = lf.inflate(R.layout.listitem_message2, null, false);
+                } else {
+                    convertView = lf.inflate(R.layout.listitem_message, null, false);
                 }
 
 
             }
             Log.d("MessageAdapter Message: ", message.getMessage()+"  "+message.getCreator());
-            TextView tvMessage = convertView.findViewById(R.id.li_message_tvmessage);
-            TextView tvTime = convertView.findViewById(R.id.li_message_tvtime);
-            TextView tvUser = convertView.findViewById(R.id.li_message_tvcreator);
+            TextView tvMessage = convertView.findViewById(R.id.viewevent_tvtitle);
+            TextView tvTime = convertView.findViewById(R.id.viewevent_tvtime);
+            TextView tvUser = convertView.findViewById(R.id.viewevent_tvcreator);
             tvMessage.setText(message.getMessage());
             tvTime.setText(message.getTimeStamp().toString());
             tvUser.setText(creator.getAccountName());
@@ -95,10 +97,14 @@ public class AdapterMessage extends BaseAdapter {
 
             if (message.isEvent()) {
                 Event event = db.getEvent(message.getId());
-                TextView tvDate = convertView.findViewById(R.id.li_event_tvdate);
+                TextView tvEventDate = convertView.findViewById(R.id.viewevent_tveveventdate);
+                TextView tvEventTime = convertView.findViewById(R.id.viewevent_tveventtime);
+                TextView tv_Description = convertView.findViewById(R.id.viewevent_tvdescription);
                 //todo: fix date in DBstatemants
 
-                tvDate.setText(FormatHelper.formatDateTime(event.getDate()));
+                tv_Description.setText(event.getDescription());
+                tvEventDate.setText(FormatHelper.formatDate(event.getDate()));
+                tvEventTime.setText(FormatHelper.formatTime(event.getDate()));
                 final CardView cv = convertView.findViewById(R.id.li_message_cv);
 
 

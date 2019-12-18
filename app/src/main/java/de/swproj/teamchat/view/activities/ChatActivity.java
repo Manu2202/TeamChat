@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.R;
+import de.swproj.teamchat.connection.firebase.FirebaseConnection;
 import de.swproj.teamchat.connection.firebase.services.TeamChatMessagingService;
 import de.swproj.teamchat.datamodell.chat.Chat;
 import de.swproj.teamchat.datamodell.chat.Message;
@@ -19,7 +20,9 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 
+import com.google.firebase.auth.FirebaseAuth;
 
+import java.sql.Time;
 import java.util.ArrayList;
 
 public class ChatActivity extends AppCompatActivity {
@@ -31,6 +34,7 @@ public class ChatActivity extends AppCompatActivity {
     public DBStatements db;
     private ArrayList<Message> messages;
     private TeamChatMessagingService messagingService;
+    private FirebaseConnection firebaseConnection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,8 @@ public class ChatActivity extends AppCompatActivity {
 
         lvMessages.setAdapter(new AdapterMessage(messages,db,this));
 
+        firebaseConnection = new FirebaseConnection(db);
+
 
         //Exclude Items from Animation
         Fade fade = new Fade();
@@ -69,9 +75,15 @@ public class ChatActivity extends AppCompatActivity {
 
 
     public void sendMessage(View view){
-     //   Time timeStamp, String message, boolean isEvent, User creator,int chatid
-
-  //todo: send Message implementaion
+        String etMessageString = etMessage.getText().toString();
+        // Check if the Message is empty
+        if (!etMessageString.isEmpty()) {
+            Message message = new Message(new Time(System.currentTimeMillis()),
+                    etMessageString, false,
+                    FirebaseAuth.getInstance().getCurrentUser().getUid(), chatID);
+            firebaseConnection.addToFirestore(message,FirebaseAuth.getInstance().getCurrentUser().getDisplayName(), false);
+            etMessage.setText("");
+        }
     }
 
     @Override
@@ -90,6 +102,13 @@ public class ChatActivity extends AppCompatActivity {
                 newEventIntent.putExtra("chatID", chatID);
                 newEventIntent.putExtra("ID", "0");
                 startActivity(newEventIntent);
+                break;
+
+            case R.id.btn_chat_menu_editChat:
+                Intent editChatIntent = new Intent(this, EditChatActivity.class);
+                editChatIntent.putExtra("admin", chat.getAdmin());
+                editChatIntent.putExtra("ID", chatID);
+                startActivity(editChatIntent);
                 break;
         }
 
