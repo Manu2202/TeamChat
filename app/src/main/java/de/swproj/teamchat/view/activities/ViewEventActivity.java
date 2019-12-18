@@ -9,7 +9,10 @@ import de.swproj.teamchat.helper.FormatHelper;
 import de.swproj.teamchat.view.adapter.AdapterUserEventStatus;
 import de.swproj.teamchat.view.dialogs.ReasonDialog;
 
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.transition.Fade;
 import android.util.Log;
 import android.view.View;
@@ -118,6 +121,31 @@ public class ViewEventActivity extends AppCompatActivity {
 
     public void cancleState(String reason) {
         Log.d("ViewEvent dialog", "Reason: " + reason);
+    }
+
+    /*
+     * On Click Method to send Event directly to phone calendar
+     */
+    public void sendToCalendar(View view){
+        Intent calendarIntent;
+        if (Build.VERSION.SDK_INT >= 14) {  // Check if SDK is high enough for extra infos
+            calendarIntent = new Intent(Intent.ACTION_INSERT)
+                    .setData(CalendarContract.Events.CONTENT_URI)
+                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.getDate().getTimeInMillis())
+                    .putExtra(CalendarContract.EXTRA_EVENT_END_TIME,
+                            event.getDate().getTimeInMillis() + 1000 * 60 * 60 * 3)  // Default Length of Event = 3h
+                    .putExtra(CalendarContract.Events.TITLE, event.getMessage())
+                    .putExtra(CalendarContract.Events.DESCRIPTION, event.getDescription())
+                    .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
+        } else {
+            calendarIntent = new Intent(Intent.ACTION_EDIT);
+            calendarIntent.setType("vnd.android.cursor.item/event");
+            calendarIntent.putExtra("beginTime", event.getDate().getTimeInMillis());
+            calendarIntent.putExtra("endTime",
+                    event.getDate().getTimeInMillis() + 1000 * 60 * 60 * 3);
+            calendarIntent.putExtra("title", event.getMessage());
+        }
+        startActivity(calendarIntent);
     }
 
 }
