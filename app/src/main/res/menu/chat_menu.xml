@@ -5,4 +5,7 @@
         android:id="@+id/btn_chat_menu_newEvent"
         android:icon="@drawable/ic_event_main"
         android:title="@string/newEvent" />
+    <item
+        android:id="@+id/btn_chat_menu_editChat"
+        android:title="@string/editChat" />
 </menu>

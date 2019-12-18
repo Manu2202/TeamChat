@@ -15,7 +15,12 @@
     <string name="create_account">Create Account</string>
     <string name="email">Email</string>
     <string name="logout">Logout</string>
+
+    <!-- Strings related to Chats -->
     <string name="newEvent">Neues Event</string>
+    <string name="editChat">Chat bearbeiten</string>
+
+    <!-- Strings related to User -->
     <string name="first_name">First Name</string>
     <string name="reg_name">Name</string>
 </resources>

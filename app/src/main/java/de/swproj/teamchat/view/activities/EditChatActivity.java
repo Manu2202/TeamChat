@@ -32,6 +32,7 @@ public class EditChatActivity extends AppCompatActivity {
 
     private String chatId;
     private Chat chat;
+    private boolean isAdmin;
 
     private HashMap<String, User> allUser = new HashMap<String, User>();
     private HashMap<String, User> groupMember = new HashMap<String, User>();
@@ -59,12 +60,14 @@ public class EditChatActivity extends AppCompatActivity {
         // Get own Intent
         Intent ownIntent = getIntent();
         chatId = ownIntent.getStringExtra("ID");
+        String adminID = ownIntent.getStringExtra("admin");
+
+        isAdmin = adminID.equals(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         if (!chatId.equals("0")) {
             chat = dbStatements.getChat(chatId);
-
+            etChatName.setText(chat.getName());
             for (User user : dbStatements.getUsersOfChat(chatId)) {
-
                 groupMember.put(user.getGoogleId(), user);
             }
         }
@@ -148,7 +151,8 @@ public class EditChatActivity extends AppCompatActivity {
         tvFName.setText(user.getFirstName());
         tvLName.setText(user.getName());
 
-        convertView.setOnClickListener(new clicklisten(list, user.getGoogleId()));
+        if(isAdmin)  // Check if current User is Admin -> able to change User
+            convertView.setOnClickListener(new clicklisten(list, user.getGoogleId()));
 
         return convertView;
 
@@ -156,6 +160,7 @@ public class EditChatActivity extends AppCompatActivity {
     }
 
     class clicklisten implements View.OnClickListener {
+
         private int list;
         private String userID;
 

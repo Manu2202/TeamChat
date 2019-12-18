@@ -103,6 +103,13 @@ public class ChatActivity extends AppCompatActivity {
                 newEventIntent.putExtra("ID", "0");
                 startActivity(newEventIntent);
                 break;
+
+            case R.id.btn_chat_menu_editChat:
+                Intent editChatIntent = new Intent(this, EditChatActivity.class);
+                editChatIntent.putExtra("admin", chat.getAdmin());
+                editChatIntent.putExtra("ID", chatID);
+                startActivity(editChatIntent);
+                break;
         }
 
         return true;

@@ -100,6 +100,7 @@ public class FragmentMainChats extends ListFragment {
                 Intent createChatIntent = new Intent(getActivity(), EditChatActivity.class);
                 // ID = 0 -> new Chat
                 createChatIntent.putExtra("ID", "0");
+                createChatIntent.putExtra("admin", FirebaseAuth.getInstance().getCurrentUser().getUid());
                 startActivity(createChatIntent);
                 break;
         }
