@@ -39,8 +39,10 @@ public class FirebaseConnection {
         firebaseDB = FirebaseFirestore.getInstance();
     }
 
-    public void addToFirestore(final Message message, final String title , final boolean isInvite) {
-        firebaseDB.collection("messages").add(FirebaseHelper.convertToMap(message, title, isInvite))
+    public void addToFirestore(final Message message, final String title ,
+                               final boolean isInvite, final boolean isEventUpdate) {
+        firebaseDB.collection("messages")
+                .add(FirebaseHelper.convertToMap(message, title, isInvite, isEventUpdate))
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
@@ -51,7 +53,7 @@ public class FirebaseConnection {
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                addToFirestore(message, title, isInvite);
+                addToFirestore(message, title, isInvite, isEventUpdate);
             }
         });
     }
@@ -79,7 +81,9 @@ public class FirebaseConnection {
     }
 
     public void addToFirestore(final User user) {
-        firebaseDB.collection("users").document(FirebaseAuth.getInstance().getCurrentUser().getUid()).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+        firebaseDB.collection("users").document(
+                FirebaseAuth.getInstance().getCurrentUser().getUid()).set(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Log.d("Firestore User", "User added to Firebase");
@@ -93,14 +97,16 @@ public class FirebaseConnection {
         Message message = new Message(new Time(System.currentTimeMillis()),
                 invite_msg, false,
                 FirebaseAuth.getInstance().getCurrentUser().getUid(), chatid);
-        addToFirestore(message, "You got invited to be part of "+ chatname,true);
+        addToFirestore(message, "You got invited to be part of "+ chatname,
+                true, false);
     }
 
     public void updateUsers(final String ChatID, final String Chatname, List<String> users){
         Map<String, Object> data = new HashMap<>();
         data.put("users", users);
 
-        FirebaseFirestore.getInstance().collection("chats").document(ChatID).set(data, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+        FirebaseFirestore.getInstance().collection("chats").document(ChatID).
+                set(data, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Log.d("Firestore Chat", "Users added to Chat " + ChatID);
@@ -119,7 +125,8 @@ public class FirebaseConnection {
     }
 
     public void saveUserByID(String uID) {
-        firebaseDB.collection("users").document(uID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        firebaseDB.collection("users").document(uID).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
@@ -127,7 +134,8 @@ public class FirebaseConnection {
                     if (documentSnapshot.exists()) {
                         User firebaseUser = documentSnapshot.toObject(User.class);
 
-                        Log.d("FirebaseUser", "Saved new User:"+firebaseUser.getAccountName() + ", " + firebaseUser.getGoogleMail());
+                        Log.d("FirebaseUser", "Saved new User:"+
+                                firebaseUser.getAccountName() + ", " + firebaseUser.getGoogleMail());
                         dbStatements.insertUser(firebaseUser);
                     }
                 }
@@ -145,7 +153,9 @@ public class FirebaseConnection {
                     if (document.exists()) {
                         Log.d("Chat", "DocumentSnapshot data: " + document.getData());
                         Map<String,Object> snapshot = document.getData();
-                        Chat firebasechat = new Chat((String)snapshot.get("name"),((Long)snapshot.get("color")).intValue(),(String)document.getId(),(String)snapshot.get("admin"));
+                        Chat firebasechat = new Chat((String)snapshot.get("name"),
+                                ((Long)snapshot.get("color")).intValue(),(String)document.getId(),
+                                (String)snapshot.get("admin"));
                         Log.d("FirebaseChat", "Saved new Chat with chatid: "+chatid);
                         dbStatements.insertChat(firebasechat);
                     } else {
@@ -160,14 +170,16 @@ public class FirebaseConnection {
 
     public void saveUserbyEmail(String email){
         // Query against the collection WHERE (googleMail == given_email).
-        firebaseDB.collection("users").whereEqualTo("googleMail", email).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        firebaseDB.collection("users").whereEqualTo("googleMail", email).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         User firebaseUser = document.toObject(User.class);
 
-                        Log.d("FirebaseUser", firebaseUser.getAccountName() + ", " + firebaseUser.getGoogleMail());
+                        Log.d("FirebaseUser", firebaseUser.getAccountName() + ", " +
+                                firebaseUser.getGoogleMail());
                         dbStatements.insertUser(firebaseUser);
                     }
                 } else {
@@ -183,7 +195,8 @@ public class FirebaseConnection {
         data.put("token", token);
         data.put("userid", uID);
 
-        FirebaseFirestore.getInstance().collection("tokens").document(uID).set(data, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+        FirebaseFirestore.getInstance().collection("tokens").document(uID)
+                .set(data, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Log.d("Firestore FCM Token", "Token added for User " + uID);
@@ -202,7 +215,8 @@ public class FirebaseConnection {
         data.put("userid", FieldValue.delete());
 
 
-        FirebaseFirestore.getInstance().collection("tokens").document(uID).set(data, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+        FirebaseFirestore.getInstance().collection("tokens").document(uID)
+                .set(data, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Log.d("Firestore FCM Token", "Token deleted for User " + uID);
