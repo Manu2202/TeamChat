@@ -40,7 +40,6 @@ public class ViewEventActivity extends AppCompatActivity {
 
         event = db.getEvent(id);
 
-
         TextView tvCreator = findViewById(R.id.viewevent_tvcreator);
         TextView tvtime = findViewById(R.id.viewevent_tvtime);
         TextView tvtitle = findViewById(R.id.viewevent_tvtitle);
@@ -55,7 +54,8 @@ public class ViewEventActivity extends AppCompatActivity {
         tvTime.setText(FormatHelper.formatTime(event.getDate()));
         tvtitle.setText(event.getMessage());
         tvDescription.setText(event.getDescription());
-        Log.d("MYLOG","ID: "+id+" User: "+activeUser);
+        Log.d("MYLOG","ID: "+id+" User: "+ activeUser);
+
         mystate = db.getUserEventStatus(id, activeUser);
         Log.d("getUserEventStatus",mystate.getReason());
         tvStatus.setText(mystate.getStatusString());

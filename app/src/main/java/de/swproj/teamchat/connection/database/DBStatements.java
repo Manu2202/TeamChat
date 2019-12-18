@@ -159,8 +159,6 @@ public class DBStatements {
 
         db.beginTransaction();
         try {
-
-
             //put values
             int i = 0;
             if (message.isEvent())
@@ -207,16 +205,15 @@ public class DBStatements {
                 db.endTransaction();
             }
 
-            // if there is a newe Event, add members
+            // if there is a new Event, add members
 
-            if (null == null) {
+            if (insertsuccesfull) {
 
-                ArrayList<String> chatMmembers = getChatMembers(message.getChatid());
+                ArrayList<String> chatMembers = getChatMembers(message.getChatid());
                 db.beginTransaction();
 
                 try {
-                    for (String userId : chatMmembers
-                    ) {
+                    for (String userId : chatMembers) {
                         values = new ContentValues();
                         values.put(DBCreate.COL_EVENTUSER_FK_EVENT, message.getId());
                         values.put(DBCreate.COL_EVENTUSER_FK_USER, userId);
@@ -314,8 +311,6 @@ public class DBStatements {
 
         db.beginTransaction();
         try {
-
-
             Cursor c = db.query(DBCreate.TABLE_EVENTUSER, new String[]{DBCreate.COL_EVENTUSER_ID,DBCreate.COL_EVENTUSER_FK_EVENT, DBCreate.COL_EVENTUSER_FK_USER, DBCreate.COL_EVENTUSER_REASON, DBCreate.COL_EVENTUSER_STATUS},
                     DBCreate.COL_EVENTUSER_FK_EVENT + "=?", new String[]{"" + eventId}, null, null, null);
             if (c.moveToFirst()) {
@@ -326,9 +321,7 @@ public class DBStatements {
                 int status = c.getColumnIndex(DBCreate.COL_EVENTUSER_STATUS);
 
                 do {
-
-                    userEventStats.add(new UserEventStatus(c.getInt(id),c.getString(user), c.getInt(event), c.getInt(status), c.getString(reason)));
-
+                    userEventStats.add(new UserEventStatus(c.getInt(id),c.getString(user), c.getString(event), c.getInt(status), c.getString(reason)));
                 } while (c.moveToNext());
 
                 db.setTransactionSuccessful();
@@ -352,7 +345,7 @@ public class DBStatements {
 
 
             Cursor c = db.query(DBCreate.TABLE_EVENTUSER, new String[]{DBCreate.COL_EVENTUSER_ID,DBCreate.COL_EVENTUSER_FK_EVENT, DBCreate.COL_EVENTUSER_FK_USER, DBCreate.COL_EVENTUSER_REASON, DBCreate.COL_EVENTUSER_STATUS},
-                    DBCreate.COL_EVENTUSER_FK_EVENT + "=? AND " + DBCreate.COL_EVENTUSER_FK_USER + "=?", new String[]{eventId,userId}, null, null, null);
+                    DBCreate.COL_EVENTUSER_FK_EVENT + "='?' AND " + DBCreate.COL_EVENTUSER_FK_USER + "='?'", new String[]{eventId,userId}, null, null, null);
             Log.d("getUserEventStatus","Cursor count: "+c.getCount());
             Log.d("getUserEventStatus","Cursor:"+c.moveToFirst());
             if (c.moveToFirst()) {
@@ -361,7 +354,7 @@ public class DBStatements {
                 int user = c.getColumnIndex(DBCreate.COL_EVENTUSER_FK_USER);
                 int reason = c.getColumnIndex(DBCreate.COL_EVENTUSER_REASON);
                 int status = c.getColumnIndex(DBCreate.COL_EVENTUSER_STATUS);
-                state = new UserEventStatus(c.getInt(id),c.getString(user), c.getInt(event), c.getInt(status), c.getString(reason));
+                state = new UserEventStatus(c.getInt(id),c.getString(user), c.getString(event), c.getInt(status), c.getString(reason));
 
             }
 
