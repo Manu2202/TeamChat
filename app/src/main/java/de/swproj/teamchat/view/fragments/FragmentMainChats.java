@@ -90,16 +90,16 @@ public class FragmentMainChats extends ListFragment {
         });
 
         list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view,
                                            int position, long arg3) {
-                 deleteButton.setVisible(true);
-                 cancelDeleteButton.setVisible(true);
-                 menuModus = DEL;
-                 markedForDeletion.add(chatAdapter.getItem(position));
-                 FrameLayout chatItem = (FrameLayout)view.findViewById(R.id.list_color_background);
-                 chatItem.setBackgroundColor(Color.GRAY);
+                deleteButton.setVisible(true);
+                cancelDeleteButton.setVisible(true);
+                menuModus = DEL;
+                markedForDeletion.add(chatAdapter.getItem(position));
+                markedMenuItems.add((FrameLayout) view.findViewById(R.id.list_color_background));
+                view.findViewById(R.id.list_color_background).setBackgroundColor(Color.GRAY);
+
                 Log.d("Fragments:", "OnLongClick" + " menuModus = " + menuModus);
                 return true;
             }
@@ -107,7 +107,6 @@ public class FragmentMainChats extends ListFragment {
         });
 
     }
-
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -146,7 +145,7 @@ public class FragmentMainChats extends ListFragment {
                 break;
             case R.id.btn_cancel_delete:
                 // Cancel delete process - unmark all items that were marked for deletion
-                AdapterChat updateViewAdapter = (AdapterChat)getListAdapter();
+                AdapterChat updateViewAdapter = (AdapterChat) getListAdapter();
                 for (FrameLayout fl : markedMenuItems) {
                     fl.setBackgroundColor(Color.WHITE);
                     Log.d("Fragments:", "Item Pos 2 : " + updateViewAdapter.getItem(2).getId());
@@ -158,8 +157,8 @@ public class FragmentMainChats extends ListFragment {
                     Log.d("Fragments:", "Chat should be white now : " + c.getId());
                 }
 
-                markedMenuItems = new ArrayList<>();
-                markedForDeletion = new ArrayList<>();
+                markedMenuItems.clear();
+                markedForDeletion.clear();
                 cancelDeleteButton.setVisible(false);
                 deleteButton.setVisible(false);
                 menuModus = STD;
@@ -171,8 +170,8 @@ public class FragmentMainChats extends ListFragment {
                     // db.deleteChat(c.getId());
                     Log.d("Fragments:", "Chat deleted : " + c.getId());
                 }
-                markedMenuItems = new ArrayList<>();
-                markedForDeletion = new ArrayList<>();
+                markedMenuItems.clear();
+                markedForDeletion.clear();
                 cancelDeleteButton.setVisible(false);
                 deleteButton.setVisible(false);
                 menuModus = STD;
