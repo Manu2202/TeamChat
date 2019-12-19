@@ -31,5 +31,10 @@
     <string name="chat_delete">Delete Chat</string>
     <string name="chat_cancel_delete">Delete nothing</string>
 
+    <!-- Strings related to Events or View Event -->
+    <string name="event_delete">Delete Event</string>
+    <string name="dialog_delete_event_title">Delete the Event</string>
+    <string name="dialog_delete_event_msg">Are you sure you want to delete this event?</string>
+
 
 </resources>
