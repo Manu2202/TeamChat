@@ -125,7 +125,7 @@ public class DBCreate {
     protected static String getEventUserTable() {
         return "CREATE TABLE " + TABLE_EVENTUSER + " ("
                 + COL_EVENTUSER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + COL_EVENTUSER_FK_EVENT + " INTEGER NOT NULL REFERENCES " + TABLE_EVENT + ","
+                + COL_EVENTUSER_FK_EVENT + " TEXT NOT NULL REFERENCES " + TABLE_EVENT + ","
                 + COL_EVENTUSER_FK_USER + " TEXT NOT NULL REFERENCES " + TABLE_USER+","
                 + COL_EVENTUSER_STATUS + " INTEGER" + ","
                 + COL_EVENTUSER_REASON + " TEXT "

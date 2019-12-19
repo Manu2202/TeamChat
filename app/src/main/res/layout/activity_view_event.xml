@@ -96,6 +96,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/viewevent_tvdescription"
                 android:layout_marginLeft="16dp"
+                android:onClick="sendToCalendar"
                 android:src="@drawable/ic_event_white_24dp" />
 
             <TextView
@@ -107,6 +108,7 @@
                 android:layout_centerHorizontal="false"
                 android:layout_marginLeft="4dp"
                 android:layout_toEndOf="@id/li_icon_date"
+                android:onClick="sendToCalendar"
                 android:text="11.11.19"
                 android:textColor="#fcfcfc" />
 
@@ -117,6 +119,7 @@
                 android:layout_below="@+id/viewevent_tvdescription"
                 android:layout_marginLeft="16dp"
                 android:layout_toEndOf="@id/viewevent_tveveventdate"
+                android:onClick="sendToCalendar"
                 android:src="@drawable/ic_access_time_white_24dp" />
 
             <TextView
@@ -128,6 +131,7 @@
                 android:layout_centerHorizontal="false"
                 android:layout_marginLeft="4dp"
                 android:layout_toEndOf="@id/li_icon_time"
+                android:onClick="sendToCalendar"
                 android:text="18:30 Uhr"
                 android:textColor="#fcfcfc" />
 
