@@ -1,5 +1,6 @@
 package de.swproj.teamchat.view.fragments;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.ListFragment;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.connection.database.DBStatements;
@@ -96,9 +98,17 @@ public class FragmentMainChats extends ListFragment {
                 deleteButton.setVisible(true);
                 cancelDeleteButton.setVisible(true);
                 menuModus = DEL;
-                markedForDeletion.add(chatAdapter.getItem(position));
-                markedMenuItems.add((FrameLayout) view.findViewById(R.id.list_color_background));
-                view.findViewById(R.id.list_color_background).setBackgroundColor(Color.GRAY);
+                if (markedForDeletion.contains(chatAdapter.getItem(position))){
+                    view.findViewById(R.id.list_color_background)
+                            .setBackgroundColor(ContextCompat.getColor(getContext(),
+                                    R.color.background));
+                    markedForDeletion.remove(chatAdapter.getItem(position));
+                    markedMenuItems.remove((FrameLayout) view.findViewById(R.id.list_color_background));
+                }else {
+                    markedForDeletion.add(chatAdapter.getItem(position));
+                    markedMenuItems.add((FrameLayout) view.findViewById(R.id.list_color_background));
+                    view.findViewById(R.id.list_color_background).setBackgroundColor(Color.GRAY);
+                }
 
                 Log.d("Fragments:", "OnLongClick" + " menuModus = " + menuModus);
                 return true;
@@ -147,7 +157,7 @@ public class FragmentMainChats extends ListFragment {
                 // Cancel delete process - unmark all items that were marked for deletion
                 AdapterChat updateViewAdapter = (AdapterChat) getListAdapter();
                 for (FrameLayout fl : markedMenuItems) {
-                    fl.setBackgroundColor(Color.WHITE);
+                    fl.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.background));
                     Log.d("Fragments:", "Item Pos 2 : " + updateViewAdapter.getItem(2).getId());
                     updateViewAdapter.notifyDataSetChanged();
                 }
