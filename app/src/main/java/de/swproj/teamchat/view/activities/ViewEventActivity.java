@@ -1,5 +1,6 @@
 package de.swproj.teamchat.view.activities;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.R;
@@ -11,12 +12,15 @@ import de.swproj.teamchat.helper.FormatHelper;
 import de.swproj.teamchat.view.adapter.AdapterUserEventStatus;
 import de.swproj.teamchat.view.dialogs.ReasonDialog;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
 import android.transition.Fade;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -35,6 +39,7 @@ public class ViewEventActivity extends AppCompatActivity {
     private TextView tvStatus;
     private AdapterUserEventStatus adapter;
     private FirebaseConnection fbConnection;
+    private boolean actUserIsAdmin;
 
 
     @Override
@@ -47,6 +52,9 @@ public class ViewEventActivity extends AppCompatActivity {
         String id = getIntent().getStringExtra("eventID");
 
         event = db.getEvent(id);
+
+        actUserIsAdmin = FirebaseAuth.getInstance().getCurrentUser().getUid()
+                .equals(event.getCreator());
 
         TextView tvCreator = findViewById(R.id.viewevent_tvcreator);
         TextView tvtime = findViewById(R.id.viewevent_tvtime);
@@ -65,14 +73,14 @@ public class ViewEventActivity extends AppCompatActivity {
         Log.d("MYLOG","ID: "+id+" User: "+ activeUser);
 
         mystate = db.getUserEventStatus(id, activeUser);
-        Log.d("getUserEventStatus",mystate.getReason());
+        //Log.d("getUserEventStatus",mystate.getReason());
         tvStatus.setText(mystate.getStatusString());
 
 
         //Get EventStatus and Print it in the List
         userEventStates = db.getUserEventStatus(id);
 
-        Log.d("ViewEventActivity", "State objects: " + userEventStates.size() + "  " + userEventStates.get(0).getUserId() + "  " + userEventStates.get(1).getUserId());
+        //Log.d("ViewEventActivity", "State objects: " + userEventStates.size() + "  " + userEventStates.get(0).getUserId() + "  " + userEventStates.get(1).getUserId());
         ListView lvStates = findViewById(R.id.viewevent_lvstates);
         lvStates.setDivider(null);
         adapter = new AdapterUserEventStatus(userEventStates, db);
@@ -100,8 +108,6 @@ public class ViewEventActivity extends AppCompatActivity {
 
         repaintMyState(mystate);
 
-        //todo: send state to server
-        // sendToFB: eventTitle + userEventStatus
         String message = FirebaseAuth.getInstance().getCurrentUser().getDisplayName().split(" ")[0]
                 + " " + mystate.getStatusString();
 
@@ -122,8 +128,6 @@ public class ViewEventActivity extends AppCompatActivity {
             i++;
         }
         adapter.notifyDataSetChanged();
-
-
     }
 
     public void cancleDialog(View view) {
@@ -162,6 +166,59 @@ public class ViewEventActivity extends AppCompatActivity {
             calendarIntent.putExtra("title", event.getMessage());
         }
         startActivity(calendarIntent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.view_event_menu, menu);
+        if(actUserIsAdmin)  // if user is admin, set delete Button true
+            menu.findItem(R.id.btn_view_event_delete).setVisible(true);
+        else
+            menu.findItem(R.id.btn_view_event_delete).setVisible(false);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.btn_view_event_delete:
+                acceptDeleteDialog();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    // Method to show Accepting Dialog and handle Button
+    private void acceptDeleteDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("Delete Event");
+        builder.setMessage("Are you sure you want to delete this event?");
+
+        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO: Löschen des Events und senden einer Nachricht an andere User
+
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                // Do nothing
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
 }
