@@ -1,6 +1,7 @@
 package de.swproj.teamchat.view.fragments;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,7 +11,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -28,6 +31,7 @@ import de.swproj.teamchat.view.activities.ChatActivity;
 import de.swproj.teamchat.view.activities.EditChatActivity;
 import de.swproj.teamchat.view.activities.StartActivity;
 import de.swproj.teamchat.view.adapter.AdapterChat;
+import de.swproj.teamchat.view.adapter.AdapterContact;
 
 
 /*
@@ -39,12 +43,22 @@ public class FragmentMainChats extends ListFragment {
     private DBStatements db;
     private ArrayList<Chat> chats;
     private MenuItem deleteButton;
+    private MenuItem cancelDeleteButton;
+
+    private final int STD = 0;
+    private final int DEL = 1;
+    private int menuModus;
+
+    // only uses one item at once so far, but may be expanded so you can delete multiple items
+    private ArrayList<Chat> markedForDeletion = new ArrayList();
+    private ArrayList<FrameLayout> markedMenuItems = new ArrayList<>();
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         db = new DBStatements(inflater.getContext());
         chats = db.getChat();
+        menuModus = STD;
         Log.d("Fragments:", "In Chat Fragment" + " Chatcount " + chats.size());
 
         setHasOptionsMenu(true);
@@ -65,10 +79,13 @@ public class FragmentMainChats extends ListFragment {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent chatIntent = new Intent(getActivity(), ChatActivity.class);
-                Chat selectedItem = (Chat) chatAdapter.getItem(position);
-                chatIntent.putExtra("chatID", selectedItem.getId());
-                startActivityForResult(chatIntent, position);
+                Log.d("Fragments:", "OnItemClick" + " menuModus = " + menuModus);
+                if (menuModus == STD) {
+                    Intent chatIntent = new Intent(getActivity(), ChatActivity.class);
+                    Chat selectedItem = (Chat) chatAdapter.getItem(position);
+                    chatIntent.putExtra("chatID", selectedItem.getId());
+                    startActivityForResult(chatIntent, position);
+                }
             }
         });
 
@@ -77,11 +94,14 @@ public class FragmentMainChats extends ListFragment {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view,
                                            int position, long arg3) {
-                // TODO: Mark item as selected, so deleteButton can delete selected items
-                // Delete Button has no function yet
                  deleteButton.setVisible(true);
-
-                return false;
+                 cancelDeleteButton.setVisible(true);
+                 menuModus = DEL;
+                 markedForDeletion.add(chatAdapter.getItem(position));
+                 FrameLayout chatItem = (FrameLayout)view.findViewById(R.id.list_color_background);
+                 chatItem.setBackgroundColor(Color.GRAY);
+                Log.d("Fragments:", "OnLongClick" + " menuModus = " + menuModus);
+                return true;
             }
 
         });
@@ -94,6 +114,7 @@ public class FragmentMainChats extends ListFragment {
         inflater.inflate(R.menu.main_chat_menu, menu);
         menu.findItem(R.id.btn_chat_menu_delete).setVisible(false);
         deleteButton = menu.findItem(R.id.btn_chat_menu_delete);
+        cancelDeleteButton = menu.findItem(R.id.btn_cancel_delete);
 
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -123,6 +144,40 @@ public class FragmentMainChats extends ListFragment {
                 createChatIntent.putExtra("admin", FirebaseAuth.getInstance().getCurrentUser().getUid());
                 startActivity(createChatIntent);
                 break;
+            case R.id.btn_cancel_delete:
+                // Cancel delete process - unmark all items that were marked for deletion
+                AdapterChat updateViewAdapter = (AdapterChat)getListAdapter();
+                for (FrameLayout fl : markedMenuItems) {
+                    fl.setBackgroundColor(Color.WHITE);
+                    Log.d("Fragments:", "Item Pos 2 : " + updateViewAdapter.getItem(2).getId());
+                    updateViewAdapter.notifyDataSetChanged();
+                }
+
+                Log.d("Fragments:", "Item Pos 2 : " + updateViewAdapter.getItem(2).getId());
+                for (Chat c : markedForDeletion) {
+                    Log.d("Fragments:", "Chat should be white now : " + c.getId());
+                }
+
+                markedMenuItems = new ArrayList<>();
+                markedForDeletion = new ArrayList<>();
+                cancelDeleteButton.setVisible(false);
+                deleteButton.setVisible(false);
+                menuModus = STD;
+
+                break;
+            case R.id.btn_chat_menu_delete:
+                for (Chat c : markedForDeletion) {
+                    // TODO: dbStatements deleteChat(String chatId) Function needed
+                    // db.deleteChat(c.getId());
+                    Log.d("Fragments:", "Chat deleted : " + c.getId());
+                }
+                markedMenuItems = new ArrayList<>();
+                markedForDeletion = new ArrayList<>();
+                cancelDeleteButton.setVisible(false);
+                deleteButton.setVisible(false);
+                menuModus = STD;
+
+                break;
         }
         return true;
     }
@@ -143,10 +198,13 @@ public class FragmentMainChats extends ListFragment {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent chatIntent = new Intent(getActivity(), ChatActivity.class);
-                Chat selectedItem = (Chat) chatAdapter.getItem(position);
-                chatIntent.putExtra("chatID", selectedItem.getId());
-                startActivityForResult(chatIntent, position);
+                Log.d("Fragments:", "OnItemClick (on Resume)" + " menuModus = " + menuModus);
+                if (menuModus == STD) {
+                    Intent chatIntent = new Intent(getActivity(), ChatActivity.class);
+                    Chat selectedItem = (Chat) chatAdapter.getItem(position);
+                    chatIntent.putExtra("chatID", selectedItem.getId());
+                    startActivityForResult(chatIntent, position);
+                }
             }
         });
     }

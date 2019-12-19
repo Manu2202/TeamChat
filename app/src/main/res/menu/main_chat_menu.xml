@@ -17,4 +17,12 @@
         app:showAsAction="always"
         android:visible="false"
         />
+
+    <item
+        android:id="@+id/btn_cancel_delete"
+        android:icon="@drawable/ic_clear"
+        android:title="@string/chat_cancel_delete"
+        app:showAsAction="always"
+        android:visible="false"
+        />
 </menu>
