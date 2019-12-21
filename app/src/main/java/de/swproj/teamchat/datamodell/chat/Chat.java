@@ -9,13 +9,16 @@ import android.content.res.Resources;
 
 import java.util.Random;
 
+import androidx.annotation.Nullable;
 import de.swproj.teamchat.R;
 
 public class Chat {
-    private String name;
-    private int color;
     private String id;
+    private String name;
     private String admin;
+    private int color;
+
+
 
     public Chat(String name, int color, String id, String admin) {
         this.name = name;
@@ -32,7 +35,19 @@ public class Chat {
         this.admin = admin;
     }
 
-
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Chat c = (Chat) obj;
+        if(c.getId().equals(id)&&c.getAdmin().equals(admin)&&c.getName().equals(name)&&c.getColor()==color)
+            return true;
+        return false;
+    }
 
     public void setId(String id) {
         this.id = id;

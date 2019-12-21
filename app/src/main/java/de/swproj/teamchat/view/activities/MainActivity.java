@@ -63,13 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
         //  db.insertChat(new Chat("Labergruppe", 0xFFFB0B03, "394", "Gott"));
         db.insertChat(new Chat("Tetris esport Team", (getResources().getIntArray(R.array.androidcolors))[1], "3934", "Gott"));
-        db.insertChat(new Chat("Tee Party", (getResources().getIntArray(R.array.androidcolors))[2], "3954", "Gott"));
-        db.insertChat(new Chat("Buchclub", (getResources().getIntArray(R.array.androidcolors))[3], "3941", "Gott"));
-        db.insertChat(new Chat("Golfclub", (getResources().getIntArray(R.array.androidcolors))[4], "3434", "Gott"));
-        db.insertChat(new Chat("Fußballclub", (getResources().getIntArray(R.array.androidcolors))[5], "34", "Gott"));
-        db.insertChat(new Chat("Squash-Club", (getResources().getIntArray(R.array.androidcolors))[6], "3484", "Gott"));
-        db.insertChat(new Chat("Tennis-Club", (getResources().getIntArray(R.array.androidcolors))[7], "324", "Gott"));
-        db.insertChat(new Chat("Eishockey-Club", (getResources().getIntArray(R.array.androidcolors))[8], "474", "Gott"));
+
 
         Date currentTime = Calendar.getInstance().getTime();
         GregorianCalendar gc = new GregorianCalendar();
@@ -80,13 +74,13 @@ public class MainActivity extends AppCompatActivity {
         db.insertMessage(new Event(time, "Panik", "546s", true, "11", gc, "hilfe ein virus", "123", (byte) 1));
         time.setTime(currentTime.getTime() + 10);
         db.insertMessage(new Message(time, "Coolbbb bfgtf ;D", "o4454546", false, "abc", "123"));
-        time.setTime(currentTime.getTime() + 10);
+        time.setTime(currentTime.getTime() + 1000);
         db.insertMessage(new Message(time, "Cool  hu;D", "o4584846", false, "11", "123"));
-        time.setTime(currentTime.getTime() + 10);
+        time.setTime(currentTime.getTime() + 1022);
         db.insertMessage(new Message(time, "Cool  huhu;D", "o448784546", false, "Gott2", "123"));
-        time.setTime(currentTime.getTime() + 10);
+        time.setTime(currentTime.getTime() + 6660);
         db.insertMessage(new Message(time, "Cool ;D", "o454846", false, "Gott", "123"));
-        time.setTime(currentTime.getTime() + 10);
+        time.setTime(currentTime.getTime() + 7977);
         db.insertMessage(new Message(time, "Ein Huhun ;D", "o4115jn546", false, "abc", "123"));
 
         db.insertMessage(new Event(time, "TourdeFrance", "4546s", true, "Gott", new GregorianCalendar(2020, 10, 27, 9, 6), "hilfe ein russ", "3434", (byte) 1));
@@ -141,9 +135,11 @@ public class MainActivity extends AppCompatActivity {
         } else {
             TeamChatMessagingService.enableFCM();
             Log.d("User-Problem", "Logged in as User" + currentUser.getDisplayName() + " with UID of:" + currentUser.getUid());
+            db.insertUser(new User(currentUser.getUid(),currentUser.getEmail(),currentUser.getDisplayName(),"hh","nch"));
             setUpUI();
         }
 
+        //addTestdat();
     }
 
     /**

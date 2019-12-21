@@ -6,16 +6,18 @@ package de.swproj.teamchat.datamodell.chat;
  */
 
 import java.sql.Time;
-import java.sql.Timestamp;
+
+
+import androidx.annotation.Nullable;
 
 public class Message {
 
-    private Time timeStamp;
-    private String message;
     private String id;
-    private boolean isEvent;
     private String creator;
     private String chatid;
+    private String message;
+    private Time timeStamp;
+    private boolean isEvent;
 
     public Message(Time timeStamp, String message, String id, boolean isEvent, String creator, String chatID) {
         this.timeStamp = timeStamp;
@@ -33,6 +35,24 @@ public class Message {
         this.isEvent = isEvent;
         this.creator = creator;
         this.chatid=chatID;
+    }
+
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Message m = (Message) obj;
+        if(m.getId().equals(id)&&
+                m.getTimeStamp().toString().equals(timeStamp.toString())&&
+                m.getMessage().equals(message) &&
+                m.getCreator().equals(creator))
+            return true;
+        return false;
     }
 
     public String getChatid() {

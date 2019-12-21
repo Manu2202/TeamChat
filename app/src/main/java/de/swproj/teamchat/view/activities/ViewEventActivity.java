@@ -73,6 +73,9 @@ public class ViewEventActivity extends AppCompatActivity {
         Log.d("MYLOG","ID: "+id+" User: "+ activeUser);
 
         mystate = db.getUserEventStatus(id, activeUser);
+        if(mystate==null){
+            mystate= new UserEventStatus(0,"abc","4546s",0,"def");
+        }
         //Log.d("getUserEventStatus",mystate.getReason());
         tvStatus.setText(mystate.getStatusString());
 

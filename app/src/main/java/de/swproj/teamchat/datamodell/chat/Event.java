@@ -8,6 +8,8 @@ package de.swproj.teamchat.datamodell.chat;
 import java.sql.Time;
 import java.util.GregorianCalendar;
 
+import androidx.annotation.Nullable;
+
 public class Event extends Message {
 
     private GregorianCalendar date;
@@ -28,7 +30,19 @@ public class Event extends Message {
         this.date = date;
         this.description = description;
         this.status = status;
-
+    }
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Event e = (Event) obj;
+        if(super.equals(obj)&& e.getDate().toString().equals(date.toString())&&e.getDescription().equals(description))
+            return true;
+        return false;
     }
 
     @Override

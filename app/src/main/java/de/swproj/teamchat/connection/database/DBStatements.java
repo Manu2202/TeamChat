@@ -169,7 +169,7 @@ public class DBStatements {
             values.put(DBCreate.COL_MESSAGE_ISEVENT, i);
             values.put(DBCreate.COL_MESSAGE_MESSAGE, message.getMessage());
             values.put(DBCreate.COL_MESSAGE_ID, message.getId());
-            values.put(DBCreate.COL_MESSAGE_TIMESTAMP, message.getTimeStamp().getTime());
+            values.put(DBCreate.COL_MESSAGE_TIMESTAMP, message.getTimeStamp().toString());
 
             db.insertOrThrow(DBCreate.TABLE_MESSAGE, null, values);
             db.setTransactionSuccessful();
@@ -589,7 +589,7 @@ public class DBStatements {
             Cursor c = db.query(DBCreate.TABLE_CHAT, new String[]{DBCreate.COL_CHAT_ID, DBCreate.COL_CHAT_FK_Creator, DBCreate.COL_CHAT_NAME, DBCreate.COL_CHAT_COLOR},
                     null, null, null, null, null);
             c= db.rawQuery("SELECT * FROM "+DBCreate.TABLE_CHAT,null);
-            Log.d("GetChat","Cursor count "+  c.getCount());
+           // Log.d("GetChat","Cursor count "+  c.getCount());
 
 
             int id = c.getColumnIndex(DBCreate.COL_CHAT_ID);
@@ -599,7 +599,7 @@ public class DBStatements {
 
             if (c.moveToFirst()) {
                 do {
-                    Log.d("GetChat","Schleife");
+               //     Log.d("GetChat","Schleife");
                     chats.add(new Chat(c.getString(name), c.getInt(color), c.getString(id), c.getString(creator)));
                 }while (c.moveToNext());
 
@@ -639,7 +639,7 @@ public class DBStatements {
 
                 do {
                     // Time timeStamp, String message, int id, boolean isEvent, User creator,int chatid
-                    messages.add(new Message(new Time(c.getInt(timestmp)), c.getString(message), c.getString(id), (c.getInt(isEvent) == 1), c.getString(creator), chatId));
+                    messages.add(new Message(Time.valueOf(c.getString(timestmp)), c.getString(message), c.getString(id), (c.getInt(isEvent) == 1), c.getString(creator), chatId));
 
                 } while (c.moveToNext());
             }
@@ -679,7 +679,7 @@ public class DBStatements {
                 int timestmp = c.getColumnIndex(DBCreate.COL_MESSAGE_TIMESTAMP);
 
 
-                message = new Message(new Time(c.getInt(timestmp)), c.getString(messageInt), c.getString(id), (c.getInt(isEvent) == 1), c.getString(creator), c.getString(chatId));
+                message = new Message(Time.valueOf(c.getString(timestmp)), c.getString(messageInt), c.getString(id), (c.getInt(isEvent) == 1), c.getString(creator), c.getString(chatId));
 
 
             }
@@ -800,7 +800,7 @@ public class DBStatements {
                    int timestmp = c.getColumnIndex(DBCreate.COL_MESSAGE_TIMESTAMP);
 
 
-                   message = new Message(new Time(c.getInt(timestmp)), c.getString(messageInt), c.getString(id), (c.getInt(isEvent) == 1), c.getString(creator), c.getString(chatID));
+                   message = new Message(Time.valueOf(c.getString(timestmp)), c.getString(messageInt), c.getString(id), (c.getInt(isEvent) == 1), c.getString(creator), c.getString(chatID));
                }
         }catch (Exception e){
             Log.d("DB_Error class DBStatements:", "Unable to read LastMessage from db");
