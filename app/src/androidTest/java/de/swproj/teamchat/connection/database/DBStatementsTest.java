@@ -69,8 +69,11 @@ public class DBStatementsTest {
         }
 
 
+    }
 
-
+    @After
+    public void dropDB(){
+        db.dropAll();
     }
 
 
