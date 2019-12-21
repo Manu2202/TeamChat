@@ -6,6 +6,7 @@ package de.swproj.teamchat.datamodell.chat;
  */
 
 import java.sql.Time;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 import androidx.annotation.Nullable;
@@ -16,7 +17,7 @@ public class Event extends Message {
     private String description;
     private int status;
 
-    public Event(Time timeStamp, String message, String id, boolean isEvent, String creator,
+    public Event(Date timeStamp, String message, String id, boolean isEvent, String creator,
                  GregorianCalendar date, String description, String chatid, int status) {
         super(timeStamp, message, id, isEvent, creator, chatid);
         this.date = date;
@@ -24,7 +25,7 @@ public class Event extends Message {
         this.status = status;
     }
 
-    public Event(Time timeStamp, String message, boolean isEvent, String creator, GregorianCalendar date,
+    public Event(Date timeStamp, String message, boolean isEvent, String creator, GregorianCalendar date,
                  String description, String chatid, int status) {
         super(timeStamp, message, isEvent, creator, chatid);
         this.date = date;

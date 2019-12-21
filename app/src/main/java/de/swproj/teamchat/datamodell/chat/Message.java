@@ -6,6 +6,7 @@ package de.swproj.teamchat.datamodell.chat;
  */
 
 import java.sql.Time;
+import java.util.Date;
 
 
 import androidx.annotation.Nullable;
@@ -16,10 +17,10 @@ public class Message {
     private String creator;
     private String chatid;
     private String message;
-    private Time timeStamp;
+    private Date timeStamp;
     private boolean isEvent;
 
-    public Message(Time timeStamp, String message, String id, boolean isEvent, String creator, String chatID) {
+    public Message(Date timeStamp, String message, String id, boolean isEvent, String creator, String chatID) {
         this.timeStamp = timeStamp;
         this.message = message;
         this.id = id;
@@ -28,7 +29,7 @@ public class Message {
         this.chatid=chatID;
     }
 
-    public Message(Time timeStamp, String message, boolean isEvent, String creator, String chatID) {
+    public Message(Date timeStamp, String message, boolean isEvent, String creator, String chatID) {
         this.timeStamp = timeStamp;
         this.message = message;
         this.id = null;
@@ -60,6 +61,10 @@ public class Message {
     }
 
     public Time getTimeStamp() {
+        return new Time(timeStamp.getTime());
+    }
+
+    public Date getTmeStamp_Date() {
         return timeStamp;
     }
 
