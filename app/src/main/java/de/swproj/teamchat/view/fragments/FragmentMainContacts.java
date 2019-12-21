@@ -22,13 +22,19 @@ import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
+import androidx.core.view.ViewCompat;
 import androidx.fragment.app.ListFragment;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.connection.firebase.FirebaseConnection;
 import de.swproj.teamchat.connection.firebase.services.TeamChatMessagingService;
+import de.swproj.teamchat.datamodell.chat.Event;
 import de.swproj.teamchat.datamodell.chat.User;
 import de.swproj.teamchat.view.activities.StartActivity;
+import de.swproj.teamchat.view.activities.ViewEventActivity;
+import de.swproj.teamchat.view.activities.ViewUserDetailsActivity;
 import de.swproj.teamchat.view.adapter.AdapterContact;
 import de.swproj.teamchat.view.dialogs.UserSearchDialog;
 
@@ -66,7 +72,7 @@ public class FragmentMainContacts extends ListFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        ListView list = getListView();
+        final ListView list = getListView();
         // Create the adapter
         adapterContact = new AdapterContact(users);
         setListAdapter(adapterContact);
@@ -74,8 +80,14 @@ public class FragmentMainContacts extends ListFragment {
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), ViewUserDetailsActivity.class);
 
-                //TODO: Konfiguration des Click Listener auf der ListView
+                User selectedUser = (User)adapterContact.getItem(position);
+                intent.putExtra("currentContactID", selectedUser.getGoogleId());
+
+                // TODO: Cool Transition Effect
+
+                startActivityForResult(intent, position);
             }
         });
 

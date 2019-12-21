@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#80FFFFFF"
+    android:padding="4dp">
+
+    <TextView
+        android:id="@+id/user_details_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/bg_letter"
+        android:gravity="center"
+        android:padding="2dp"
+        android:text="AA"
+        android:textColor="@color/colorOnPrimary"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/user_details_accname"
+        style="@style/TextAppearance.MaterialComponents.Headline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="8dp"
+        android:layout_toRightOf="@+id/user_details_icon"
+        android:text="AccName" />
+
+    <TextView
+        android:id="@+id/user_details_fname"
+        style="@style/TextAppearance.MaterialComponents.Body1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_below="@+id/user_details_accname"
+        android:layout_toRightOf="@+id/user_details_icon"
+        android:text="Forname" />
+
+    <TextView
+        android:id="@+id/user_details_lname"
+        style="@style/TextAppearance.MaterialComponents.Body1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/user_details_accname"
+        android:layout_toRightOf="@+id/user_details_fname"
+        android:paddingStart="5dp"
+        android:text="LastName" />
+
+    <TextView
+        android:id="@+id/user_details_email"
+        style="@style/TextAppearance.MaterialComponents.Body1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/user_details_accname"
+        android:layout_marginTop="34dp"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@+id/user_details_icon"
+        android:layout_toRightOf="@+id/user_details_fname"
+        android:text="Email Address" />
+
+    <Button
+        android:id="@+id/user_details_send_email_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/user_details_email"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@+id/user_details_icon"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:onClick="sendMailToUser"
+        android:text="@string/send_email" />
+
+    <TextView
+        android:id="@+id/user_details_shared_groups_title"
+        style="@style/TextAppearance.MaterialComponents.Body1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/user_details_email"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="100dp"
+        android:layout_toEndOf="@+id/user_details_icon"
+        android:layout_toRightOf="@+id/user_details_fname"
+        android:paddingLeft="3dp"
+        android:text="@string/common_groups"
+        android:textColor="@color/colorPrimaryDark" />
+
+    <ListView
+        android:id="@+id/user_details_common_groups_lv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/user_details_remove_user"
+        android:layout_below="@+id/user_details_shared_groups_title"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="80dp" />
+
+
+    <Button
+        android:id="@+id/user_details_remove_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="75dp"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="#AA0B1E"
+        android:onClick="removeUserFromContacts"
+        android:text="Remove from contact list" />
+
+</RelativeLayout>
