@@ -6,8 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import java.sql.Date;
-import java.sql.Time;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -169,7 +168,7 @@ public class DBStatements {
             values.put(DBCreate.COL_MESSAGE_ISEVENT, i);
             values.put(DBCreate.COL_MESSAGE_MESSAGE, message.getMessage());
             values.put(DBCreate.COL_MESSAGE_ID, message.getId());
-            values.put(DBCreate.COL_MESSAGE_TIMESTAMP, message.getTimeStamp().toString());
+            values.put(DBCreate.COL_MESSAGE_TIMESTAMP, String.valueOf(message.getTimeStampDate().getTime()));
 
             db.insertOrThrow(DBCreate.TABLE_MESSAGE, null, values);
             db.setTransactionSuccessful();
@@ -266,7 +265,7 @@ public class DBStatements {
         } catch (Exception e) {
             insertsuccesfull = false;
             Log.d("DB_Error class DBStatements:", "Unable to write User in db");
-            e.printStackTrace();
+           // e.printStackTrace();
         } finally {
             db.endTransaction();
         }
@@ -288,7 +287,7 @@ public class DBStatements {
             values.put(DBCreate.COL_EVENTUSER_STATUS, status.getStatus());
             values.put(DBCreate.COL_EVENTUSER_REASON, status.getReason());
 
-            db.update(DBCreate.TABLE_EVENTUSER, values,DBCreate.COL_EVENTUSER_ID+"=?",new String[]{status.getStatusId()+""});
+            db.update(DBCreate.TABLE_EVENTUSER, values,DBCreate.COL_EVENTUSER_FK_EVENT+"=? AND " + DBCreate.COL_EVENTUSER_FK_USER+"=?",new String[]{status.getEventId(),status.getUserId()});
 
             db.setTransactionSuccessful();
 
@@ -314,14 +313,14 @@ public class DBStatements {
             Cursor c = db.query(DBCreate.TABLE_EVENTUSER, new String[]{DBCreate.COL_EVENTUSER_ID,DBCreate.COL_EVENTUSER_FK_EVENT, DBCreate.COL_EVENTUSER_FK_USER, DBCreate.COL_EVENTUSER_REASON, DBCreate.COL_EVENTUSER_STATUS},
                     DBCreate.COL_EVENTUSER_FK_EVENT + "=?", new String[]{"" + eventId}, null, null, null);
             if (c.moveToFirst()) {
-                int id = c.getColumnIndex(DBCreate.COL_EVENTUSER_ID);
+
                 int event = c.getColumnIndex(DBCreate.COL_EVENTUSER_FK_EVENT);
                 int user = c.getColumnIndex(DBCreate.COL_EVENTUSER_FK_USER);
                 int reason = c.getColumnIndex(DBCreate.COL_EVENTUSER_REASON);
                 int status = c.getColumnIndex(DBCreate.COL_EVENTUSER_STATUS);
 
                 do {
-                    userEventStats.add(new UserEventStatus(c.getInt(id),c.getString(user), c.getString(event), c.getInt(status), c.getString(reason)));
+                    userEventStats.add(new UserEventStatus(c.getString(user), c.getString(event), c.getInt(status), c.getString(reason)));
                 } while (c.moveToNext());
 
                 db.setTransactionSuccessful();
@@ -345,16 +344,15 @@ public class DBStatements {
 
 
             Cursor c = db.query(DBCreate.TABLE_EVENTUSER, new String[]{DBCreate.COL_EVENTUSER_ID,DBCreate.COL_EVENTUSER_FK_EVENT, DBCreate.COL_EVENTUSER_FK_USER, DBCreate.COL_EVENTUSER_REASON, DBCreate.COL_EVENTUSER_STATUS},
-                    DBCreate.COL_EVENTUSER_FK_EVENT + "='?' AND " + DBCreate.COL_EVENTUSER_FK_USER + "='?'", new String[]{eventId,userId}, null, null, null);
-            Log.d("getUserEventStatus","Cursor count: "+c.getCount());
-            Log.d("getUserEventStatus","Cursor:"+c.moveToFirst());
+                    DBCreate.COL_EVENTUSER_FK_EVENT + "=? AND " + DBCreate.COL_EVENTUSER_FK_USER + "=?", new String[]{eventId,userId}, null, null, null);
+
             if (c.moveToFirst()) {
                 int id = c.getColumnIndex(DBCreate.COL_EVENTUSER_ID);
                 int event = c.getColumnIndex(DBCreate.COL_EVENTUSER_FK_EVENT);
                 int user = c.getColumnIndex(DBCreate.COL_EVENTUSER_FK_USER);
                 int reason = c.getColumnIndex(DBCreate.COL_EVENTUSER_REASON);
                 int status = c.getColumnIndex(DBCreate.COL_EVENTUSER_STATUS);
-                state = new UserEventStatus(c.getInt(id),c.getString(user), c.getString(event), c.getInt(status), c.getString(reason));
+                state = new UserEventStatus(c.getString(user), c.getString(event), c.getInt(status), c.getString(reason));
 
             }
 
@@ -639,7 +637,7 @@ public class DBStatements {
 
                 do {
                     // Time timeStamp, String message, int id, boolean isEvent, User creator,int chatid
-                    messages.add(new Message(Time.valueOf(c.getString(timestmp)), c.getString(message), c.getString(id), (c.getInt(isEvent) == 1), c.getString(creator), chatId));
+                    messages.add(new Message(new Date(Long.parseLong(c.getString(timestmp))), c.getString(message), c.getString(id), (c.getInt(isEvent) == 1), c.getString(creator), chatId));
 
                 } while (c.moveToNext());
             }
@@ -679,7 +677,8 @@ public class DBStatements {
                 int timestmp = c.getColumnIndex(DBCreate.COL_MESSAGE_TIMESTAMP);
 
 
-                message = new Message(Time.valueOf(c.getString(timestmp)), c.getString(messageInt), c.getString(id), (c.getInt(isEvent) == 1), c.getString(creator), c.getString(chatId));
+
+               message =new Message(new Date(Long.parseLong(c.getString(timestmp))), c.getString(messageInt), c.getString(id), (c.getInt(isEvent) == 1), c.getString(creator), c.getString(chatId));
 
 
             }
@@ -703,11 +702,9 @@ public class DBStatements {
             db.beginTransaction();
             try {
 
-         //       Cursor c = db.query(DBCreate.TABLE_EVENT, new String[]{DBCreate.COL_EVENT_DATE, DBCreate.COL_EVENT_DESCRIPTION},
-           //             DBCreate.COL_EVENT_ID + "=?", new String[]{messageId + ""}, null, null, null);
-                Cursor c = db.rawQuery("SELECT * FROM "+ DBCreate.TABLE_EVENT,null);//" WHERE "+DBCreate.COL_EVENT_ID+"=? ;",new String[]{messageId});
+                Cursor c = db.query(DBCreate.TABLE_EVENT, new String[]{DBCreate.COL_EVENT_DATE, DBCreate.COL_EVENT_DESCRIPTION},
+                        DBCreate.COL_EVENT_ID + "=?", new String[]{messageId}, null, null, null);
 
-                Log.d("Get Message ", "counter for id "+ messageId+" coutn: "+c.getCount());
 
                 if (c.moveToFirst()) {
 
@@ -721,7 +718,7 @@ public class DBStatements {
 
                     GregorianCalendar d = new GregorianCalendar();
                     d.setTime(new Date(Long.parseLong(c.getString(date))));
-                    event = new Event(message.getTimeStamp(), message.getMessage(), message.getId(), true, message.getCreator(),
+                    event = new Event(message.getTimeStampDate(), message.getMessage(), message.getId(), true, message.getCreator(),
                             d, c.getString(description), message.getChatid(), 0);
 
 
@@ -800,7 +797,7 @@ public class DBStatements {
                    int timestmp = c.getColumnIndex(DBCreate.COL_MESSAGE_TIMESTAMP);
 
 
-                   message = new Message(Time.valueOf(c.getString(timestmp)), c.getString(messageInt), c.getString(id), (c.getInt(isEvent) == 1), c.getString(creator), c.getString(chatID));
+                   message = new Message(GregorianCalendar.getInstance().getTime(), c.getString(messageInt), c.getString(id), (c.getInt(isEvent) == 1), c.getString(creator), c.getString(chatID));
                }
         }catch (Exception e){
             Log.d("DB_Error class DBStatements:", "Unable to read LastMessage from db");

@@ -29,6 +29,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 
 public class ViewEventActivity extends AppCompatActivity {
     private DBStatements db;
@@ -74,7 +75,7 @@ public class ViewEventActivity extends AppCompatActivity {
 
         mystate = db.getUserEventStatus(id, activeUser);
         if(mystate==null){
-            mystate= new UserEventStatus(0,"abc","4546s",0,"def");
+            mystate= new UserEventStatus("abc","4546s",0,"def");
         }
         //Log.d("getUserEventStatus",mystate.getReason());
         tvStatus.setText(mystate.getStatusString());
@@ -114,7 +115,7 @@ public class ViewEventActivity extends AppCompatActivity {
         String message = FirebaseAuth.getInstance().getCurrentUser().getDisplayName().split(" ")[0]
                 + " " + mystate.getStatusString();
 
-        fbConnection.addToFirestore(new Message(new Time(System.currentTimeMillis()),
+        fbConnection.addToFirestore(new Message(GregorianCalendar.getInstance().getTime(),
                 message, false,
                 FirebaseAuth.getInstance().getCurrentUser().getUid(), event.getChatid()),
                 event.getMessage(), false, true);

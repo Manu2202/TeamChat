@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 import androidx.room.Room;
@@ -19,7 +20,9 @@ import de.swproj.teamchat.datamodell.chat.Chat;
 import de.swproj.teamchat.datamodell.chat.Event;
 import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.datamodell.chat.User;
+import de.swproj.teamchat.datamodell.chat.UserEventStatus;
 
+import static org.hamcrest.Matchers.both;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.*;
 
@@ -27,6 +30,8 @@ public class DBStatementsTest {
     DBStatements db;
     ArrayList<User> users = new ArrayList<>();
     ArrayList<Chat> chats = new ArrayList<>();
+    ArrayList<Event> events= new ArrayList<>();
+    ArrayList<Message>messages= new ArrayList<>();
 
     @Before
     public void createDb() {
@@ -49,8 +54,20 @@ public class DBStatementsTest {
                 us[j]=users.get(j).getGoogleId();
             }
             db.updateChatMembers(us,chats.get(1).getId());
-
         }
+        for (int i=0;i<5;i++){
+            Message m = new Message(new Date(System.currentTimeMillis()+i*30000), "Test Nachricht"+i, "ghdfghdtrgfx"+i, false, users.get(i).getGoogleId(), chats.get(1).getId());
+            messages.add(m);
+            db.insertMessage(m);
+        }
+        for (int i=0;i<3;i++){
+             Event e = new Event(new Date(System.currentTimeMillis()+(i+5)*30000), "TourdeFrance"+i, "ergbu34gfgfr7v4zd7u"+i,
+                     true, users.get(i).getGoogleId(), new GregorianCalendar(2020+i, i, 13+i, 9+i, 6+i),
+                     "Keine Panik "+i,  chats.get(1).getId(), (byte) 1);
+             events.add(e);
+             db.insertMessage(e);
+        }
+
 
 
 
@@ -82,16 +99,14 @@ public class DBStatementsTest {
 
     @Test
     public void insertMessage() {
-        Time time = new Time(System.currentTimeMillis());
-        Message m = new Message(time, "Test Nachricht 1", "ghdfghdtrgfx", false, users.get(1).getGoogleId(), chats.get(1).getId());
-        db.insertMessage(m);
+        Date time = GregorianCalendar.getInstance().getTime();;
+        Message m = new Message(time, "Test Nachricht insert", "ghdzuhzfghdtrgfx", false, users.get(1).getGoogleId(), chats.get(1).getId());
+       boolean b= db.insertMessage(m);
         Message m2 = db.getMessage(m.getId());
         assertThat(m, equalTo(m2));
 
 
-
-
-        time = new Time(System.currentTimeMillis()+20000);
+        time = new Time(System.currentTimeMillis());
 
     }
 
@@ -108,15 +123,20 @@ public class DBStatementsTest {
 
     @Test
     public void updateUserEventStatus() {
+        UserEventStatus ues = db.getUserEventStatus(events.get(1).getId(), users.get(1).getGoogleId());
+        ues.setReason("Blabla");
+        ues.setStatus(2);
+        db.updateUserEventStatus(ues);
+        UserEventStatus ues2= db.getUserEventStatus(events.get(1).getId(), users.get(1).getGoogleId());
+
+        assertThat(ues,equalTo(ues2));
     }
 
     @Test
     public void getUserEventStatus() {
+
     }
 
-    @Test
-    public void getUserEventStatus1() {
-    }
 
     @Test
     public void getChatMembers() {
@@ -150,10 +170,10 @@ public class DBStatementsTest {
 
     @Test
     public void getEvent() {
-        Time time = new Time(System.currentTimeMillis());
+        Date time = GregorianCalendar.getInstance().getTime();;
 
-        Event e=  new Event(time, "TourdeFrance", "ergbu34zr74bgv4zd7u",
-                true, users.get(1).getGoogleId(), new GregorianCalendar(2020, 10, 27, 9, 6),
+        Event e=  new Event(time, "TourdeFrance", "ergbu34gfgfr74bgv4zd7u",
+                true, users.get(2).getGoogleId(), new GregorianCalendar(2020, 10, 27, 9, 6),
                 "hilfe ein russ",  chats.get(1).getId(), (byte) 1);
 
 

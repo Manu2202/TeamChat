@@ -16,6 +16,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
 import java.sql.Time;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -94,7 +95,7 @@ public class FirebaseConnection {
 
     public void inviteToChat(String chatid, String chatname){
         String invite_msg= "Welcome to "+chatname+ "!";
-        Message message = new Message(new Time(System.currentTimeMillis()),
+        Message message = new Message(GregorianCalendar.getInstance().getTime(),
                 invite_msg, false,
                 FirebaseAuth.getInstance().getCurrentUser().getUid(), chatid);
         addToFirestore(message, "You got invited to be part of "+ chatname,

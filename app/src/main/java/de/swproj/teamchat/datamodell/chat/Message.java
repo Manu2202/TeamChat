@@ -49,9 +49,10 @@ public class Message {
         }
         Message m = (Message) obj;
         if(m.getId().equals(id)&&
-                m.getTimeStamp().toString().equals(timeStamp.toString())&&
+                m.getTimeStamp().getTime()==timeStamp.getTime()&&
                 m.getMessage().equals(message) &&
-                m.getCreator().equals(creator))
+                m.getCreator().equals(creator) &&
+                m.getChatid().equals(chatid))
             return true;
         return false;
     }
@@ -64,7 +65,7 @@ public class Message {
         return new Time(timeStamp.getTime());
     }
 
-    public Date getTmeStamp_Date() {
+    public Date getTimeStampDate() {
         return timeStamp;
     }
 

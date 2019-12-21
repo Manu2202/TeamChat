@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -78,7 +79,7 @@ public class ChatActivity extends AppCompatActivity {
         String etMessageString = etMessage.getText().toString();
         // Check if the Message is empty
         if (!etMessageString.isEmpty()) {
-            Message message = new Message(new Time(System.currentTimeMillis()),
+            Message message = new Message(GregorianCalendar.getInstance().getTime(),
                     etMessageString, false,
                     FirebaseAuth.getInstance().getCurrentUser().getUid(), chatID);
             firebaseConnection.addToFirestore(message,

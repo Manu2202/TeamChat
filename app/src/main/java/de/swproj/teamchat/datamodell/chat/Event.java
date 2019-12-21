@@ -41,7 +41,7 @@ public class Event extends Message {
             return false;
         }
         Event e = (Event) obj;
-        if(super.equals(obj)&& e.getDate().toString().equals(date.toString())&&e.getDescription().equals(description))
+        if(super.equals(obj)&& e.getDate().getTime().getTime()==date.getTime().getTime()&&e.getDescription().equals(description))
             return true;
         return false;
     }

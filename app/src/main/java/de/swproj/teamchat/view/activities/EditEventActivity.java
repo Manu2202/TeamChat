@@ -173,7 +173,7 @@ public class EditEventActivity extends AppCompatActivity {
             int status = 1;
             try {
                 GregorianCalendar date = new GregorianCalendar(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute);
-                event = new Event(new Time(System.currentTimeMillis()),
+                event = new Event(GregorianCalendar.getInstance().getTime(),
                         et_title.getText().toString(), msgId, true, FirebaseAuth.getInstance().getCurrentUser().getUid(),
                         date, et_description.getText().toString(), chatID, status);
                 //Push Event to Firebase
