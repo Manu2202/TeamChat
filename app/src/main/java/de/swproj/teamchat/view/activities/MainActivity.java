@@ -21,7 +21,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.ListView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,8 +33,6 @@ import java.util.GregorianCalendar;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ListView lvChat;
-    private ListView lvEvents;
     private ListFragment chatFragment;
     private ListFragment eventFragment;
     private ListFragment contactFragment;
@@ -58,12 +55,27 @@ public class MainActivity extends AppCompatActivity {
         db.insertUser(new User("emusk", "sdbf", "Elon Musk", "Musk", "Elon"));
         db.insertChat(new Chat("Gugel", (getResources().getIntArray(R.array.androidcolors))[0], "123", "11"));
         db.updateChatMembers(new String[]{"Gott", "11", "abc", "Gott2"}, "123");
-        db.updateChatMembers(new String[]{"Gott", "11", "abc", "Gott2"}, "3434");
 
 
         //  db.insertChat(new Chat("Labergruppe", 0xFFFB0B03, "394", "Gott"));
         db.insertChat(new Chat("Tetris esport Team", (getResources().getIntArray(R.array.androidcolors))[1], "3934", "Gott"));
-
+        db.updateChatMembers(new String[]{"Gott", "11", "abc", "Gott2"}, "3934");
+        db.insertChat(new Chat("Tee Party", (getResources().getIntArray(R.array.androidcolors))[2], "3954", "Gott"));
+        db.updateChatMembers(new String[]{"Gott", "11", "abc", "Gott2"}, "3954");
+        db.insertChat(new Chat("Buchclub", (getResources().getIntArray(R.array.androidcolors))[3], "3941", "Gott"));
+        db.updateChatMembers(new String[]{"Gott", "11", "abc", "Gott2"}, "3941");
+        db.insertChat(new Chat("Golfclub", (getResources().getIntArray(R.array.androidcolors))[4], "3434", "Gott"));
+        db.updateChatMembers(new String[]{"Gott", "11", "abc", "Gott2"}, "3434");
+        db.insertChat(new Chat("Fußballclub", (getResources().getIntArray(R.array.androidcolors))[5], "34", "Gott"));
+        db.updateChatMembers(new String[]{"Gott", "11", "abc", "Gott2"}, "34");
+        db.insertChat(new Chat("Squash-Club", (getResources().getIntArray(R.array.androidcolors))[6], "3484", "Gott"));
+        db.updateChatMembers(new String[]{"Gott", "11", "abc", "Gott2"}, "3484");
+        db.insertChat(new Chat("Tennis-Club", (getResources().getIntArray(R.array.androidcolors))[7], "324", "Gott"));
+        db.updateChatMembers(new String[]{"Gott", "11", "abc", "Gott2"}, "324");
+        db.insertChat(new Chat("Eishockey-Club", (getResources().getIntArray(R.array.androidcolors))[8], "474", "Gott"));
+        db.updateChatMembers(new String[]{"Gott", "11", "abc", "Gott2"}, "474");
+        db.insertChat(new Chat("Event Club",  (getResources().getIntArray(R.array.androidcolors))[11], "25000", "Gott"));
+        db.updateChatMembers(new String[]{"Gott", "11", "abc", "Gott2"}, "25000");
 
         Date currentTime = Calendar.getInstance().getTime();
         GregorianCalendar gc = new GregorianCalendar();
@@ -71,22 +83,36 @@ public class MainActivity extends AppCompatActivity {
         Time time = new Time(currentTime.getTime());
         db.insertMessage(new Message(time, "Hallo, der horst ist da!!!", "oho", false, "11", "123"));
         time.setTime(currentTime.getTime() + 5);
-        db.insertMessage(new Event(time, "Panik", "546s", true, "11", gc, "hilfe ein virus", "123", (byte) 1));
-        time.setTime(currentTime.getTime() + 10);
-        db.insertMessage(new Message(time, "Coolbbb bfgtf ;D", "o4454546", false, "abc", "123"));
-        time.setTime(currentTime.getTime() + 1000);
-        db.insertMessage(new Message(time, "Cool  hu;D", "o4584846", false, "11", "123"));
-        time.setTime(currentTime.getTime() + 1022);
-        db.insertMessage(new Message(time, "Cool  huhu;D", "o448784546", false, "Gott2", "123"));
-        time.setTime(currentTime.getTime() + 6660);
-        db.insertMessage(new Message(time, "Cool ;D", "o454846", false, "Gott", "123"));
-        time.setTime(currentTime.getTime() + 7977);
-        db.insertMessage(new Message(time, "Ein Huhun ;D", "o4115jn546", false, "abc", "123"));
 
-        db.insertMessage(new Event(time, "TourdeFrance", "4546s", true, "Gott", new GregorianCalendar(2020, 10, 27, 9, 6), "hilfe ein russ", "3434", (byte) 1));
+        db.insertMessage(new Event(time, "Panik", "546s", true, "11", gc, "hilfe ein virus", "3934", (byte) 1));
+        time.setTime(currentTime.getTime() + 10);
+        db.insertMessage(new Message(time, "Coolbbb bfgtf ;D", "o4454546", false, "abc", "3954"));
+        time.setTime(currentTime.getTime() + 10);
+        db.insertMessage(new Message(time, "Cool  hu;D", "o4584846", false, "11", "3941"));
+        time.setTime(currentTime.getTime() + 10);
+        db.insertMessage(new Message(time, "Cool  huhu;D", "o448784546", false, "Gott2", "3434"));
+        time.setTime(currentTime.getTime() + 10);
+        db.insertMessage(new Message(time, "Cool ;D", "o454846", false, "Gott", "34"));
+        time.setTime(currentTime.getTime() + 10);
+        db.insertMessage(new Message(time, "Ein Huhun ;D", "o4115jn546", false, "abc", "3484"));
+
+        db.insertMessage(new Event(time, "TourdeFrance", "4546s", true, "Gott", new GregorianCalendar(2015, 3, 23, 10, 8), "hilfe ein russ", "474", (byte) 1));
+        time.setTime(currentTime.getTime() + 10);
+        db.insertMessage(new Event(time, "Zweiter Termin", "45466", true, "Gott", new GregorianCalendar(2015, 3, 23, 9, 50), "Sollte gleichen Separator haben", "3954", (byte) 1));
         time.setTime(currentTime.getTime() + 10);
 
-        db.insertMessage(new Event(time, "Mars Tour", "14546s", true, "emusk", new GregorianCalendar(2020, 10, 27, 9, 6), "colonize mars with me", "123", (byte) 1));
+        db.insertMessage(new Event(time, "Bla", "15466", true, "Gott", new GregorianCalendar(2015, 4, 23, 9, 50), "Event Text", "3941", (byte) 1));
+        time.setTime(currentTime.getTime() + 10);
+
+        db.insertMessage(new Event(time, "Weltuntergang", "4546", true, "Gott", new GregorianCalendar(2020, 3, 23, 9, 50), "Event Text", "3434", (byte) 1));
+        time.setTime(currentTime.getTime() + 10);
+        db.insertMessage(new Event(time, "Weltuntergang Ersatztermin", "43466", true, "Gott", new GregorianCalendar(2020, 3, 23, 23, 59), "Event Text", "3434", (byte) 1));
+        time.setTime(currentTime.getTime() + 10);
+        db.insertMessage(new Event(time, "Weltuntergang Ersatztermin 2", "323466", true, "Gott", new GregorianCalendar(2022, 3, 23, 23, 59), "Event Text", "25000", (byte) 1));
+        time.setTime(currentTime.getTime() + 10);
+
+
+        db.insertMessage(new Event(time, "Mars Tour", "14546s", true, "emusk", new GregorianCalendar(2020, 10, 27, 9, 6), "colonize mars with me", "324", (byte) 1));
         time.setTime(currentTime.getTime() + 1555);
 
 
@@ -216,8 +242,8 @@ public class MainActivity extends AppCompatActivity {
         contactFragment = new FragmentMainContacts();
 
         //---------------------------------------------------------------  Test
-        //addTestdat();
-        //db.dropAll();
+        // addTestdat();
+        // db.dropAll();
 
 
         //Set Up the first Fragment, if lastSelectedFragment is NULL, else use this

@@ -11,7 +11,7 @@ import java.util.GregorianCalendar;
 
 import androidx.annotation.Nullable;
 
-public class Event extends Message {
+public class Event extends Message implements Comparable<Event> {
 
     private GregorianCalendar date;
     private String description;
@@ -94,4 +94,10 @@ public class Event extends Message {
     public void setId(String id) {
         super.setId(id);
     }
+
+    @Override
+    public int compareTo(Event e) {
+        return getDate().compareTo(e.getDate());
+    }
+
 }

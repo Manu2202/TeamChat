@@ -59,10 +59,12 @@ public class FragmentMainEvents extends ListFragment {
         super.onActivityCreated(savedInstanceState);
 
         ListView list = getListView();
-        //Todo: Add divider for each individual group
-        //int[] colors = {0xFF000000, 0xFF000000, 0xFF000000};
+
+        getListView().setDivider(null);
+        getListView().setDividerHeight(0);
+       // int[] colors = {0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF};
         //list.setDivider(new GradientDrawable(GradientDrawable.Orientation.RIGHT_LEFT, colors));
-        //list.setDividerHeight(10);
+       // list.setDividerHeight(10);
         setListAdapter(adapterEvent);
 
         setHasOptionsMenu(true);
