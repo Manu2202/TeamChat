@@ -40,6 +40,7 @@
     <string name="common_groups">Common groups</string>
     <string name="send_email">Send Email</string>
     <string name="deleteUser">Delete Contact from List</string>
+    <string name="debug_displayEventByGroupColor">Debug: Toggle Group Colors</string>
 
 
 </resources>

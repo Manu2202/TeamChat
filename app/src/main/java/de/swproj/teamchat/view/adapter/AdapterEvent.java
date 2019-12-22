@@ -30,12 +30,17 @@ public class AdapterEvent extends BaseAdapter {
     private ArrayList<Event> events;
     private DBStatements db;
     private Event lastEvent;
+    private boolean evColorIsGroupColor = false;
 
 
     public AdapterEvent(ArrayList<Event> events, DBStatements dbStatements) {
         this.events = events;
         db = dbStatements;
         Collections.sort(this.events);
+    }
+
+    public void toggleEventColorToGroupColor() {
+        evColorIsGroupColor = !evColorIsGroupColor;
     }
 
     @Override
@@ -105,8 +110,10 @@ public class AdapterEvent extends BaseAdapter {
 
 
         // Make event cardview color the same as the color of the corresponding chat
-        // CardView cardView = convertView.findViewById(R.id.li_message_cv);
-        // cardView.setCardBackgroundColor(db.getChat(ev.getChatid()).getColor());
+        if (evColorIsGroupColor) {
+            CardView cardView = convertView.findViewById(R.id.li_message_cv);
+            cardView.setCardBackgroundColor(db.getChat(ev.getChatid()).getColor());
+        }
 
         // Display name of group this event belongs to (this is the event overview, so
         // it makes more sense here to display the group name instead of the event creator name)

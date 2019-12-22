@@ -245,7 +245,6 @@ public class MainActivity extends AppCompatActivity {
         // addTestdat();
         // db.dropAll();
 
-
         //Set Up the first Fragment, if lastSelectedFragment is NULL, else use this
         if (lastSelectedFragment == null) {
             getSupportFragmentManager().beginTransaction()
