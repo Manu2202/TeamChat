@@ -91,6 +91,7 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
      * If app is in foreground, notification data comes from onMessageReceived
      */
     private void save_message(RemoteMessage.Notification notification, Map<String, String> data) {
+        Log.d("IS EVENT", "Ist es ein Event?:"+Boolean.valueOf(data.get("isEvent")));
         if (notification.getBody() != null && notification.getBody().length() > 0 && dbStatements.getMessage(data.get("id")) == null) {
             if (Boolean.parseBoolean(data.get("isInvite"))) {
                 Log.d("Chat", "Got invite");
@@ -133,8 +134,7 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
 
                 dbStatements.updateUserEventStatus(userEventStatus);
             }
-
-        } else {
+            else {
             //New Message
             Message msg = new Message(FormatHelper.formatTime(data.get("timestamp")),
                     notification.getBody(),
@@ -146,7 +146,9 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
             //Save in Database
             dbStatements.insertMessage(msg);
         }
+        }
     }
+
 
     private void save_token(final String token) {
         //Get shared Preference
