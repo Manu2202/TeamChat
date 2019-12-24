@@ -1,14 +1,19 @@
 package de.swproj.teamchat.view.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.Space;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
 import androidx.cardview.widget.CardView;
+import androidx.core.graphics.ColorUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,7 +35,7 @@ public class AdapterEvent extends BaseAdapter {
     private ArrayList<Event> events;
     private DBStatements db;
     private Event lastEvent;
-    private boolean evColorIsGroupColor = false;
+    private boolean evColorIsGroupColor = true;
 
 
     public AdapterEvent(ArrayList<Event> events, DBStatements dbStatements) {
@@ -76,6 +81,9 @@ public class AdapterEvent extends BaseAdapter {
         TextView tvTime = convertView.findViewById(R.id.viewevent_tveventtime);
         TextView tvGroupname = convertView.findViewById(R.id.viewevent_tvcreator);
         TextView tvDescription = convertView.findViewById(R.id.viewevent_tvdescription);
+        ImageView icon_date = convertView.findViewById(R.id.li_icon_date);
+        ImageView icon_time = convertView.findViewById(R.id.li_icon_time);
+
         tvTitle.setText(ev.getMessage());
         tvTime.setText(ev.getTimeStamp().toString());
 
@@ -113,6 +121,20 @@ public class AdapterEvent extends BaseAdapter {
         if (evColorIsGroupColor) {
             CardView cardView = convertView.findViewById(R.id.li_message_cv);
             cardView.setCardBackgroundColor(db.getChat(ev.getChatid()).getColor());
+            double contrast_ratio = ColorUtils.calculateContrast(db.getChat(ev.getChatid()).getColor(),Color.parseColor("#FFFFFF"));
+            Log.d("Contrast Ratio",String.valueOf(contrast_ratio));
+            if (contrast_ratio < 4){
+                //Black Text should be used
+                tvDescription.setTextColor(Color.parseColor("#000000"));
+                tvDate.setTextColor(Color.parseColor("#000000"));
+                tvGroupname.setTextColor(Color.parseColor("#000000"));
+                tvTime.setTextColor(Color.parseColor("#000000"));
+                tvTitle.setTextColor(Color.parseColor("#000000"));
+                //Black Icon
+                icon_date.setImageResource(R.drawable.ic_event_black_24dp);
+                icon_time.setImageResource(R.drawable.ic_access_time_black_24dp);
+
+            }
         }
 
         // Display name of group this event belongs to (this is the event overview, so
