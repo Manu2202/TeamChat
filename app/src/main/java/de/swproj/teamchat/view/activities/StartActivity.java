@@ -149,9 +149,15 @@ public class StartActivity extends AppCompatActivity {
                             //Check if User is New -> if true add to Database
                             if (task.getResult().getAdditionalUserInfo().isNewUser()){
                                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                                String name[] = user.getDisplayName().split(" ");
-                                //TODO name not defined only forename
-                                fbconnect.addToFirestore(new User(user.getUid(),user.getEmail(),user.getDisplayName(),name[1],name[0]));
+                                String forname_lastname[];
+                                if (user.getDisplayName().contains(" ")){
+                                    forname_lastname = user.getDisplayName().split(" ");
+                                }
+                                else{
+                                    forname_lastname= new String[]{user.getDisplayName(),""};
+                                }
+
+                                fbconnect.addToFirestore(new User(user.getUid(),user.getEmail(),user.getDisplayName(),forname_lastname[1],forname_lastname[0]));
                             }
                             //Send to MainActivity
                             Intent mainIntent = new Intent(StartActivity.this, MainActivity.class);

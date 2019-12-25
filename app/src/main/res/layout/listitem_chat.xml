@@ -12,14 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minWidth="50dp"
-        android:minHeight="70dp">
+        android:minHeight="75dp">
 
     </FrameLayout>
 
     <FrameLayout
         android:id="@+id/list_color_box"
         android:layout_width="10dp"
-        android:layout_height="70dp"
+        android:layout_height="75dp"
         android:minWidth="50dp"
         android:minHeight="50dp">
 
@@ -42,14 +42,14 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/chatListChatName"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:textSize="16sp"
         android:layout_toEndOf="@+id/list_color_box"
         android:ellipsize="end"
         android:maxLength="75"
         android:maxLines="1"
-        android:text="Letzte Chat Message, und so sieht es aus wenn sie nicht ins Feld passt" />
+        android:text="Letzte Chat Message, und so sieht es aus wenn sie nicht ins Feld passt"
+        android:textSize="17dp" />
 
     <TextView
         android:id="@+id/chatListChatName"

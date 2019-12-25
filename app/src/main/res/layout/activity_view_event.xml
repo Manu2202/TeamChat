@@ -143,7 +143,7 @@
                 android:layout_below="@+id/li_icon_date"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="8dp"
-                android:text="Dein Status: "
+                android:text="Your status:"
                 android:textSize="16sp" />
 
             <TextView
@@ -155,7 +155,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_toRightOf="@id/viewevent_txtstatus"
-                android:text="zugesagt"
+                android:text="commited"
                 android:textSize="16sp"
                 android:textStyle="italic" />
 
@@ -168,8 +168,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="4dp"
                 android:onClick="cancleDialog"
-                android:text="absagen"
-                android:textSize="16sp" />
+                android:text="cancel" />
 
             <Button
                 android:id="@+id/viewevent_btncomit"
@@ -179,7 +178,8 @@
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="16dp"
                 android:onClick="commit"
-                android:text="zusagen" />
+                android:textSize="16sp"
+                android:text="commit" />
 
 
         </RelativeLayout>
@@ -196,7 +196,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-        android:text="Status aller User"
+        android:text="Status of Group Members"
         android:textColor="@color/design_default_color_primary_dark"
         android:textSize="18dp" />
 

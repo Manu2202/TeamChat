@@ -10,6 +10,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Formatter;
 import java.util.GregorianCalendar;
 
 public class FormatHelper {
@@ -73,6 +74,10 @@ public class FormatHelper {
         SimpleDateFormat sdfDate = new SimpleDateFormat("dd.MM.YYYY");
         sdfDate.setCalendar(date);
         return sdfDate.format(date.getTime());
+    }
+    public static String getMonthfromDate(GregorianCalendar date){
+        SimpleDateFormat sdfMonth = new SimpleDateFormat("MMMM yyyy");
+        return sdfMonth.format(date.getTime());
     }
 
 }

@@ -69,8 +69,7 @@ public class AdapterChat extends BaseAdapter {
         //TODO LAST MESSAGE NOT WORKING
 
         // Avoid NullpointerException if Chat is empty
-        if (lastMsg == null) {
-        } else {
+        if (lastMsg != null) {
             lastMessage.setText(lastMsg.getMessage());
 
             // Date

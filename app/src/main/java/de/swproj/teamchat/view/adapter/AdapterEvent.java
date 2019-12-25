@@ -67,8 +67,6 @@ public class AdapterEvent extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         Context context = parent.getContext();
         Event ev = events.get(position);
-        Log.d("Date is not null", String.valueOf(ev.getDate()!=null));
-        boolean isInPast = (System.currentTimeMillis() > ev.getDate().getTimeInMillis());
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.listitem_event_for_overview_menu, null, false);
              TextView separator = convertView.findViewById(R.id.listitem_event_separator);
@@ -87,30 +85,33 @@ public class AdapterEvent extends BaseAdapter {
              tvTitle.setText(ev.getMessage());
              tvTime.setText(ev.getTimeStamp().toString());
 
-
-
-
+             boolean YearisInPast = (Calendar.getInstance().get(Calendar.YEAR) > ev.getDate().get(Calendar.YEAR));
+             boolean MonthisInPast = (Calendar.getInstance().get(Calendar.MONTH) > ev.getDate().get(Calendar.MONTH)) && (Calendar.getInstance().get(Calendar.YEAR) == ev.getDate().get(Calendar.YEAR));
+             boolean isInPast = YearisInPast || MonthisInPast;
+             Log.d("IsInPast",String.valueOf(isInPast)+ " Month Event"+ev.getDate().get(Calendar.MONTH)+ "Month akt"+Calendar.getInstance().get(Calendar.MONTH)+
+                     "Year Event"+ev.getDate().get(Calendar.YEAR)+"Year akt"+Calendar.getInstance().get(Calendar.YEAR));
              // Separator
-             // Will be displayed only once above Events happening on the same day
+             // Will be displayed only once above Events happening on the same month
+            //TODO still buggy if scrolled from bottom to top..
              boolean displaySeparator = false;
-             if (events.size() > 0 ) {
-                 if (ev.getId().equals(events.get(0).getId())&& !isInPast) {
+             if (events.size() > 0 && !isInPast) {
+                 if (ev.getId().equals(events.get(0).getId())) {
                      spaceStart.setVisibility(View.VISIBLE);
-                     displaySeparator = true;
 
                  }
-                 if (lastEvent!=null&& !isInPast) {
-                     if (ev.getDate().get(Calendar.YEAR) != lastEvent.getDate().get(Calendar.YEAR) ||
-                             ev.getDate().get(Calendar.MONTH) != lastEvent.getDate().get(Calendar.MONTH) ||
-                             ev.getDate().get(Calendar.DAY_OF_MONTH) != lastEvent.getDate().get(Calendar.DAY_OF_MONTH)) {
+                 if (lastEvent!=null){
+                     if ( ev.getDate().get(Calendar.YEAR) != lastEvent.getDate().get(Calendar.YEAR) ||
+                             ev.getDate().get(Calendar.MONTH) != lastEvent.getDate().get(Calendar.MONTH) ) {
                          displaySeparator = true;
                      }
                  }
 
+
+
                  lastEvent = ev;
              }
 
-             separator.setText(FormatHelper.formatDate(ev.getDate()));
+             separator.setText(FormatHelper.getMonthfromDate(ev.getDate()));
              if (displaySeparator) {
                  separator.setVisibility(View.VISIBLE);
                  if (!ev.getId().equals(events.get(0).getId())) {
@@ -124,7 +125,7 @@ public class AdapterEvent extends BaseAdapter {
              // Make event cardview color the same as the color of the corresponding chat
              if (evColorIsGroupColor) {
                  CardView cardView = convertView.findViewById(R.id.li_message_cv);
-                 if (isInPast){
+                 if (System.currentTimeMillis() > ev.getDate().getTimeInMillis()){
                      cardView.setVisibility(View.GONE);
                  }
                  cardView.setCardBackgroundColor(db.getChat(ev.getChatid()).getColor());

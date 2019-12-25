@@ -66,7 +66,7 @@ public class ViewEventActivity extends AppCompatActivity {
         tvStatus = findViewById(R.id.viewevent_tvstatus);
 
         tvCreator.setText(db.getUser(event.getCreator()).getAccountName());
-        tvtime.setText(event.getTimeStamp().toString());
+        tvtime.setText(FormatHelper.formatTime(event.getTimeStamp()));
         tvDate.setText(FormatHelper.formatDate(event.getDate()));
         tvTime.setText(FormatHelper.formatTime(event.getDate()));
         tvtitle.setText(event.getMessage());
