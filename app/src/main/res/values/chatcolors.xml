@@ -7,8 +7,11 @@
     <color name="chat_indigo">#3F51B5</color>
     <color name="chat_blue">#2196F3</color>
     <color name="chat_lightblue">#03A9F4</color>
+    <color name="chat_cyan">#00BCD4</color>
     <color name="chat_teal">#009688</color>
     <color name="chat_green">#4CAF50</color>
+    <color name="chat_lightgreen">#8BC34A</color>
+    <color name="chat_lime">#CDDC39</color>
     <color name="chat_yellow">#FFEB3B</color>
     <color name="chat_amber">#FFC107</color>
     <color name="chat_orange">#FF9800</color>
@@ -26,8 +29,11 @@
         <item>@color/chat_indigo</item>
         <item>@color/chat_blue</item>
         <item>@color/chat_lightblue</item>
+        <item>@color/chat_cyan</item>
         <item>@color/chat_teal</item>
         <item>@color/chat_green</item>
+        <item>@color/chat_lightgreen</item>
+        <item>@color/chat_lime</item>
         <item>@color/chat_yellow</item>
         <item>@color/chat_amber</item>
         <item>@color/chat_orange</item>

@@ -116,8 +116,7 @@ public class EditEventActivity extends AppCompatActivity {
         dateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                month = month + 1;  // Month starts at '0'
-                String date = dayOfMonth + "." + month + "." + year;
+                String date = dayOfMonth + "." + (month+1) + "." + year;
                 tv_selectDate.setText(date);
 
                 // Write the selected Date in the variables
