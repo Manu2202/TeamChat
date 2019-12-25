@@ -14,6 +14,8 @@
     <color name="save_green">#6CA468</color>
     <color name="cancel_red">#FF0000</color>
     <color name="black">#000000</color>
+    <color name="light_grey">#40838383</color>
+
 
 
 </resources>

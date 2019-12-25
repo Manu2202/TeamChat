@@ -67,89 +67,95 @@ public class AdapterEvent extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         Context context = parent.getContext();
         Event ev = events.get(position);
+        Log.d("Date is not null", String.valueOf(ev.getDate()!=null));
+        boolean isInPast = (System.currentTimeMillis() > ev.getDate().getTimeInMillis());
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.listitem_event_for_overview_menu, null, false);
+             TextView separator = convertView.findViewById(R.id.listitem_event_separator);
+             Space spaceStart = convertView.findViewById(R.id.eventview_space1);
+             spaceStart.setVisibility(View.GONE);
+             Space spaceBetweenSeparators = convertView.findViewById(R.id.eventview_space2);
+             spaceBetweenSeparators.setVisibility(View.GONE);
+             TextView tvTitle = convertView.findViewById(R.id.viewevent_tvtitle);
+             TextView tvDate = convertView.findViewById(R.id.viewevent_tveveventdate);
+             TextView tvTime = convertView.findViewById(R.id.viewevent_tveventtime);
+             TextView tvGroupname = convertView.findViewById(R.id.viewevent_tvcreator);
+             TextView tvDescription = convertView.findViewById(R.id.viewevent_tvdescription);
+             ImageView icon_date = convertView.findViewById(R.id.li_icon_date);
+             ImageView icon_time = convertView.findViewById(R.id.li_icon_time);
 
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        convertView = inflater.inflate(R.layout.listitem_event_for_overview_menu, null, false);
-
-        TextView separator = convertView.findViewById(R.id.listitem_event_separator);
-        Space spaceStart = convertView.findViewById(R.id.eventview_space1);
-        spaceStart.setVisibility(View.GONE);
-        Space spaceBetweenSeparators = convertView.findViewById(R.id.eventview_space2);
-        spaceBetweenSeparators.setVisibility(View.GONE);
-        TextView tvTitle = convertView.findViewById(R.id.viewevent_tvtitle);
-        TextView tvDate = convertView.findViewById(R.id.viewevent_tveveventdate);
-        TextView tvTime = convertView.findViewById(R.id.viewevent_tveventtime);
-        TextView tvGroupname = convertView.findViewById(R.id.viewevent_tvcreator);
-        TextView tvDescription = convertView.findViewById(R.id.viewevent_tvdescription);
-        ImageView icon_date = convertView.findViewById(R.id.li_icon_date);
-        ImageView icon_time = convertView.findViewById(R.id.li_icon_time);
-
-        tvTitle.setText(ev.getMessage());
-        tvTime.setText(ev.getTimeStamp().toString());
-
-
-        // Separator
-        // Will be displayed only once above Events happening on the same day
-        boolean displaySeparator = false;
-        if (events.size() > 0) {
-            if ( ev.getId().equals(events.get(0).getId()) ) {
-                spaceStart.setVisibility(View.VISIBLE);
-                displaySeparator = true;
-
-            } else if ( ev.getDate().get(Calendar.YEAR) != lastEvent.getDate().get(Calendar.YEAR) ||
-                    ev.getDate().get(Calendar.MONTH) != lastEvent.getDate().get(Calendar.MONTH) ||
-                    ev.getDate().get(Calendar.DAY_OF_MONTH) != lastEvent.getDate().get(Calendar.DAY_OF_MONTH)
-            ) {
-                displaySeparator = true;
-            }
-
-            lastEvent = ev;
-        }
-
-        separator.setText(FormatHelper.formatDate(ev.getDate()));
-        if (displaySeparator) {
-            separator.setVisibility(View.VISIBLE);
-            if ( !ev.getId().equals(events.get(0).getId()) ) {
-                spaceBetweenSeparators.setVisibility(View.VISIBLE);
-            }
-        } else {
-            separator.setVisibility(View.GONE);
-        }
+             tvTitle.setText(ev.getMessage());
+             tvTime.setText(ev.getTimeStamp().toString());
 
 
-        // Make event cardview color the same as the color of the corresponding chat
-        if (evColorIsGroupColor) {
-            CardView cardView = convertView.findViewById(R.id.li_message_cv);
-            cardView.setCardBackgroundColor(db.getChat(ev.getChatid()).getColor());
-            double contrast_ratio = ColorUtils.calculateContrast(db.getChat(ev.getChatid()).getColor(),Color.parseColor("#FFFFFF"));
-            Log.d("Contrast Ratio",String.valueOf(contrast_ratio));
-            if (contrast_ratio < 4){
-                //Black Text should be used
-                tvDescription.setTextColor(Color.parseColor("#000000"));
-                tvDate.setTextColor(Color.parseColor("#000000"));
-                tvGroupname.setTextColor(Color.parseColor("#000000"));
-                tvTime.setTextColor(Color.parseColor("#000000"));
-                tvTitle.setTextColor(Color.parseColor("#000000"));
-                //Black Icon
-                icon_date.setImageResource(R.drawable.ic_event_black_24dp);
-                icon_time.setImageResource(R.drawable.ic_access_time_black_24dp);
-
-            }
-        }
-
-        // Display name of group this event belongs to (this is the event overview, so
-        // it makes more sense here to display the group name instead of the event creator name)
-        tvGroupname.setText(db.getChat(ev.getChatid()).getName());
-
-        // Display event creator name
-       // tvUser.setText(ev.getCreator());
-
-        tvDescription.setText(ev.getDescription());
-        tvTime.setText(FormatHelper.formatTime(ev.getDate()));
-        tvDate.setText(FormatHelper.formatDate(ev.getDate()));
 
 
-        return convertView;
+             // Separator
+             // Will be displayed only once above Events happening on the same day
+             boolean displaySeparator = false;
+             if (events.size() > 0 ) {
+                 if (ev.getId().equals(events.get(0).getId())&& !isInPast) {
+                     spaceStart.setVisibility(View.VISIBLE);
+                     displaySeparator = true;
+
+                 }
+                 if (lastEvent!=null&& !isInPast) {
+                     if (ev.getDate().get(Calendar.YEAR) != lastEvent.getDate().get(Calendar.YEAR) ||
+                             ev.getDate().get(Calendar.MONTH) != lastEvent.getDate().get(Calendar.MONTH) ||
+                             ev.getDate().get(Calendar.DAY_OF_MONTH) != lastEvent.getDate().get(Calendar.DAY_OF_MONTH)) {
+                         displaySeparator = true;
+                     }
+                 }
+
+                 lastEvent = ev;
+             }
+
+             separator.setText(FormatHelper.formatDate(ev.getDate()));
+             if (displaySeparator) {
+                 separator.setVisibility(View.VISIBLE);
+                 if (!ev.getId().equals(events.get(0).getId())) {
+                     spaceBetweenSeparators.setVisibility(View.VISIBLE);
+                 }
+             } else {
+                 separator.setVisibility(View.GONE);
+             }
+
+
+             // Make event cardview color the same as the color of the corresponding chat
+             if (evColorIsGroupColor) {
+                 CardView cardView = convertView.findViewById(R.id.li_message_cv);
+                 if (isInPast){
+                     cardView.setVisibility(View.GONE);
+                 }
+                 cardView.setCardBackgroundColor(db.getChat(ev.getChatid()).getColor());
+
+                 //Calculate Contrast Ratio between Background color and White Text
+                 double contrast_ratio = ColorUtils.calculateContrast(db.getChat(ev.getChatid()).getColor(), Color.parseColor("#FFFFFF"));
+
+                 if (contrast_ratio < 4) {
+                     //Black Text should be used
+                     tvDescription.setTextColor(Color.parseColor("#000000"));
+                     tvDate.setTextColor(Color.parseColor("#000000"));
+                     tvGroupname.setTextColor(Color.parseColor("#000000"));
+                     tvTime.setTextColor(Color.parseColor("#000000"));
+                     tvTitle.setTextColor(Color.parseColor("#000000"));
+                     //Black Icon should be used
+                     icon_date.setImageResource(R.drawable.ic_event_black_24dp);
+                     icon_time.setImageResource(R.drawable.ic_access_time_black_24dp);
+                 }
+             }
+
+             // Display name of group this event belongs to (this is the event overview, so
+             // it makes more sense here to display the group name instead of the event creator name)
+             tvGroupname.setText(db.getChat(ev.getChatid()).getName());
+
+             // Display event creator name
+             // tvUser.setText(ev.getCreator());
+
+             tvDescription.setText(ev.getDescription());
+             tvTime.setText(FormatHelper.formatTime(ev.getDate()));
+             tvDate.setText(FormatHelper.formatDate(ev.getDate()));
+            return convertView;
     }
 
 }
