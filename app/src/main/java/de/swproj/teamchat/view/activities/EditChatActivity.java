@@ -33,7 +33,7 @@ public class EditChatActivity extends AppCompatActivity {
     private String chatId;
     private Chat chat;
     private boolean isAdmin;
-
+    private static Random random = new Random();
     private HashMap<String, User> allUser = new HashMap<String, User>();
     private HashMap<String, User> groupMember = new HashMap<String, User>();
 
@@ -198,7 +198,7 @@ public class EditChatActivity extends AppCompatActivity {
     public void saveChanges(View view) {
         if (chatId.equals("0")) {
             int[] androidColors = getResources().getIntArray((R.array.androidcolors));
-            int color =  androidColors[new Random().nextInt(androidColors.length)];
+            int color =  androidColors[random.nextInt(androidColors.length)];
             Chat chat = new Chat(etChatName.getText().toString(),
                     FirebaseAuth.getInstance().getCurrentUser().getUid(), color);
             List<String> userIDs = new ArrayList<>(groupMember.keySet());

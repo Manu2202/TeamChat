@@ -35,6 +35,7 @@ public class AdapterEvent extends BaseAdapter {
     private ArrayList<Event> events;
     private DBStatements db;
     private Event lastEvent;
+    private int last_pos;
     private boolean evColorIsGroupColor = true;
 
 
@@ -86,37 +87,37 @@ public class AdapterEvent extends BaseAdapter {
              tvTime.setText(ev.getTimeStamp().toString());
 
              boolean YearisInPast = (Calendar.getInstance().get(Calendar.YEAR) > ev.getDate().get(Calendar.YEAR));
-             boolean MonthisInPast = (Calendar.getInstance().get(Calendar.MONTH) > ev.getDate().get(Calendar.MONTH)) && (Calendar.getInstance().get(Calendar.YEAR) == ev.getDate().get(Calendar.YEAR));
+             boolean MonthisInPast = ((Calendar.getInstance().get(Calendar.MONTH) > ev.getDate().get(Calendar.MONTH)) && (Calendar.getInstance().get(Calendar.YEAR) == ev.getDate().get(Calendar.YEAR)));
              boolean isInPast = YearisInPast || MonthisInPast;
-             Log.d("IsInPast",String.valueOf(isInPast)+ " Month Event"+ev.getDate().get(Calendar.MONTH)+ "Month akt"+Calendar.getInstance().get(Calendar.MONTH)+
-                     "Year Event"+ev.getDate().get(Calendar.YEAR)+"Year akt"+Calendar.getInstance().get(Calendar.YEAR));
              // Separator
              // Will be displayed only once above Events happening on the same month
             //TODO still buggy if scrolled from bottom to top..
              boolean displaySeparator = false;
-             if (events.size() > 0 && !isInPast) {
+             boolean month=false,year=false;
+
+             //!isinpast
+             if (events.size() > 0) {
                  if (ev.getId().equals(events.get(0).getId())) {
                      spaceStart.setVisibility(View.VISIBLE);
-
                  }
                  if (lastEvent!=null){
-                     if ( ev.getDate().get(Calendar.YEAR) != lastEvent.getDate().get(Calendar.YEAR) ||
-                             ev.getDate().get(Calendar.MONTH) != lastEvent.getDate().get(Calendar.MONTH) ) {
+
+                     if ( (ev.getDate().get(Calendar.YEAR) != lastEvent.getDate().get(Calendar.YEAR)) ||
+                             (ev.getDate().get(Calendar.MONTH) != lastEvent.getDate().get(Calendar.MONTH))){
+                         Log.d("Trennung zwischen",FormatHelper.getMonthfromDate(ev.getDate())+" und "+FormatHelper.getMonthfromDate(events.get(last_pos).getDate()));
                          displaySeparator = true;
                      }
+
                  }
-
-
-
                  lastEvent = ev;
+                 last_pos = position;
              }
 
              separator.setText(FormatHelper.getMonthfromDate(ev.getDate()));
-             if (displaySeparator) {
+
+             if (displaySeparator ) {
                  separator.setVisibility(View.VISIBLE);
-                 if (!ev.getId().equals(events.get(0).getId())) {
-                     spaceBetweenSeparators.setVisibility(View.VISIBLE);
-                 }
+                 spaceBetweenSeparators.setVisibility(View.VISIBLE);
              } else {
                  separator.setVisibility(View.GONE);
              }
@@ -125,9 +126,9 @@ public class AdapterEvent extends BaseAdapter {
              // Make event cardview color the same as the color of the corresponding chat
              if (evColorIsGroupColor) {
                  CardView cardView = convertView.findViewById(R.id.li_message_cv);
-                 if (System.currentTimeMillis() > ev.getDate().getTimeInMillis()){
+                 /*if (System.currentTimeMillis() > ev.getDate().getTimeInMillis()){
                      cardView.setVisibility(View.GONE);
-                 }
+                 }*/
                  cardView.setCardBackgroundColor(db.getChat(ev.getChatid()).getColor());
 
                  //Calculate Contrast Ratio between Background color and White Text
