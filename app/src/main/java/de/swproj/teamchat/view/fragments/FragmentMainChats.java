@@ -19,11 +19,13 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.ListFragment;
+import androidx.lifecycle.Observer;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.connection.firebase.FirebaseConnection;
@@ -34,6 +36,7 @@ import de.swproj.teamchat.view.activities.EditChatActivity;
 import de.swproj.teamchat.view.activities.StartActivity;
 import de.swproj.teamchat.view.adapter.AdapterChat;
 import de.swproj.teamchat.view.adapter.AdapterContact;
+import de.swproj.teamchat.view.viewmodels.MainChatsViewModel;
 
 
 /*
@@ -43,7 +46,9 @@ import de.swproj.teamchat.view.adapter.AdapterContact;
 
 public class FragmentMainChats extends ListFragment {
 
-    private ArrayList<Chat> chats;
+   // private ArrayList<Chat> chats;
+    private MainChatsViewModel viewModel;
+
     private MenuItem deleteButton;
     private MenuItem cancelDeleteButton;
 
@@ -55,28 +60,49 @@ public class FragmentMainChats extends ListFragment {
     private ArrayList<Chat> markedForDeletion = new ArrayList();
     private ArrayList<FrameLayout> markedMenuItems = new ArrayList<>();
 
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        chats = DBStatements.getChat();
+
+
         menuModus = STD;
-        Log.d("Fragments:", "In Chat Fragment" + " Chatcount " + chats.size());
+      //  Log.d("Fragments:", "In Chat Fragment" + " Chatcount " + chats.size());
 
         setHasOptionsMenu(true);
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        DBStatements.removeUpdateable(viewModel);
+
+    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        //instanciate LiveData
+        viewModel= new MainChatsViewModel((LinkedList<Chat>) DBStatements.getChat());
         ListView list = getListView();
 
-        final AdapterChat chatAdapter = new AdapterChat(chats);
+        final AdapterChat chatAdapter = new AdapterChat(viewModel.getLiveChats().getValue());
         setListAdapter(chatAdapter);
+        // Register ViewModel in DB
+        DBStatements.addUpdateable(viewModel);
+
+        viewModel.getLiveChats().observe(this, new Observer<LinkedList<Chat>>() {
+            @Override
+            public void onChanged(LinkedList<Chat> chats) {
+                chatAdapter.notifyDataSetChanged();
+            }
+        });
+
+
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -190,7 +216,7 @@ public class FragmentMainChats extends ListFragment {
         }
         return true;
     }
-
+/*
     @Override
     public void onResume() {
         super.onResume();
@@ -216,6 +242,6 @@ public class FragmentMainChats extends ListFragment {
                 }
             }
         });
-    }
+    } */
 
 }

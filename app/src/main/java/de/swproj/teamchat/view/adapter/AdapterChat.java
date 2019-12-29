@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.R;
@@ -22,10 +23,10 @@ import de.swproj.teamchat.datamodell.chat.Message;
 
 public class AdapterChat extends BaseAdapter {
 
-    private ArrayList<Chat> chats;
+    private List<Chat> chats;
 
 
-    public AdapterChat(ArrayList<Chat> chats) {
+    public AdapterChat(List<Chat> chats) {
         this.chats = chats;
     }
 

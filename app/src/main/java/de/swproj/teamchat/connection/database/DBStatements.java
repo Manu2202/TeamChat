@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -628,8 +629,8 @@ public class DBStatements {
     }
 
 
-    public static ArrayList<Chat> getChat() {
-        ArrayList<Chat> chats = new ArrayList<>();
+    public static List<Chat> getChat() {
+        LinkedList<Chat> chats = new LinkedList<>();
         SQLiteDatabase db = dbConnection.getReadableDatabase();
         db.beginTransaction();
 

@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.connection.database.DBStatements;
@@ -77,7 +78,7 @@ public class ViewUserDetailsActivity extends AppCompatActivity {
 //        db.insertChat(new Chat("DUMMY CHAT ", 0xFF004888, "9999000", user.getGoogleId()));
 //       db.updateChatMembers(new String[]{user.getGoogleId()}, "9999000");
 
-        ArrayList<Chat> allChats;
+        List<Chat> allChats;
         allChats = DBStatements.getChat();
 
         for (Chat c : allChats) {
