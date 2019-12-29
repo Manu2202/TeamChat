@@ -38,16 +38,15 @@ import de.swproj.teamchat.view.adapter.AdapterEvent;
 
 public class FragmentMainEvents extends ListFragment {
 
-    private DBStatements dbStatements;
     private ArrayList<Event> eventList;
     private AdapterEvent adapterEvent;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        dbStatements = new DBStatements(getContext());
-        eventList = dbStatements.getEvents();
-        adapterEvent = new AdapterEvent(eventList, dbStatements);
+
+        eventList = DBStatements.getEvents();
+        adapterEvent = new AdapterEvent(eventList);
         Log.d("Fragments:", "In Event Fragment");
 
 

@@ -27,7 +27,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.*;
 
 public class DBStatementsTest {
-    DBStatements db;
+
     ArrayList<User> users = new ArrayList<>();
     ArrayList<Chat> chats = new ArrayList<>();
     ArrayList<Event> events= new ArrayList<>();
@@ -36,36 +36,36 @@ public class DBStatementsTest {
     @Before
     public void createDb() {
         Context context = ApplicationProvider.getApplicationContext();
-        db = new DBStatements(context);
-        db.dropAll();
+       DBStatements.setDbConnection(new DBConnection(context));
+        DBStatements.dropAll();
         for (int i=0;i<10;i++){
             User u = new User("hduwuf3ihu4nkn8u83hr"+i, "test"+i+"@mail.de", "TestAcc"+i, "Mustermann"+i, "Max"+i);
             users.add(u);
-            db.insertUser(u);
+            DBStatements.insertUser(u);
         }
         for (int i=0;i<5;i++){
             Chat c =new Chat("TestChat"+i, i, "gf23uficfg37829"+i, users.get(i).getGoogleId());
             chats.add(c);
-            db.insertChat(c);
+            DBStatements.insertChat(c);
         }
         for (int i=0;i<10;i++){
             String[] us = new String[users.size()];
             for (int j = 0; j<us.length;j++) {
                 us[j]=users.get(j).getGoogleId();
             }
-            db.updateChatMembers(us,chats.get(1).getId());
+            DBStatements.updateChatMembers(us,chats.get(1).getId());
         }
         for (int i=0;i<5;i++){
             Message m = new Message(new Date(System.currentTimeMillis()+i*30000), "Test Nachricht"+i, "ghdfghdtrgfx"+i, false, users.get(i).getGoogleId(), chats.get(1).getId());
             messages.add(m);
-            db.insertMessage(m);
+            DBStatements.insertMessage(m);
         }
         for (int i=0;i<3;i++){
              Event e = new Event(new Date(System.currentTimeMillis()+(i+5)*30000), "TourdeFrance"+i, "ergbu34gfgfr7v4zd7u"+i,
                      true, users.get(i).getGoogleId(), new GregorianCalendar(2020+i, i, 13+i, 9+i, 6+i),
                      "Keine Panik "+i,  chats.get(1).getId(), (byte) 1);
              events.add(e);
-             db.insertMessage(e);
+            DBStatements.insertMessage(e);
         }
 
 
@@ -73,19 +73,28 @@ public class DBStatementsTest {
 
     @After
     public void dropDB(){
-        db.dropAll();
+        DBStatements.dropAll();
     }
 
 
     @Test
     public void updateChat() {
+        Chat c = chats.get(0);
+        c.setName("Neuer Chat name");
+        DBStatements.updateChat(c);
+        Chat c2 = DBStatements.getChat(c.getId());
+
+        assertThat(c, equalTo(c2));
+
+
+
     }
 
     @Test
     public void insertChat() {
        Chat c = chats.get(0);
-        db.insertChat(c);
-        Chat c2 = db.getChat(c.getId());
+        DBStatements.insertChat(c);
+        Chat c2 = DBStatements.getChat(c.getId());
 
         assertThat(c, equalTo(c2));
     }
@@ -93,8 +102,8 @@ public class DBStatementsTest {
     @Test
     public void updateChatMembers() {
         String[] userList = new String[]{users.get(0).getGoogleId(),users.get(2).getGoogleId(),users.get(1).getGoogleId()};
-        db.updateChatMembers(userList,chats.get(0).getId());
-        ArrayList<String> members =db.getChatMembers(chats.get(0).getId());
+        DBStatements.updateChatMembers(userList,chats.get(0).getId());
+        ArrayList<String> members =DBStatements.getChatMembers(chats.get(0).getId());
         assertThat(members.get(0), equalTo(userList[0]));
         assertThat(members.get(1), equalTo(userList[1]));
         assertThat(members.get(2), equalTo(userList[2]));
@@ -104,8 +113,8 @@ public class DBStatementsTest {
     public void insertMessage() {
         Date time = GregorianCalendar.getInstance().getTime();;
         Message m = new Message(time, "Test Nachricht insert", "ghdzuhzfghdtrgfx", false, users.get(1).getGoogleId(), chats.get(1).getId());
-       boolean b= db.insertMessage(m);
-        Message m2 = db.getMessage(m.getId());
+       boolean b= DBStatements.insertMessage(m);
+        Message m2 = DBStatements.getMessage(m.getId());
         assertThat(m, equalTo(m2));
 
 
@@ -117,8 +126,8 @@ public class DBStatementsTest {
     public void insertUser() {
 
         User u = users.get(0);
-        db.insertUser(u);
-        User u2 = db.getUser(u.getGoogleId());
+        DBStatements.insertUser(u);
+        User u2 = DBStatements.getUser(u.getGoogleId());
 
         assertThat(u, equalTo(u2));
 
@@ -126,11 +135,11 @@ public class DBStatementsTest {
 
     @Test
     public void updateUserEventStatus() {
-        UserEventStatus ues = db.getUserEventStatus(events.get(1).getId(), users.get(1).getGoogleId());
+        UserEventStatus ues = DBStatements.getUserEventStatus(events.get(1).getId(), users.get(1).getGoogleId());
         ues.setReason("Blabla");
         ues.setStatus(2);
-        db.updateUserEventStatus(ues);
-        UserEventStatus ues2= db.getUserEventStatus(events.get(1).getId(), users.get(1).getGoogleId());
+        DBStatements.updateUserEventStatus(ues);
+        UserEventStatus ues2= DBStatements.getUserEventStatus(events.get(1).getId(), users.get(1).getGoogleId());
 
         assertThat(ues,equalTo(ues2));
     }
@@ -180,8 +189,8 @@ public class DBStatementsTest {
                 "hilfe ein russ",  chats.get(1).getId(), (byte) 1);
 
 
-        db.insertMessage(e);
-        Event e2 = db.getEvent(e.getId());
+        DBStatements.insertMessage(e);
+        Event e2 = DBStatements.getEvent(e.getId());
         assertThat(e, equalTo(e2));
 
 

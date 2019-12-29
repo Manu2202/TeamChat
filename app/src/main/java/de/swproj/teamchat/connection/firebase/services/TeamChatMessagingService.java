@@ -38,8 +38,8 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
     private static final String CHANNEL_NAME = "FCM";
     private static final String CHANNEL_DESC = "Firebase Cloud Messaging";
     private int numMessages = 0;
-    private DBStatements dbStatements = new DBStatements(this);
-    FirebaseConnection fbconnect = new FirebaseConnection(dbStatements);
+
+    FirebaseConnection fbconnect = new FirebaseConnection();
 
     @Override
     public void onNewToken(final String token) {
@@ -92,12 +92,12 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
      */
     private void save_message(RemoteMessage.Notification notification, Map<String, String> data) {
         Log.d("IS EVENT", "Ist es ein Event?:"+Boolean.valueOf(data.get("isEvent")));
-        if (notification.getBody() != null && notification.getBody().length() > 0 && dbStatements.getMessage(data.get("id")) == null) {
+        if (notification.getBody() != null && notification.getBody().length() > 0 && DBStatements.getMessage(data.get("id")) == null) {
             if (Boolean.parseBoolean(data.get("isInvite"))) {
                 Log.d("Chat", "Got invite");
                 //Got new Invite -> Check if Chat is new
                 String chatid = data.get("chatid");
-                if (dbStatements.getChat(chatid) == null) {
+                if (DBStatements.getChat(chatid) == null) {
                     Log.d("Chat", "Chat nicht vorhanden");
                     //Chat is not in Database -> Get Chat from Firestore
                     fbconnect.saveChatbyID(chatid);
@@ -117,12 +117,12 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
                 Log.d("Save FCM Event from onMessageReceived", event.getMessage() +
                         "Status:" + event.getStatus());
                 //Save in Database
-                dbStatements.insertMessage(event);
+                DBStatements.insertMessage(event);
 
             } else if (Boolean.valueOf(data.get("isEventUpdate"))) {
                 String userID = data.get("creator");
                 String eventID = data.get("id");
-                UserEventStatus userEventStatus = dbStatements.getUserEventStatus(eventID, userID);
+                UserEventStatus userEventStatus = DBStatements.getUserEventStatus(eventID, userID);
                 String status = notification.getBody();
                 status = status.split(" ")[1];
                 int intStatus = 0;
@@ -132,7 +132,7 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
                     intStatus = 2;
                 userEventStatus.setStatus(intStatus);
 
-                dbStatements.updateUserEventStatus(userEventStatus);
+                DBStatements.updateUserEventStatus(userEventStatus);
             }
             else {
             //New Message
@@ -144,7 +144,7 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
                     data.get("chatid"));
             Log.d("Save FCM Message from onMessageReceived", msg.getMessage());
             //Save in Database
-            dbStatements.insertMessage(msg);
+                DBStatements.insertMessage(msg);
         }
         }
     }

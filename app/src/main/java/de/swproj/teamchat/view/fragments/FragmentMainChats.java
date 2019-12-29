@@ -42,7 +42,7 @@ import de.swproj.teamchat.view.adapter.AdapterContact;
  */
 
 public class FragmentMainChats extends ListFragment {
-    private DBStatements db;
+
     private ArrayList<Chat> chats;
     private MenuItem deleteButton;
     private MenuItem cancelDeleteButton;
@@ -58,8 +58,8 @@ public class FragmentMainChats extends ListFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        db = new DBStatements(inflater.getContext());
-        chats = db.getChat();
+
+        chats = DBStatements.getChat();
         menuModus = STD;
         Log.d("Fragments:", "In Chat Fragment" + " Chatcount " + chats.size());
 
@@ -75,7 +75,7 @@ public class FragmentMainChats extends ListFragment {
 
         ListView list = getListView();
 
-        final AdapterChat chatAdapter = new AdapterChat(chats, db);
+        final AdapterChat chatAdapter = new AdapterChat(chats);
         setListAdapter(chatAdapter);
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -196,12 +196,12 @@ public class FragmentMainChats extends ListFragment {
         super.onResume();
 
         // set a new Adapter -> QnD
-        ArrayList<Chat> c = db.getChat();
+        ArrayList<Chat> c = DBStatements.getChat();
 
         ListView list = getListView();
 
 
-        final AdapterChat chatAdapter = new AdapterChat(c, db);
+        final AdapterChat chatAdapter = new AdapterChat(c);
         setListAdapter(chatAdapter);
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -2,6 +2,7 @@ package de.swproj.teamchat.view.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.connection.firebase.FirebaseConnection;
@@ -9,6 +10,7 @@ import de.swproj.teamchat.connection.firebase.services.TeamChatMessagingService;
 import de.swproj.teamchat.datamodell.chat.Chat;
 import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.view.adapter.AdapterMessage;
+import de.swproj.teamchat.view.viewmodels.ChatViewModel;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,10 +32,12 @@ public class ChatActivity extends AppCompatActivity {
 
     private ListView lvMessages;
     private EditText etMessage;
-    private Chat chat;
+ //   private Chat chat;
     private String chatID;
-    public DBStatements db;
-    private ArrayList<Message> messages;
+
+    //private ArrayList<Message> messages;
+    private ChatViewModel viewModel;
+
     private TeamChatMessagingService messagingService;
     private FirebaseConnection firebaseConnection;
 
@@ -45,21 +49,33 @@ public class ChatActivity extends AppCompatActivity {
         messagingService = new TeamChatMessagingService();
 
         lvMessages = findViewById(R.id.lvMessages);
-
         etMessage = findViewById(R.id.etMessage);
 
-        db = new DBStatements(this);
+
 
         chatID = getIntent().getStringExtra("chatID");
 
-        chat = db.getChat(chatID);
+         viewModel= new ChatViewModel(DBStatements.getChat(chatID),DBStatements.getMessages(chatID));
+          final AdapterMessage adapterMessage = new AdapterMessage(viewModel.getLiveMessages().getValue(),this);
+          lvMessages.setAdapter(adapterMessage);
+         viewModel.getLiveChat().observe(this, new Observer<Chat>() {
+             @Override
+             public void onChanged(Chat chat) {
+                 setTitle(chat.getName());
+             }
+         });
 
-        setTitle(chat.getName());
-        messages=db.getMessages(chatID);
+         viewModel.getLiveMessages().observe(this, new Observer<ArrayList<Message>>() {
+             @Override
+             public void onChanged(ArrayList<Message> messages) {
+             adapterMessage.notifyDataSetChanged();
+             }
+         });
 
-        lvMessages.setAdapter(new AdapterMessage(messages,db,this));
 
-        firebaseConnection = new FirebaseConnection(db);
+
+
+        firebaseConnection = new FirebaseConnection();
 
 
         //Exclude Items from Animation
@@ -109,7 +125,7 @@ public class ChatActivity extends AppCompatActivity {
 
             case R.id.btn_chat_menu_editChat:
                 Intent editChatIntent = new Intent(this, EditChatActivity.class);
-                editChatIntent.putExtra("admin", chat.getAdmin());
+                editChatIntent.putExtra("admin", viewModel.getLiveChat().getValue().getAdmin());
                 editChatIntent.putExtra("ID", chatID);
                 startActivity(editChatIntent);
                 break;

@@ -58,7 +58,7 @@ public class UserSearchDialog extends Dialog implements
    // private User foundUser;         // to be replaced by an array for multiple search results
     private ArrayList<User> searchResultUsers = new ArrayList<User>();
 
-    private DBStatements dbStatements;
+
     private FirebaseConnection fbconnect;
 
     private final int STILL_WAITING = -1;
@@ -82,9 +82,9 @@ public class UserSearchDialog extends Dialog implements
         setContentView(R.layout.dialog_usersearch);
         setTitle("Search for User Email");
 
-        this.dbStatements = new DBStatements(getContext());
 
-        fbconnect = new FirebaseConnection(dbStatements);
+
+        fbconnect = new FirebaseConnection();
 
         // Button "Search" - Disabled until searchField has text
         searchButton = (Button)findViewById(R.id.dialog_userSearch_search_btn);
@@ -122,7 +122,7 @@ public class UserSearchDialog extends Dialog implements
                     }
                 });
 
-                dbStatements.insertUser(selectedUser);
+                DBStatements.insertUser(selectedUser);
                 searchResultUsers.remove(selectedUser);
                 adapterContact.notifyDataSetChanged();
 
@@ -200,9 +200,9 @@ public class UserSearchDialog extends Dialog implements
                     } else {
                         String enteredQuery = searchField.getText().toString();
 
-                        if (dbStatements.getUserEmailExists(enteredQuery)) {
+                        if (DBStatements.getUserEmailExists(enteredQuery)) {
                             responseText.setText("User already in list ("
-                                    + dbStatements.getUserByEmail(enteredQuery).getAccountName() + ")");
+                                    + DBStatements.getUserByEmail(enteredQuery).getAccountName() + ")");
                             responseText.setVisibility(View.VISIBLE);
                         } else {
                             // Search is submitted
@@ -247,7 +247,7 @@ public class UserSearchDialog extends Dialog implements
                         });
 
                         for (User u : searchResultUsers) {
-                            dbStatements.insertUser(u);
+                            DBStatements.insertUser(u);
                         }
 
                         dismiss();
@@ -390,7 +390,7 @@ public class UserSearchDialog extends Dialog implements
                     }
                     // Removes Search Results that already exist in local database
                     for (User u: firestoreResults) {
-                        if (!dbStatements.getUserEmailExists(u.getGoogleMail())) {
+                        if (!DBStatements.getUserEmailExists(u.getGoogleMail())) {
                             searchResultUsers.add(u);
                         }
                     }

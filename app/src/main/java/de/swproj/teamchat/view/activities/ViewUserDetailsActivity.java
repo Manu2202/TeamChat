@@ -25,7 +25,7 @@ import de.swproj.teamchat.view.adapter.AdapterChat;
 
 public class ViewUserDetailsActivity extends AppCompatActivity {
 
-    private DBStatements db;
+
     private User user;
     private ArrayList<Chat> commonChats;
 
@@ -44,10 +44,10 @@ public class ViewUserDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_user_details);
 
-        db = new DBStatements(this);
+
 
         String id = getIntent().getStringExtra("currentContactID");
-        user = db.getUser(id);
+        user = DBStatements.getUser(id);
 
         icon = (TextView) findViewById(R.id.user_details_icon);
         accName = (TextView) findViewById(R.id.user_details_accname);
@@ -78,10 +78,10 @@ public class ViewUserDetailsActivity extends AppCompatActivity {
 //       db.updateChatMembers(new String[]{user.getGoogleId()}, "9999000");
 
         ArrayList<Chat> allChats;
-        allChats = db.getChat();
+        allChats = DBStatements.getChat();
 
         for (Chat c : allChats) {
-            if (db.getChatMembers(c.getId()).contains(user.getGoogleId())) {
+            if (DBStatements.getChatMembers(c.getId()).contains(user.getGoogleId())) {
                 commonChats.add(c);
             }
         }
@@ -89,7 +89,7 @@ public class ViewUserDetailsActivity extends AppCompatActivity {
 
 
         if (commonChats.size() > 0) {
-            adapter = new AdapterChat(commonChats, db);
+            adapter = new AdapterChat(commonChats);
             commonChatsList.setAdapter(adapter);
 
             commonChatsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {

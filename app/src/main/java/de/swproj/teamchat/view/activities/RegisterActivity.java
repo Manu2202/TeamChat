@@ -36,7 +36,7 @@ public class RegisterActivity extends AppCompatActivity {
     private TextInputLayout mPassword;
     private Button btn_create;
     private FirebaseConnection fbconnect;
-    private DBStatements dbStatements;
+
     //Firebase Auth
     private FirebaseAuth mAuth;
 
@@ -51,8 +51,8 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
-        dbStatements = new DBStatements(this);
-        fbconnect = new FirebaseConnection(dbStatements);
+
+        fbconnect = new FirebaseConnection();
 
         mFirstName=(TextInputLayout)findViewById(R.id.reg_first_name);
         mName=(TextInputLayout)findViewById(R.id.reg_name);

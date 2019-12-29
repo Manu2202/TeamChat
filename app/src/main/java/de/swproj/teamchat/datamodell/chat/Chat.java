@@ -19,6 +19,9 @@ public class Chat {
     private int color;
 
 
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public Chat(String name, int color, String id, String admin) {
         this.name = name;

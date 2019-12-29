@@ -36,12 +36,12 @@ import de.swproj.teamchat.view.activities.ViewEventActivity;
 public class AdapterMessage extends BaseAdapter {
 
     private ArrayList<Message> messages;
-    private DBStatements db;
+
     private AppCompatActivity activity;//todo: Get Authenticated user for send and show
 
-    public AdapterMessage(ArrayList<Message> messages, DBStatements dbStatements, AppCompatActivity activity) {
+    public AdapterMessage(ArrayList<Message> messages, AppCompatActivity activity) {
         this.messages = messages;
-        db = dbStatements;
+
         this.activity = activity;
     }
 
@@ -64,7 +64,7 @@ public class AdapterMessage extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         final Message message = messages.get(position);
         Context context = parent.getContext();
-        User creator = db.getUser(message.getCreator());
+        User creator = DBStatements.getUser(message.getCreator());
 
         if(convertView==null) {
 
@@ -97,7 +97,7 @@ public class AdapterMessage extends BaseAdapter {
 
 
             if (message.isEvent()) {
-                Event event = db.getEvent(message.getId());
+                Event event = DBStatements.getEvent(message.getId());
                 TextView tvEventDate = convertView.findViewById(R.id.viewevent_tveveventdate);
                 TextView tvEventTime = convertView.findViewById(R.id.viewevent_tveventtime);
                 TextView tv_Description = convertView.findViewById(R.id.viewevent_tvdescription);

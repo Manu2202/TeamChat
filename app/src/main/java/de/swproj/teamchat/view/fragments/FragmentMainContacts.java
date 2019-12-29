@@ -38,7 +38,7 @@ import de.swproj.teamchat.view.dialogs.UserSearchDialog;
 
 public class FragmentMainContacts extends ListFragment {
 
-    private DBStatements dbStatements;
+
     private ArrayList<User> users;
     private FloatingActionButton fab;
     AdapterContact adapterContact;
@@ -47,8 +47,7 @@ public class FragmentMainContacts extends ListFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Create DBStatements and get all User
-        dbStatements = new DBStatements(getContext());
-        users = dbStatements.getUser();
+
         Log.d("Fragments:", "In Contact Fragment");
 
         setHasOptionsMenu(true);

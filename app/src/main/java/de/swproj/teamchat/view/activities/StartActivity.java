@@ -45,7 +45,7 @@ public class StartActivity extends AppCompatActivity {
     int RC_SIGN_IN = 0;
 
     private FirebaseAuth mAuth;
-    private DBStatements dbStatements;
+
     private FirebaseConnection fbconnect;
 
     /////////////////////
@@ -59,8 +59,8 @@ public class StartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_start);
 
         mAuth = FirebaseAuth.getInstance();
-        dbStatements = new DBStatements(this);
-        fbconnect = new FirebaseConnection(dbStatements);
+
+
         ///////// Google Sign In ///////////
 
         signInButton = findViewById(R.id.google_sign_in_button);
@@ -207,7 +207,7 @@ public class StartActivity extends AppCompatActivity {
 
         switch (item.getItemId()){
             case R.id.btn_start_menu_dropall:
-                dbStatements.dropAll();
+                DBStatements.dropAll();
                 return true;
 
             default:

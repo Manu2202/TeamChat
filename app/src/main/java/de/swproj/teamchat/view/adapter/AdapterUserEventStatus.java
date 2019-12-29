@@ -24,11 +24,11 @@ import de.swproj.teamchat.datamodell.chat.UserEventStatus;
 public class AdapterUserEventStatus extends BaseAdapter {
 
     private ArrayList<UserEventStatus> userEventStatuses;
-    private DBStatements db;
 
-    public AdapterUserEventStatus(ArrayList<UserEventStatus> userEventStatuses, DBStatements dbStatements) {
+
+    public AdapterUserEventStatus(ArrayList<UserEventStatus> userEventStatuses) {
         this.userEventStatuses = userEventStatuses;
-        db = dbStatements;
+
 
     }
 
@@ -83,7 +83,7 @@ public class AdapterUserEventStatus extends BaseAdapter {
 
          }
         TextView tvUsername = convertView.findViewById(R.id.li_ues_tvusername);
-        tvUsername.setText(db.getUser(state.getUserId()).getAccountName() + ":");
+        tvUsername.setText(DBStatements.getUser(state.getUserId()).getAccountName() + ":");
         TextView tvStatus = convertView.findViewById(R.id.li_ues_tvstatus);
 
             switch(state.getStatus()){

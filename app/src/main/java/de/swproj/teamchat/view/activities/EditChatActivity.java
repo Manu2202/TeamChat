@@ -37,7 +37,7 @@ public class EditChatActivity extends AppCompatActivity {
     private HashMap<String, User> allUser = new HashMap<String, User>();
     private HashMap<String, User> groupMember = new HashMap<String, User>();
 
-    private DBStatements dbStatements;
+
     private FirebaseConnection firebaseConnection;
 
     private TextInputEditText etChatName;
@@ -50,9 +50,9 @@ public class EditChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_chat);
 
-        dbStatements = new DBStatements(EditChatActivity.this);
+
         // Connect Firebase
-        firebaseConnection = new FirebaseConnection(dbStatements);
+        firebaseConnection = new FirebaseConnection();
 
         etChatName = (TextInputEditText) findViewById(R.id.edit_chat_et_name);
         llUsers = findViewById(R.id.edit_chat_linear_layout);
@@ -65,9 +65,9 @@ public class EditChatActivity extends AppCompatActivity {
         isAdmin = adminID.equals(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
         if (!chatId.equals("0")) {
-            chat = dbStatements.getChat(chatId);
+            chat = DBStatements.getChat(chatId);
             etChatName.setText(chat.getName());
-            for (User user : dbStatements.getUsersOfChat(chatId)) {
+            for (User user : DBStatements.getUsersOfChat(chatId)) {
                 groupMember.put(user.getGoogleId(), user);
             }
         }
@@ -78,7 +78,7 @@ public class EditChatActivity extends AppCompatActivity {
 
     private void getAllUsers() {
         String selfUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        for (User user : dbStatements.getUser()) {
+        for (User user : DBStatements.getUser()) {
             if (!groupMember.containsKey(user.getGoogleId()))
                 Log.d("EditChat ", "Users " + user.getGoogleId());
 

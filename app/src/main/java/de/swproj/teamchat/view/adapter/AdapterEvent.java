@@ -33,15 +33,14 @@ import de.swproj.teamchat.helper.FormatHelper;
 public class AdapterEvent extends BaseAdapter {
 
     private ArrayList<Event> events;
-    private DBStatements db;
+
     private Event lastEvent;
     private int last_pos;
     private boolean evColorIsGroupColor = true;
 
 
-    public AdapterEvent(ArrayList<Event> events, DBStatements dbStatements) {
+    public AdapterEvent(ArrayList<Event> events) {
         this.events = events;
-        db = dbStatements;
         Collections.sort(this.events);
     }
 
@@ -129,10 +128,10 @@ public class AdapterEvent extends BaseAdapter {
                  /*if (System.currentTimeMillis() > ev.getDate().getTimeInMillis()){
                      cardView.setVisibility(View.GONE);
                  }*/
-                 cardView.setCardBackgroundColor(db.getChat(ev.getChatid()).getColor());
+                 cardView.setCardBackgroundColor(DBStatements.getChat(ev.getChatid()).getColor());
 
                  //Calculate Contrast Ratio between Background color and White Text
-                 double contrast_ratio = ColorUtils.calculateContrast(db.getChat(ev.getChatid()).getColor(), Color.parseColor("#FFFFFF"));
+                 double contrast_ratio = ColorUtils.calculateContrast(DBStatements.getChat(ev.getChatid()).getColor(), Color.parseColor("#FFFFFF"));
 
                  if (contrast_ratio < 4) {
                      //Black Text should be used
@@ -149,7 +148,7 @@ public class AdapterEvent extends BaseAdapter {
 
              // Display name of group this event belongs to (this is the event overview, so
              // it makes more sense here to display the group name instead of the event creator name)
-             tvGroupname.setText(db.getChat(ev.getChatid()).getName());
+             tvGroupname.setText(DBStatements.getChat(ev.getChatid()).getName());
 
              // Display event creator name
              // tvUser.setText(ev.getCreator());

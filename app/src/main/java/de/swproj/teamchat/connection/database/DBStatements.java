@@ -17,20 +17,25 @@ import de.swproj.teamchat.datamodell.chat.Event;
 import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.datamodell.chat.User;
 import de.swproj.teamchat.datamodell.chat.UserEventStatus;
+import de.swproj.teamchat.view.activities.MainActivity;
 
 
 public class DBStatements {
-    private DBConnection dbConnection;
 
-    public void dropAll(){
+
+    private static DBConnection dbConnection;
+
+    public static void setDbConnection(DBConnection connection){
+        dbConnection=connection;
+        if(dbConnection==null)
+            dbConnection=new DBConnection(MainActivity.getAppContext());
+    }
+    public static void dropAll(){
         dbConnection.onUpgrade(dbConnection.getWritableDatabase(),0,0);
     }
 
-    public DBStatements(Context context) {
-        dbConnection = new DBConnection(context);
-    }
 
-    public void updateChat(Chat chat) {
+    public static void updateChat(Chat chat) {
         //todo: BUG fix
 
         String chatId = chat.getId();
@@ -66,18 +71,19 @@ public class DBStatements {
                 Log.d("UpdateChat","Is new "+isNew);
              Long i=   db.insertOrThrow(DBCreate.TABLE_CHAT, null, values);
 
+
                 Log.d("UpdateChat","Insert: "+i);
 
             }//update Chat with ID...
             else {
 
-                db.update(DBCreate.TABLE_CHAT, values, DBCreate.COL_CHAT_ID + "=?", new String[]{"" + chatId});
-
+              int i=  db.update(DBCreate.TABLE_CHAT, values, DBCreate.COL_CHAT_ID + "=?", new String[]{chatId});
+                Log.d("DB_UpdateChat res",i+"");
             }
 
         } catch (Exception e) {
 
-            Log.d("DB_Error class DBStatements:", "Unable to write CHAT in db");
+            Log.d("DB_Error class DBStatements", "Unable to write CHAT in db");
         } finally {
             db.endTransaction();
         }
@@ -85,7 +91,7 @@ public class DBStatements {
 
     }
 
-    public boolean insertChat(Chat chat){
+    public static boolean insertChat(Chat chat){
     boolean insertsuccesfull = true;
 
     SQLiteDatabase db = dbConnection.getWritableDatabase();
@@ -120,7 +126,7 @@ public class DBStatements {
     return insertsuccesfull;
 }
 
-    public boolean updateChatMembers(String[] userIDs, String chatId) {
+    public static boolean updateChatMembers(String[] userIDs, String chatId) {
         SQLiteDatabase db = dbConnection.getReadableDatabase();
         db.beginTransaction();
 
@@ -149,7 +155,7 @@ public class DBStatements {
         return success;
     }
 
-    public boolean insertMessage(Message message) {
+    public static boolean insertMessage(Message message) {
 
         boolean insertsuccesfull = true;
 
@@ -238,7 +244,7 @@ public class DBStatements {
         return insertsuccesfull;
     }
 
-    public boolean insertUser(User user) {
+    public static boolean insertUser(User user) {
         boolean insertsuccesfull = true;
 
         SQLiteDatabase db = dbConnection.getWritableDatabase();
@@ -274,7 +280,7 @@ public class DBStatements {
         return insertsuccesfull;
     }
 
-    public boolean updateUserEventStatus(UserEventStatus status) {
+    public static boolean updateUserEventStatus(UserEventStatus status) {
         boolean insertsuccesfull = true;
 
         SQLiteDatabase db = dbConnection.getWritableDatabase();
@@ -303,7 +309,7 @@ public class DBStatements {
         return insertsuccesfull;
     }
 
-    public ArrayList<UserEventStatus> getUserEventStatus(String eventId) {
+    public static ArrayList<UserEventStatus> getUserEventStatus(String eventId) {
         ArrayList<UserEventStatus> userEventStats = new ArrayList<>();
 
         SQLiteDatabase db = dbConnection.getReadableDatabase();
@@ -335,7 +341,7 @@ public class DBStatements {
 
         return userEventStats;
     }
-    public UserEventStatus getUserEventStatus(String eventId, String userId) {
+    public static UserEventStatus getUserEventStatus(String eventId, String userId) {
         UserEventStatus state = null;
         SQLiteDatabase db = dbConnection.getReadableDatabase();
 
@@ -370,7 +376,7 @@ public class DBStatements {
         return state;
     }
 
-    public ArrayList<String> getChatMembers(String chatId) {
+    public static ArrayList<String> getChatMembers(String chatId) {
         ArrayList<String> memberIds = new ArrayList<>();
 
         SQLiteDatabase db = dbConnection.getReadableDatabase();
@@ -397,7 +403,7 @@ public class DBStatements {
         return memberIds;
     }
 
-    public User getUser(String googleID) {
+    public static User getUser(String googleID) {
         User user = null;
         SQLiteDatabase db = dbConnection.getReadableDatabase();
         db.beginTransaction();
@@ -427,7 +433,7 @@ public class DBStatements {
         return user;
     }
 
-    public User getUserByEmail(String googleMail) {
+    public static User getUserByEmail(String googleMail) {
         User user = null;
         SQLiteDatabase db = dbConnection.getReadableDatabase();
         db.beginTransaction();
@@ -455,7 +461,7 @@ public class DBStatements {
         return user;
     }
 
-    public boolean getUserEmailExists(String googleMail) {
+    public static boolean getUserEmailExists(String googleMail) {
         SQLiteDatabase db = dbConnection.getReadableDatabase();
         db.beginTransaction();
 
@@ -477,7 +483,7 @@ public class DBStatements {
         return false;
     }
 
-    public ArrayList<User> getUser() {
+    public static ArrayList<User> getUser() {
         ArrayList<User> users = new ArrayList<>();
         SQLiteDatabase db = dbConnection.getReadableDatabase();
 
@@ -510,7 +516,7 @@ public class DBStatements {
         return users;
     }
 
-    public List<User> getUsersOfChat(String chatId) {
+    public static List<User> getUsersOfChat(String chatId) {
         ArrayList<User> users = new ArrayList<>();
         SQLiteDatabase db = dbConnection.getReadableDatabase();
 
@@ -544,7 +550,7 @@ public class DBStatements {
         return users;
     }
 
-    public Chat getChat(String chatId) {
+    public static Chat getChat(String chatId) {
         Chat chat = null;
         SQLiteDatabase db = dbConnection.getReadableDatabase();
         db.beginTransaction();
@@ -577,7 +583,7 @@ public class DBStatements {
     }
 
 
-    public ArrayList<Chat> getChat() {
+    public static ArrayList<Chat> getChat() {
         ArrayList<Chat> chats = new ArrayList<>();
         SQLiteDatabase db = dbConnection.getReadableDatabase();
         db.beginTransaction();
@@ -614,7 +620,7 @@ public class DBStatements {
 
     }
 
-    public ArrayList<Message> getMessages(String chatId) {
+    public static ArrayList<Message> getMessages(String chatId) {
         ArrayList<Message> messages = new ArrayList<>();
         SQLiteDatabase db = dbConnection.getReadableDatabase();
 
@@ -652,7 +658,7 @@ public class DBStatements {
         return messages;
     }
 
-    public Message getMessage(String messageID) {
+    public static Message getMessage(String messageID) {
 
         Message message = null;
         SQLiteDatabase db = dbConnection.getReadableDatabase();
@@ -692,7 +698,7 @@ public class DBStatements {
         return message;
     }
 
-    public Event getEvent(String messageId) {
+    public static Event getEvent(String messageId) {
         Message message = getMessage(messageId);
         Event event = null;
 
@@ -736,7 +742,7 @@ public class DBStatements {
         return event;
     }
 
-    public ArrayList<Event> getEvents() {
+    public static ArrayList<Event> getEvents() {
          ArrayList<String> eventIDs= new ArrayList<>();
 
         SQLiteDatabase db = dbConnection.getReadableDatabase();
@@ -775,7 +781,7 @@ public class DBStatements {
         return events;
     }
 
-    public Message getLastMessage(String chatId) {
+    public static Message getLastMessage(String chatId) {
         Message message = null;
         SQLiteDatabase db = dbConnection.getReadableDatabase();
         db.beginTransaction();

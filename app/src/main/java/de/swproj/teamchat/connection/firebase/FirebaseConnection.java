@@ -32,10 +32,10 @@ import de.swproj.teamchat.helper.FirebaseHelper;
 public class FirebaseConnection {
 
     private FirebaseFirestore firebaseDB;
-    private DBStatements dbStatements;
 
-    public FirebaseConnection(DBStatements dbStatements) {
-        this.dbStatements = dbStatements;
+
+    public FirebaseConnection() {
+
         // Connect Firebase
         firebaseDB = FirebaseFirestore.getInstance();
     }
@@ -49,7 +49,7 @@ public class FirebaseConnection {
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d("Firestore Messages", "Message added to Firebase with ID: " + documentReference.getId());
                         message.setId(documentReference.getId());
-                        dbStatements.insertMessage(message);
+                        DBStatements.insertMessage(message);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -70,7 +70,7 @@ public class FirebaseConnection {
                         updateUsers(chatid,chat.getName(),userids);
 
                         chat.setId(chatid);
-                        dbStatements.insertChat(chat);
+                        DBStatements.insertChat(chat);
 
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -88,7 +88,7 @@ public class FirebaseConnection {
             @Override
             public void onSuccess(Void aVoid) {
                 Log.d("Firestore User", "User added to Firebase");
-                dbStatements.insertUser(user);
+                DBStatements.insertUser(user);
             }
         });
     }
@@ -137,7 +137,7 @@ public class FirebaseConnection {
 
                         Log.d("FirebaseUser", "Saved new User:"+
                                 firebaseUser.getAccountName() + ", " + firebaseUser.getGoogleMail());
-                        dbStatements.insertUser(firebaseUser);
+                        DBStatements.insertUser(firebaseUser);
                     }
                 }
             }
@@ -158,7 +158,7 @@ public class FirebaseConnection {
                                 ((Long)snapshot.get("color")).intValue(),(String)document.getId(),
                                 (String)snapshot.get("admin"));
                         Log.d("FirebaseChat", "Saved new Chat with chatid: "+chatid);
-                        dbStatements.insertChat(firebasechat);
+                        DBStatements.insertChat(firebasechat);
                     } else {
                         Log.d("Chat", "No such document");
                     }
@@ -181,7 +181,7 @@ public class FirebaseConnection {
 
                         Log.d("FirebaseUser", firebaseUser.getAccountName() + ", " +
                                 firebaseUser.getGoogleMail());
-                        dbStatements.insertUser(firebaseUser);
+                        DBStatements.insertUser(firebaseUser);
                     }
                 } else {
                     Log.d("Firebase User", "Error getting user: ", task.getException());

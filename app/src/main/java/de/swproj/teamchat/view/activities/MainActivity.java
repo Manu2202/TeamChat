@@ -17,6 +17,7 @@ import de.swproj.teamchat.view.fragments.FragmentMainChats;
 import de.swproj.teamchat.view.fragments.FragmentMainContacts;
 import de.swproj.teamchat.view.fragments.FragmentMainEvents;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,96 +33,16 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class MainActivity extends AppCompatActivity {
-
+    private static Context context;
     private ListFragment chatFragment;
     private ListFragment eventFragment;
     private ListFragment contactFragment;
     private static Fragment lastSelectedFragment;
-    private DBStatements db;
     private FirebaseConnection fbconnect;
 
     //FirebaseAuth
     private FirebaseAuth mAuth;
 
-    private void addTestdat() {
-
-        //löscht alle eintäge beim Start
-        db.dropAll();
-
-        db.insertUser(new User("Gott", "sdbjhdj", "Der Herr der Dinge", "Gott", "Herr"));
-        db.insertUser(new User("11", "sdjhnjhdj", "Horster", "Hors", "tidiot"));
-        db.insertUser(new User("abc", "sdjjunhdj", "ICH", "Man", "Derine"));
-        db.insertUser(new User("Gott2", "sdbjhdj", "Der Herr der Dinge2", "Gott2", "Herr"));
-        db.insertUser(new User("emusk", "sdbf", "Elon Musk", "Musk", "Elon"));
-        db.insertChat(new Chat("Gugel", (getResources().getIntArray(R.array.androidcolors))[0], "123", "11"));
-        db.updateChatMembers(new String[]{"Gott", "11", "abc", "Gott2"}, "123");
-
-
-        //  db.insertChat(new Chat("Labergruppe", 0xFFFB0B03, "394", "Gott"));
-        db.insertChat(new Chat("Tetris esport Team", (getResources().getIntArray(R.array.androidcolors))[1], "3934", "Gott"));
-        db.updateChatMembers(new String[]{"Gott", "11", "abc", "Gott2"}, "3934");
-        db.insertChat(new Chat("Tee Party", (getResources().getIntArray(R.array.androidcolors))[2], "3954", "Gott"));
-        db.updateChatMembers(new String[]{"Gott", "11", "abc", "Gott2"}, "3954");
-        db.insertChat(new Chat("Buchclub", (getResources().getIntArray(R.array.androidcolors))[3], "3941", "Gott"));
-        db.updateChatMembers(new String[]{"Gott", "11", "abc", "Gott2"}, "3941");
-        db.insertChat(new Chat("Golfclub", (getResources().getIntArray(R.array.androidcolors))[4], "3434", "Gott"));
-        db.updateChatMembers(new String[]{"Gott", "11", "abc", "Gott2"}, "3434");
-        db.insertChat(new Chat("Fußballclub", (getResources().getIntArray(R.array.androidcolors))[5], "34", "Gott"));
-        db.updateChatMembers(new String[]{"Gott", "11", "abc", "Gott2"}, "34");
-        db.insertChat(new Chat("Squash-Club", (getResources().getIntArray(R.array.androidcolors))[6], "3484", "Gott"));
-        db.updateChatMembers(new String[]{"Gott", "11", "abc", "Gott2"}, "3484");
-        db.insertChat(new Chat("Tennis-Club", (getResources().getIntArray(R.array.androidcolors))[7], "324", "Gott"));
-        db.updateChatMembers(new String[]{"Gott", "11", "abc", "Gott2"}, "324");
-        db.insertChat(new Chat("Eishockey-Club", (getResources().getIntArray(R.array.androidcolors))[8], "474", "Gott"));
-        db.updateChatMembers(new String[]{"Gott", "11", "abc", "Gott2"}, "474");
-        db.insertChat(new Chat("Event Club",  (getResources().getIntArray(R.array.androidcolors))[11], "25000", "Gott"));
-        db.updateChatMembers(new String[]{"Gott", "11", "abc", "Gott2"}, "25000");
-
-        Date currentTime = Calendar.getInstance().getTime();
-        GregorianCalendar gc = new GregorianCalendar();
-        gc.setGregorianChange(new java.sql.Date(849494994));
-        Time time = new Time(currentTime.getTime());
-        db.insertMessage(new Message(time, "Hallo, der horst ist da!!!", "oho", false, "11", "123"));
-        time.setTime(currentTime.getTime() + 5);
-
-        db.insertMessage(new Event(time, "Panik", "546s", true, "11", gc, "hilfe ein virus", "3934", (byte) 1));
-        time.setTime(currentTime.getTime() + 10);
-        db.insertMessage(new Message(time, "Coolbbb bfgtf ;D", "o4454546", false, "abc", "3954"));
-        time.setTime(currentTime.getTime() + 10);
-        db.insertMessage(new Message(time, "Cool  hu;D", "o4584846", false, "11", "3941"));
-        time.setTime(currentTime.getTime() + 10);
-        db.insertMessage(new Message(time, "Cool  huhu;D", "o448784546", false, "Gott2", "3434"));
-        time.setTime(currentTime.getTime() + 10);
-        db.insertMessage(new Message(time, "Cool ;D", "o454846", false, "Gott", "34"));
-        time.setTime(currentTime.getTime() + 10);
-        db.insertMessage(new Message(time, "Ein Huhun ;D", "o4115jn546", false, "abc", "3484"));
-
-        db.insertMessage(new Event(time, "TourdeFrance", "4546s", true, "Gott", new GregorianCalendar(2015, 3, 23, 10, 8), "hilfe ein russ", "474", (byte) 1));
-        time.setTime(currentTime.getTime() + 10);
-        db.insertMessage(new Event(time, "Zweiter Termin", "45466", true, "Gott", new GregorianCalendar(2015, 3, 23, 9, 50), "Sollte gleichen Separator haben", "3954", (byte) 1));
-        time.setTime(currentTime.getTime() + 10);
-
-        db.insertMessage(new Event(time, "Bla", "15466", true, "Gott", new GregorianCalendar(2015, 4, 23, 9, 50), "Event Text", "3941", (byte) 1));
-        time.setTime(currentTime.getTime() + 10);
-
-        db.insertMessage(new Event(time, "Weltuntergang", "4546", true, "Gott", new GregorianCalendar(2020, 3, 23, 9, 50), "Event Text", "3434", (byte) 1));
-        time.setTime(currentTime.getTime() + 10);
-        db.insertMessage(new Event(time, "Weltuntergang Ersatztermin", "43466", true, "Gott", new GregorianCalendar(2020, 3, 23, 23, 59), "Event Text", "3434", (byte) 1));
-        time.setTime(currentTime.getTime() + 10);
-        db.insertMessage(new Event(time, "Weltuntergang Ersatztermin 2", "323466", true, "Gott", new GregorianCalendar(2022, 3, 23, 23, 59), "Event Text", "25000", (byte) 1));
-        time.setTime(currentTime.getTime() + 10);
-
-
-        db.insertMessage(new Event(time, "Mars Tour", "14546s", true, "emusk", new GregorianCalendar(2020, 10, 27, 9, 6), "colonize mars with me", "324", (byte) 1));
-        time.setTime(currentTime.getTime() + 1555);
-
-
-        Log.d("Main TestDaten  ", db.getUser().size() + "");
-        for (User user : db.getUser()) {
-            Log.d("User: ", user.getAccountName() + "");
-        }
-
-    }
 
     @Override
     protected void onResume() {
@@ -135,15 +56,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        MainActivity.context = getApplicationContext();
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
-        db = new DBStatements(this);
-        fbconnect = new FirebaseConnection(db);
+
+        fbconnect = new FirebaseConnection();
         //fbconnect.saveUserByID("gTiVTJ7cjORANbGUw2hpPHZfG122");
 
         //Save FCM from Notification Intent
         saveFCMtoDB();
+
+        //Setup Database
+        DBStatements.setDbConnection(null);
+    }
+    public static Context getAppContext() {
+        return MainActivity.context;
     }
 
     @Override
@@ -161,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             TeamChatMessagingService.enableFCM();
             Log.d("User-Problem", "Logged in as User" + currentUser.getDisplayName() + " with UID of:" + currentUser.getUid());
-            db.insertUser(new User(currentUser.getUid(),currentUser.getEmail(),currentUser.getDisplayName(),"hh","nch"));
+            DBStatements.insertUser(new User(currentUser.getUid(),currentUser.getEmail(),currentUser.getDisplayName(),"hh","nch"));
             setUpUI();
         }
 
@@ -180,13 +107,13 @@ public class MainActivity extends AppCompatActivity {
             //Got new Intent extras from Notification
             String message = extras.getString("message");
             Log.d("Save FCM", "Message: "+message);
-            if (message!=null && message.length()>0 && db.getMessage(extras.getString("id"))==null) {
+            if (message!=null && message.length()>0 && DBStatements.getMessage(extras.getString("id"))==null) {
                 //Message is new and relevant
                 if(Boolean.parseBoolean(extras.getString("isInvite"))){
                     Log.d("Chat", "Got invite");
                     //Got new Invite -> Check if Chat is new
                     String chatid = extras.getString("chatid");
-                    if (db.getChat(chatid)==null){
+                    if (DBStatements.getChat(chatid)==null){
                         Log.d("Chat","chat nicht vorhanden");
                         //Chat is not in Database -> Get Chat from Firestore
                         fbconnect.saveChatbyID(chatid);
@@ -208,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("Save FCM Event from Intent", event.getMessage() + "Status: "+event.getStatus());
 
                     //Insert in Database
-                    db.insertMessage(event);
+                    DBStatements.insertMessage(event);
                     }else {
                     //New Message received-------------------------------
                     Log.d("Save Fcm", "Save Message in Database");
@@ -222,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("Save FCM Message from Intent", msg.getMessage());
 
                     //Insert in Database
-                    db.insertMessage(msg);
+                    DBStatements.insertMessage(msg);
                 }
                 //TODO: necessary to delete?
                 getIntent().removeExtra("body");

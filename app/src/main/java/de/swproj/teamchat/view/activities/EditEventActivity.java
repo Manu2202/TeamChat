@@ -38,7 +38,7 @@ public class EditEventActivity extends AppCompatActivity {
     private int selectedDay;
     private int selectedHour;
     private int selectedMinute;
-    private DBStatements dbStatements;
+
 
     private TextView tv_selectDate;
     private TextView tv_selectTime;
@@ -55,10 +55,10 @@ public class EditEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_event);
 
         // Initialize Local Database Statements
-        dbStatements = new DBStatements(EditEventActivity.this);
+
 
         // Connect Firebase
-        firebaseConnection = new FirebaseConnection(dbStatements);
+        firebaseConnection = new FirebaseConnection();
 
         // Initialize the Calendar
         cal = (GregorianCalendar) GregorianCalendar.getInstance();

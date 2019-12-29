@@ -32,7 +32,7 @@ public class MainActivityJUnitTest {
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<MainActivity>(MainActivity.class);
 
     private MainActivity mActivity = null;
-    private DBStatements db;
+
     private int testScale = 70;  // Number of Test entries
     private Date currentTime = Calendar.getInstance().getTime();
     private Time time = new Time(currentTime.getTime());
@@ -44,18 +44,18 @@ public class MainActivityJUnitTest {
     @Before
     public void setUp() throws Exception {
         mActivity = mActivityTestRule.getActivity();
-        db = new DBStatements(mActivity.getBaseContext());
 
-        db.insertUser(new User("1", "DUMMY@email.de", "DummyAccountName", "DummyName", "DummyFirstName"));
+
+        DBStatements.insertUser(new User("1", "DUMMY@email.de", "DummyAccountName", "DummyName", "DummyFirstName"));
 
         for (int i = 0; i < testScale; i++) {
             // For User Tests
-            db.insertUser(new User("10"+i, i+"@junkmail.de", "Account "+i, "Horst "+ i, i+". Voll"));
+            DBStatements.insertUser(new User("10"+i, i+"@junkmail.de", "Account "+i, "Horst "+ i, i+". Voll"));
 
             // For Chat Tests
-            db.insertChat(new Chat("TestGruppe " + i, 0xFF004888 + i, "1000" + i, "10" + i));
-            db.updateChatMembers(new String[]{"10"+i, "1"}, "1000" + i);
-            db.insertMessage(new Message(time, "Message Text " + i, "1000" + i, false,
+            DBStatements.insertChat(new Chat("TestGruppe " + i, 0xFF004888 + i, "1000" + i, "10" + i));
+            DBStatements.updateChatMembers(new String[]{"10"+i, "1"}, "1000" + i);
+            DBStatements.insertMessage(new Message(time, "Message Text " + i, "1000" + i, false,
                     "10"+i, "1000"+i));
 
         }
@@ -77,14 +77,14 @@ public class MainActivityJUnitTest {
     @Test
     public void testDBStatementsUserFirstName() {
         for (int i = 0; i < testScale; i++) {
-            assertEquals((db.getUser("10"+i).getFirstName()), i + ". Voll");
+            assertEquals((DBStatements.getUser("10"+i).getFirstName()), i + ". Voll");
         }
     }
 
     @Test
     public void testDBStatementsUserFirstName2() {
         for (int i = 0; i < testScale; i++) {
-            assertNotEquals((db.getUser("10"+i).getFirstName()), "Nix");
+            assertNotEquals((DBStatements.getUser("10"+i).getFirstName()), "Nix");
         }
     }
 
@@ -95,14 +95,14 @@ public class MainActivityJUnitTest {
     @Test
     public void testDBStatementsUserName() {
         for (int i = 0; i < testScale; i++) {
-            assertEquals((db.getUser("10"+i).getName()), "Horst " + i);
+            assertEquals((DBStatements.getUser("10"+i).getName()), "Horst " + i);
         }
     }
 
     @Test
     public void testDBStatementsUserName2() {
         for (int i = 0; i < testScale; i++) {
-            assertNotEquals((db.getUser("10"+i).getName()), "Nix");
+            assertNotEquals((DBStatements.getUser("10"+i).getName()), "Nix");
         }
     }
 
@@ -113,14 +113,14 @@ public class MainActivityJUnitTest {
     @Test
     public void testDBStatementsUserGoogleId() {
         for (int i = 0; i < testScale; i++) {
-            assertEquals((db.getUser("10"+i).getGoogleId()), "10" + i);
+            assertEquals((DBStatements.getUser("10"+i).getGoogleId()), "10" + i);
         }
     }
 
     @Test
     public void testDBStatementsUserGoogleId2() {
         for (int i = 0; i < testScale; i++) {
-            assertNotEquals((db.getUser("10"+i).getGoogleId()), "00000");
+            assertNotEquals((DBStatements.getUser("10"+i).getGoogleId()), "00000");
         }
     }
 
@@ -131,14 +131,14 @@ public class MainActivityJUnitTest {
     @Test
     public void testDBStatementsUserGoogleMail() {
         for (int i = 0; i < testScale; i++) {
-            assertEquals((db.getUser("10"+i).getGoogleMail()), i+"@junkmail.de");
+            assertEquals((DBStatements.getUser("10"+i).getGoogleMail()), i+"@junkmail.de");
         }
     }
 
     @Test
     public void testDBStatementsUserGoogleMail2() {
         for (int i = 0; i < testScale; i++) {
-            assertNotEquals((db.getUser("10"+i).getGoogleMail()), "Nix@Nix.de");
+            assertNotEquals((DBStatements.getUser("10"+i).getGoogleMail()), "Nix@Nix.de");
         }
     }
 
@@ -148,14 +148,14 @@ public class MainActivityJUnitTest {
     @Test
     public void testDBStatementsUserAccountName() {
         for (int i = 0; i < testScale; i++) {
-            assertEquals((db.getUser("10"+i).getAccountName()), "Account " + i );
+            assertEquals((DBStatements.getUser("10"+i).getAccountName()), "Account " + i );
         }
     }
 
     @Test
     public void testDBStatementsUserAccountName2() {
         for (int i = 0; i < testScale; i++) {
-            assertNotEquals((db.getUser("10"+i).getAccountName()), "____");
+            assertNotEquals((DBStatements.getUser("10"+i).getAccountName()), "____");
         }
     }
 
@@ -166,7 +166,7 @@ public class MainActivityJUnitTest {
     @Test
     public void testChatFunctionsAdmin() {
         for (int i = 0; i < testScale; i++) {
-            assertEquals(db.getChat(("1000" + i)).getAdmin(), "10" + i);
+            assertEquals(DBStatements.getChat(("1000" + i)).getAdmin(), "10" + i);
         }
     }
 
@@ -176,21 +176,21 @@ public class MainActivityJUnitTest {
             ArrayList<String> memberIds = new ArrayList<>();
             memberIds.add("10"+i);
             memberIds.add("1");
-            assertEquals(db.getChatMembers("1000" + i), memberIds);
+            assertEquals(DBStatements.getChatMembers("1000" + i), memberIds);
         }
     }
 
     @Test
     public void testChatFunctionsID() {
         for (int i = 0; i < testScale; i++) {
-            assertEquals(db.getChat(("1000" + i)).getId(), "1000" + i);
+            assertEquals(DBStatements.getChat(("1000" + i)).getId(), "1000" + i);
         }
     }
 
     @Test
     public void testChatFunctionsName() {
         for (int i = 0; i < testScale; i++) {
-            assertEquals(db.getChat(("1000" + i)).getName(), "TestGruppe " + i);
+            assertEquals(DBStatements.getChat(("1000" + i)).getName(), "TestGruppe " + i);
         }
     }
 
@@ -202,7 +202,7 @@ public class MainActivityJUnitTest {
                     "10"+i, "1000"+i));
          */
         for (int i = 0; i < testScale; i++) {
-            Message testMessage = db.getMessage("1000" + i);
+            Message testMessage = DBStatements.getMessage("1000" + i);
             assertEquals(testMessage.getMessage(), "Message Text " + i);
             assertEquals(testMessage.getChatid(), "1000" + i);
             assertEquals(testMessage.getCreator(), "10" + i);

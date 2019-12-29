@@ -23,11 +23,10 @@ import de.swproj.teamchat.datamodell.chat.Message;
 public class AdapterChat extends BaseAdapter {
 
     private ArrayList<Chat> chats;
-    private DBStatements db;
 
-    public AdapterChat(ArrayList<Chat> chats, DBStatements dbStatements) {
+
+    public AdapterChat(ArrayList<Chat> chats) {
         this.chats = chats;
-        db = dbStatements;
     }
 
     @Override
@@ -64,7 +63,7 @@ public class AdapterChat extends BaseAdapter {
 
         // Last message
         TextView lastMessage = (TextView) convertView.findViewById(R.id.chatListLastMessage);
-        final Message lastMsg = db.getLastMessage(chat.getId());
+        final Message lastMsg = DBStatements.getLastMessage(chat.getId());
 
         //TODO LAST MESSAGE NOT WORKING
 

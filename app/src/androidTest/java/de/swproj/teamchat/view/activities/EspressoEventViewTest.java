@@ -72,23 +72,23 @@ public class EspressoEventViewTest {
     @Before
     public void setUp() throws Exception {
         mActivity = mActivityTestRule.getActivity();
-        db = new DBStatements(mActivity.getBaseContext());
 
-        db.dropAll();
 
-        db.insertUser(new User("Test1", "test1@mail.de", "Test User 1", "Gott", "Herr"));
-        db.insertUser(new User("Admin", "admin@mail.d", "Admin", "Hors", "tidiot"));
-        db.insertUser(new User("abc", "abc@mail.d", "ICH", "ABC", "Derine"));
-        db.insertUser(new User("Test2", "test2@mail.d", "Test User 2", "Gott2", "Herr"));
-        db.insertUser(new User("emusk", "elon@mail.d", "Elon Musk", "Musk", "Elon"));
-        db.insertChat(new Chat("Gugel", (mActivity.getResources().getIntArray(R.array.androidcolors))[0], "123", "Admin"));
-        db.updateChatMembers(new String[]{"Test1", "Admin", "abc", "Test2", "emusk"}, "123");
+        DBStatements.dropAll();
+
+        DBStatements.insertUser(new User("Test1", "test1@mail.de", "Test User 1", "Gott", "Herr"));
+        DBStatements.insertUser(new User("Admin", "admin@mail.d", "Admin", "Hors", "tidiot"));
+        DBStatements.insertUser(new User("abc", "abc@mail.d", "ICH", "ABC", "Derine"));
+        DBStatements.insertUser(new User("Test2", "test2@mail.d", "Test User 2", "Gott2", "Herr"));
+        DBStatements.insertUser(new User("emusk", "elon@mail.d", "Elon Musk", "Musk", "Elon"));
+        DBStatements.insertChat(new Chat("Gugel", (mActivity.getResources().getIntArray(R.array.androidcolors))[0], "123", "Admin"));
+        DBStatements.updateChatMembers(new String[]{"Test1", "Admin", "abc", "Test2", "emusk"}, "123");
 
         Date currentTime = Calendar.getInstance().getTime();
         GregorianCalendar gc = new GregorianCalendar();
         gc.setGregorianChange(new java.sql.Date(10000));
         Time time = new Time(currentTime.getTime());
-        db.insertMessage(new Event(time, "Mars Tour", "14546s", true, "emusk", new GregorianCalendar(2020, 10, 27, 9, 6), "Colonize mars with me", "123", (byte) 1));
+        DBStatements.insertMessage(new Event(time, "Mars Tour", "14546s", true, "emusk", new GregorianCalendar(2020, 10, 27, 9, 6), "Colonize mars with me", "123", (byte) 1));
     }
 
 

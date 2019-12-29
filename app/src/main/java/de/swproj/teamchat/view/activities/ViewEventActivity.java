@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 public class ViewEventActivity extends AppCompatActivity {
-    private DBStatements db;
+
     private Event event;
     private String activeUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
     private ArrayList<UserEventStatus> userEventStates;
@@ -48,11 +48,10 @@ public class ViewEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_event);
 
-        db = new DBStatements(this);
-        fbConnection = new FirebaseConnection(db);
+
         String id = getIntent().getStringExtra("eventID");
 
-        event = db.getEvent(id);
+        event = DBStatements.getEvent(id);
 
         actUserIsAdmin = FirebaseAuth.getInstance().getCurrentUser().getUid()
                 .equals(event.getCreator());
@@ -65,7 +64,7 @@ public class ViewEventActivity extends AppCompatActivity {
         TextView tvDescription = findViewById(R.id.viewevent_tvdescription);
         tvStatus = findViewById(R.id.viewevent_tvstatus);
 
-        tvCreator.setText(db.getUser(event.getCreator()).getAccountName());
+        tvCreator.setText(DBStatements.getUser(event.getCreator()).getAccountName());
         tvtime.setText(FormatHelper.formatTime(event.getTimeStamp()));
         tvDate.setText(FormatHelper.formatDate(event.getDate()));
         tvTime.setText(FormatHelper.formatTime(event.getDate()));
@@ -73,7 +72,7 @@ public class ViewEventActivity extends AppCompatActivity {
         tvDescription.setText(event.getDescription());
         Log.d("MYLOG","ID: "+id+" User: "+ activeUser);
 
-        mystate = db.getUserEventStatus(id, activeUser);
+        mystate = DBStatements.getUserEventStatus(id, activeUser);
         if(mystate==null){
             mystate= new UserEventStatus("abc","4546s",0,"def");
         }
@@ -82,12 +81,12 @@ public class ViewEventActivity extends AppCompatActivity {
 
 
         //Get EventStatus and Print it in the List
-        userEventStates = db.getUserEventStatus(id);
+        userEventStates = DBStatements.getUserEventStatus(id);
 
         //Log.d("ViewEventActivity", "State objects: " + userEventStates.size() + "  " + userEventStates.get(0).getUserId() + "  " + userEventStates.get(1).getUserId());
         ListView lvStates = findViewById(R.id.viewevent_lvstates);
         lvStates.setDivider(null);
-        adapter = new AdapterUserEventStatus(userEventStates, db);
+        adapter = new AdapterUserEventStatus(userEventStates);
 
         lvStates.setAdapter(adapter);
 
@@ -107,7 +106,7 @@ public class ViewEventActivity extends AppCompatActivity {
     public void commit(View view) {
         mystate.setReason("-");
         mystate.setStatus(1);
-        db.updateUserEventStatus(mystate);
+        DBStatements.updateUserEventStatus(mystate);
         tvStatus.setText(mystate.getStatusString());
 
         repaintMyState(mystate);
