@@ -31,7 +31,8 @@ public class DBCreate {
     public static final String COL_CHAT_ID = BaseColumns._ID;
     public static final String COL_CHAT_NAME = "name";
     public static final String COL_CHAT_COLOR = "color";
-    public static final String COL_CHAT_FK_Creator = "fk_creator";
+    public static final String COL_CHAT_FK_CREATOR = "fk_creator";
+    public static final String COL_CHAT_FK_LASTMESSAGE= "fk_lastmessage";
 
 
     protected static String getChatTable() {
@@ -39,7 +40,8 @@ public class DBCreate {
                 + COL_CHAT_ID + " TEXT PRIMARY KEY, "
                 + COL_CHAT_NAME + " TEXT, "
                 + COL_CHAT_COLOR + " INTEGER, "
-                + COL_CHAT_FK_Creator + " TEXT  NOT NULL REFERENCES " + TABLE_USER + ")";
+                + COL_CHAT_FK_CREATOR + " TEXT, "
+                + COL_CHAT_FK_LASTMESSAGE+" TEXT )";
     }
 
     protected static String deleteChatTable() {
