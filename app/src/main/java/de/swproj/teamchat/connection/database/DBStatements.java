@@ -9,21 +9,32 @@ import android.util.Log;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
 
 
 import de.swproj.teamchat.datamodell.chat.Chat;
+import de.swproj.teamchat.datamodell.chat.ChatMembers;
 import de.swproj.teamchat.datamodell.chat.Event;
 import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.datamodell.chat.User;
 import de.swproj.teamchat.datamodell.chat.UserEventStatus;
 import de.swproj.teamchat.view.activities.MainActivity;
+import de.swproj.teamchat.view.viewmodels.Updateable;
 
 
 public class DBStatements {
 
-
+    private static HashSet<Updateable> updateables=new HashSet<>();
     private static DBConnection dbConnection;
+
+    public static void addUpdateable(Updateable updateable){
+        if(updateable!=null)
+        updateables.add(updateable);
+    }
+    public static void removeUpdateable(Updateable updateable){
+        updateables.remove(updateable);
+    }
 
     public static void setDbConnection(DBConnection connection){
         dbConnection=connection;
@@ -80,6 +91,11 @@ public class DBStatements {
               int i=  db.update(DBCreate.TABLE_CHAT, values, DBCreate.COL_CHAT_ID + "=?", new String[]{chatId});
                 Log.d("DB_UpdateChat res",i+"");
             }
+            for (Updateable u:updateables
+                 ) {
+                u.updateObject(chat);
+            }
+
 
         } catch (Exception e) {
 
@@ -112,8 +128,12 @@ public class DBStatements {
 
 
         db.insertOrThrow(DBCreate.TABLE_CHAT, null, values);
-
         db.setTransactionSuccessful();
+
+        for (Updateable u:updateables
+        ) {
+            u.insertObject(chat);
+        }
 
     } catch (Exception e) {
         insertsuccesfull = false;
@@ -144,6 +164,12 @@ public class DBStatements {
 
             }
             db.setTransactionSuccessful();
+           ChatMembers cm=  new ChatMembers(userIDs,chatId);
+            for (Updateable u:updateables
+            ) {
+                u.updateObject(cm);
+            }
+
         } catch (Exception e) {
             success = false;
             Log.d("DB_Error class DBStatements:", "Unable to write CHAT_USER in db");
@@ -196,9 +222,9 @@ public class DBStatements {
             db.beginTransaction();
             try {
                 values.put(DBCreate.COL_EVENT_ID, message.getId());
-                values.put(DBCreate.COL_EVENT_DATE, e.getDate().getTime().getTime()+"");
+                values.put(DBCreate.COL_EVENT_DATE, e.getDate().getTime().getTime() + "");
                 values.put(DBCreate.COL_EVENT_DESCRIPTION, e.getDescription());
-              //  values.put(DBCreate.COL_EVENT_FK_MESSAGEID, message.getId());
+                //  values.put(DBCreate.COL_EVENT_FK_MESSAGEID, message.getId());
 
                 db.insertOrThrow(DBCreate.TABLE_EVENT, null, values);
 
@@ -237,10 +263,13 @@ public class DBStatements {
 
 
         }
+        if (insertsuccesfull) {
+            for (Updateable u : updateables
+            ) {
 
-
-
-
+                u.insertObject(message);
+            }
+        }
         return insertsuccesfull;
     }
 
@@ -267,6 +296,10 @@ public class DBStatements {
             db.insertOrThrow(DBCreate.TABLE_USER, null, values);
 
             db.setTransactionSuccessful();
+            for (Updateable u:updateables
+            ) {
+                u.insertObject(user);
+            }
 
         } catch (Exception e) {
             insertsuccesfull = false;
@@ -275,7 +308,12 @@ public class DBStatements {
         } finally {
             db.endTransaction();
         }
-
+        if(insertsuccesfull){
+        for (Updateable u:updateables
+        ) {
+            u.insertObject(user);
+        }
+        }
 
         return insertsuccesfull;
     }
@@ -305,6 +343,12 @@ public class DBStatements {
             db.endTransaction();
         }
 
+        if(insertsuccesfull){
+            for (Updateable u:updateables
+            ) {
+                u.updateObject(status);
+            }
+        }
 
         return insertsuccesfull;
     }
@@ -341,6 +385,7 @@ public class DBStatements {
 
         return userEventStats;
     }
+
     public static UserEventStatus getUserEventStatus(String eventId, String userId) {
         UserEventStatus state = null;
         SQLiteDatabase db = dbConnection.getReadableDatabase();

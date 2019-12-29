@@ -12,19 +12,20 @@ import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.view.adapter.AdapterMessage;
 import de.swproj.teamchat.view.viewmodels.ChatViewModel;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.transition.Fade;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
 
 
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
@@ -32,14 +33,21 @@ public class ChatActivity extends AppCompatActivity {
 
     private ListView lvMessages;
     private EditText etMessage;
- //   private Chat chat;
+
     private String chatID;
 
-    //private ArrayList<Message> messages;
+    private  AdapterMessage adapterMessage;
+
     private ChatViewModel viewModel;
 
     private TeamChatMessagingService messagingService;
     private FirebaseConnection firebaseConnection;
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        DBStatements.removeUpdateable(viewModel);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +64,11 @@ public class ChatActivity extends AppCompatActivity {
         chatID = getIntent().getStringExtra("chatID");
 
          viewModel= new ChatViewModel(DBStatements.getChat(chatID),DBStatements.getMessages(chatID));
-          final AdapterMessage adapterMessage = new AdapterMessage(viewModel.getLiveMessages().getValue(),this);
+
+
+         DBStatements.addUpdateable(viewModel);
+
+         adapterMessage = new AdapterMessage(viewModel.getLiveMessages().getValue(),this);
           lvMessages.setAdapter(adapterMessage);
          viewModel.getLiveChat().observe(this, new Observer<Chat>() {
              @Override
@@ -69,6 +81,7 @@ public class ChatActivity extends AppCompatActivity {
              @Override
              public void onChanged(ArrayList<Message> messages) {
              adapterMessage.notifyDataSetChanged();
+             scrollListViewToBottom();
              }
          });
 
@@ -90,8 +103,21 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
+    private void scrollListViewToBottom() {
+        lvMessages.post(new Runnable() {
+            @Override
+            public void run() {
+                // Select the last row so it will scroll into view...
+                lvMessages.setSelection(adapterMessage.getCount() - 1);
+            }
+        });
+    }
 
     public void sendMessage(View view){
+        //hide Keyboard
+        InputMethodManager imm = (InputMethodManager) this.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
         String etMessageString = etMessage.getText().toString();
         // Check if the Message is empty
         if (!etMessageString.isEmpty()) {

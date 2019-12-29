@@ -66,7 +66,7 @@ public class AdapterMessage extends BaseAdapter {
         Context context = parent.getContext();
         User creator = DBStatements.getUser(message.getCreator());
 
-        if(convertView==null) {
+     //   if(convertView==null) {
 
             if (message.isEvent()) {
 
@@ -85,7 +85,7 @@ public class AdapterMessage extends BaseAdapter {
                 }
 
 
-            }
+    //        }
             Log.d("MessageAdapter Message: ", message.getMessage()+"  "+message.getCreator());
             TextView tvMessage = convertView.findViewById(R.id.viewevent_tvtitle);
             TextView tvTime = convertView.findViewById(R.id.viewevent_tvtime);
