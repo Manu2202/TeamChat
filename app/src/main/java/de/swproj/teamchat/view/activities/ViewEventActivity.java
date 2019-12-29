@@ -30,12 +30,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 public class ViewEventActivity extends AppCompatActivity {
 
     private Event event;
     private String activeUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-    private ArrayList<UserEventStatus> userEventStates;
+    private List<UserEventStatus> userEventStates;
     private UserEventStatus mystate;
     private TextView tvStatus;
     private AdapterUserEventStatus adapter;

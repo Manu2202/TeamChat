@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.cardview.widget.CardView;
 import androidx.transition.TransitionManager;
@@ -23,10 +24,10 @@ import de.swproj.teamchat.datamodell.chat.UserEventStatus;
 
 public class AdapterUserEventStatus extends BaseAdapter {
 
-    private ArrayList<UserEventStatus> userEventStatuses;
+    private List<UserEventStatus> userEventStatuses;
 
 
-    public AdapterUserEventStatus(ArrayList<UserEventStatus> userEventStatuses) {
+    public AdapterUserEventStatus(List<UserEventStatus> userEventStatuses) {
         this.userEventStatuses = userEventStatuses;
 
 

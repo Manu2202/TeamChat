@@ -12,7 +12,7 @@ import de.swproj.teamchat.datamodell.chat.User;
 import de.swproj.teamchat.datamodell.chat.UserEventStatus;
 
 public class MainChatsViewModel extends ViewModel implements Updateable {
-    MutableLiveData<LinkedList<Chat>> liveChats=new MutableLiveData<>();
+    private MutableLiveData<LinkedList<Chat>> liveChats=new MutableLiveData<>();
 
     public MainChatsViewModel(LinkedList<Chat> chats) {
        liveChats.setValue(chats);

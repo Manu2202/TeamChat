@@ -11,8 +11,8 @@ import de.swproj.teamchat.datamodell.chat.User;
 import de.swproj.teamchat.datamodell.chat.UserEventStatus;
 
 public class ChatViewModel extends ViewModel implements Updateable {
-    MutableLiveData<Chat> liveChat = new MutableLiveData<>();
-    MutableLiveData<ArrayList<Message>> liveMessages = new MutableLiveData<>();
+    private MutableLiveData<Chat> liveChat = new MutableLiveData<>();
+    private MutableLiveData<ArrayList<Message>> liveMessages = new MutableLiveData<>();
 
 
     public ChatViewModel(Chat chat, ArrayList<Message> messages) {
