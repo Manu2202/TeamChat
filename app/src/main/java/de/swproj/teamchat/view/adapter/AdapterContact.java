@@ -10,6 +10,7 @@ import android.widget.TextView;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.datamodell.chat.User;
@@ -22,9 +23,9 @@ import de.swproj.teamchat.datamodell.chat.User;
 
 public class AdapterContact extends BaseAdapter {
 
-    private ArrayList<User> contacts;
+    private List<User> contacts;
 
-    public AdapterContact(ArrayList<User> contacts) {
+    public AdapterContact(List<User> contacts) {
         this.contacts = contacts;
     }
 

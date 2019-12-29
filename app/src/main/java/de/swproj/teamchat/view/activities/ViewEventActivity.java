@@ -136,7 +136,7 @@ public class ViewEventActivity extends AppCompatActivity {
     public void cancleDialog(View view) {
         ReasonDialog rd = new ReasonDialog(this);
         rd.show();
-        //todo: send state to sertver
+        //todo: send state to server
 
         // sendToFB: eventTitle + userEventStatus
     }

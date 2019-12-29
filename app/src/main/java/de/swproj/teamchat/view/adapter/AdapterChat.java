@@ -66,7 +66,7 @@ public class AdapterChat extends BaseAdapter {
         TextView lastMessage = (TextView) convertView.findViewById(R.id.chatListLastMessage);
         final Message lastMsg = DBStatements.getLastMessage(chat.getId());
 
-        //TODO LAST MESSAGE NOT WORKING
+
 
         // Avoid NullpointerException if Chat is empty
         if (lastMsg != null) {

@@ -37,8 +37,7 @@ public class AdapterMessage extends BaseAdapter {
 
     private ArrayList<Message> messages;
 
-    private AppCompatActivity activity;//todo: Get Authenticated user for send and show
-
+    private AppCompatActivity activity;
     public AdapterMessage(ArrayList<Message> messages, AppCompatActivity activity) {
         this.messages = messages;
 
@@ -85,7 +84,7 @@ public class AdapterMessage extends BaseAdapter {
                 }
 
 
-    //        }
+      }
             Log.d("MessageAdapter Message: ", message.getMessage()+"  "+message.getCreator());
             TextView tvMessage = convertView.findViewById(R.id.viewevent_tvtitle);
             TextView tvTime = convertView.findViewById(R.id.viewevent_tvtime);
@@ -124,7 +123,7 @@ public class AdapterMessage extends BaseAdapter {
 
 
             }
-        }
+
 
             return convertView;
         }

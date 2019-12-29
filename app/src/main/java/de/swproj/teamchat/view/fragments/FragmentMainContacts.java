@@ -16,6 +16,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,7 +40,7 @@ import de.swproj.teamchat.view.dialogs.UserSearchDialog;
 public class FragmentMainContacts extends ListFragment {
 
 
-    private ArrayList<User> users;
+    private List<User> users;
     private FloatingActionButton fab;
     AdapterContact adapterContact;
 
@@ -62,7 +63,7 @@ public class FragmentMainContacts extends ListFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+          users=DBStatements.getUser();
         final ListView list = getListView();
         // Create the adapter
         adapterContact = new AdapterContact(users);
