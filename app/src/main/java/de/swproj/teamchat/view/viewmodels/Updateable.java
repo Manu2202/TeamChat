@@ -18,6 +18,9 @@ public interface Updateable {
     public void updateObject(UserEventStatus obj);
     public void updateObject(ChatMembers chatMembers);
 
+    //todo: implement update event
+
+
 
     //implemtation if there is time
    // public void removeObject(Object obj);

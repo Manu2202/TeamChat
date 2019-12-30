@@ -1,15 +1,17 @@
 package de.swproj.teamchat.datamodell.chat;
 
+import java.util.List;
+
 public class ChatMembers {
-   private String[] userIDs;
+   private List<String> userIDs;
    private String chatID;
 
-    public ChatMembers(String[] userIDs, String chatID) {
+    public ChatMembers(List<String> userIDs, String chatID) {
         this.userIDs = userIDs;
         this.chatID = chatID;
     }
 
-    public String[] getUserIDs() {
+    public List<String> getUserIDs() {
         return userIDs;
     }
 

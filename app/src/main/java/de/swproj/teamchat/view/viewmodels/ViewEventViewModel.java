@@ -22,6 +22,7 @@ public class ViewEventViewModel extends ViewModel implements Updateable {
        liveStates.setValue(states);
     }
 
+
     public MutableLiveData<UserEventStatus> getMyLiveState() {
         return myLiveState;
     }
@@ -32,6 +33,28 @@ public class ViewEventViewModel extends ViewModel implements Updateable {
 
     public MutableLiveData<Event> getLiveEvent() {
         return liveEvent;
+    }
+
+
+
+    private void updateStatus(UserEventStatus status){
+      if(myLiveState.getValue().getUserId().equals(status.getUserId())){
+        myLiveState.postValue(status);
+      }else {
+        List<UserEventStatus> stats = liveStates.getValue();
+        for (int i = 0; i < stats.size(); i++) {
+          if (stats.get(i).getUserId().equals(status.getUserId())) {
+            stats.set(i, status);
+            liveStates.postValue(stats);
+            break;
+          }
+        }
+      }
+    }
+
+    private void insertStatus(UserEventStatus status){
+      liveStates.getValue().add(status);
+      liveStates.postValue(liveStates.getValue());
     }
 
     @Override
@@ -52,15 +75,21 @@ public class ViewEventViewModel extends ViewModel implements Updateable {
     @Override
     public void updateObject(Chat obj) {
 
+
     }
 
     @Override
     public void updateObject(User obj) {
 
     }
+    //todo: implement update event
+  //todo: implement insert UserEvent State
 
     @Override
     public void updateObject(UserEventStatus obj) {
+      if(obj.getEventId().equals(liveEvent.getValue().getId())){
+        updateStatus(obj);
+      }
 
     }
 

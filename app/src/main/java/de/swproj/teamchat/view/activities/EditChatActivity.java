@@ -68,6 +68,7 @@ public class EditChatActivity extends AppCompatActivity {
             chat = DBStatements.getChat(chatId);
             etChatName.setText(chat.getName());
             for (User user : DBStatements.getUsersOfChat(chatId)) {
+                if(!FirebaseAuth.getInstance().getCurrentUser().getUid().equals(user.getGoogleId()))
                 groupMember.put(user.getGoogleId(), user);
             }
         }
@@ -196,6 +197,7 @@ public class EditChatActivity extends AppCompatActivity {
 
 
     public void saveChanges(View view) {
+
         if (chatId.equals("0")) {
             int[] androidColors = getResources().getIntArray((R.array.androidcolors));
             int color =  androidColors[random.nextInt(androidColors.length)];

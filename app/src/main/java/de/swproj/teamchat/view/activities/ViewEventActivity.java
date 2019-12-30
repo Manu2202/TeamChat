@@ -2,6 +2,7 @@ package de.swproj.teamchat.view.activities;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.connection.firebase.FirebaseConnection;
@@ -11,6 +12,7 @@ import de.swproj.teamchat.datamodell.chat.UserEventStatus;
 import de.swproj.teamchat.helper.FormatHelper;
 import de.swproj.teamchat.view.adapter.AdapterUserEventStatus;
 import de.swproj.teamchat.view.dialogs.ReasonDialog;
+import de.swproj.teamchat.view.viewmodels.ViewEventViewModel;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -34,11 +36,12 @@ import java.util.List;
 
 public class ViewEventActivity extends AppCompatActivity {
 
-    private Event event;
+
     private String activeUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-    private List<UserEventStatus> userEventStates;
-    private UserEventStatus mystate;
+   // private List<UserEventStatus> userEventStates;
+ //   private UserEventStatus mystate;
     private TextView tvStatus;
+    private ViewEventViewModel viewModel;
     private AdapterUserEventStatus adapter;
     private FirebaseConnection fbConnection;
     private boolean actUserIsAdmin;
@@ -49,45 +52,53 @@ public class ViewEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_event);
 
-
         String id = getIntent().getStringExtra("eventID");
 
-        event = DBStatements.getEvent(id);
+        viewModel= new ViewEventViewModel(DBStatements.getUserEventStatus(id,activeUser),DBStatements.getUserEventStatus(id),DBStatements.getEvent(id));
 
         actUserIsAdmin = FirebaseAuth.getInstance().getCurrentUser().getUid()
-                .equals(event.getCreator());
+                .equals(viewModel.getLiveEvent().getValue().getCreator());
 
-        TextView tvCreator = findViewById(R.id.viewevent_tvcreator);
-        TextView tvtime = findViewById(R.id.viewevent_tvtime);
-        TextView tvtitle = findViewById(R.id.viewevent_tvtitle);
-        TextView tvDate = findViewById(R.id.viewevent_tveveventdate);
-        TextView tvTime = findViewById(R.id.viewevent_tveventtime);
-        TextView tvDescription = findViewById(R.id.viewevent_tvdescription);
+      final TextView tvCreator = findViewById(R.id.viewevent_tvcreator);
+       final TextView tvtime = findViewById(R.id.viewevent_tvtime);
+       final TextView tvtitle = findViewById(R.id.viewevent_tvtitle);
+       final TextView tvDate = findViewById(R.id.viewevent_tveveventdate);
+       final TextView tvTime = findViewById(R.id.viewevent_tveventtime);
+       final TextView tvDescription = findViewById(R.id.viewevent_tvdescription);
         tvStatus = findViewById(R.id.viewevent_tvstatus);
 
-        tvCreator.setText(DBStatements.getUser(event.getCreator()).getAccountName());
-        tvtime.setText(FormatHelper.formatTime(event.getTimeStamp()));
-        tvDate.setText(FormatHelper.formatDate(event.getDate()));
-        tvTime.setText(FormatHelper.formatTime(event.getDate()));
-        tvtitle.setText(event.getMessage());
-        tvDescription.setText(event.getDescription());
+        //set Observer
+        viewModel.getLiveEvent().observe(this, new Observer<Event>() {
+            @Override
+            public void onChanged(Event event) {
+                tvCreator.setText(DBStatements.getUser(event.getCreator()).getAccountName());
+                tvtime.setText(FormatHelper.formatTime(event.getTimeStamp()));
+                tvDate.setText(FormatHelper.formatDate(event.getDate()));
+                tvTime.setText(FormatHelper.formatTime(event.getDate()));
+                tvtitle.setText(event.getMessage());
+                tvDescription.setText(event.getDescription());
+            }
+        });
+
         Log.d("MYLOG","ID: "+id+" User: "+ activeUser);
 
-        mystate = DBStatements.getUserEventStatus(id, activeUser);
-        if(mystate==null){
-            mystate= new UserEventStatus("abc","4546s",0,"def");
-        }
-        //Log.d("getUserEventStatus",mystate.getReason());
-        tvStatus.setText(mystate.getStatusString());
+        viewModel.getMyLiveState().observe(this, new Observer<UserEventStatus>() {
+            @Override
+            public void onChanged(UserEventStatus status) {
+                tvStatus.setText(status.getStatusString());
+            }
+        });
 
 
-        //Get EventStatus and Print it in the List
-        userEventStates = DBStatements.getUserEventStatus(id);
-
-        //Log.d("ViewEventActivity", "State objects: " + userEventStates.size() + "  " + userEventStates.get(0).getUserId() + "  " + userEventStates.get(1).getUserId());
         ListView lvStates = findViewById(R.id.viewevent_lvstates);
         lvStates.setDivider(null);
-        adapter = new AdapterUserEventStatus(userEventStates);
+        adapter = new AdapterUserEventStatus(viewModel.getLiveStates().getValue());
+         viewModel.getLiveStates().observe(this, new Observer<List<UserEventStatus>>() {
+             @Override
+             public void onChanged(List<UserEventStatus> userEventStatuses) {
+                 adapter.notifyDataSetChanged();
+             }
+         });
 
         lvStates.setAdapter(adapter);
 
@@ -105,45 +116,41 @@ public class ViewEventActivity extends AppCompatActivity {
     }
 
     public void commit(View view) {
+        UserEventStatus mystate = viewModel.getMyLiveState().getValue();
         mystate.setReason("-");
         mystate.setStatus(1);
         DBStatements.updateUserEventStatus(mystate);
-        tvStatus.setText(mystate.getStatusString());
 
-        repaintMyState(mystate);
+
+
 
         String message = FirebaseAuth.getInstance().getCurrentUser().getDisplayName().split(" ")[0]
                 + " " + mystate.getStatusString();
 
+
+
         fbConnection.addToFirestore(new Message(GregorianCalendar.getInstance().getTime(),
                 message, false,
-                FirebaseAuth.getInstance().getCurrentUser().getUid(), event.getChatid()),
-                event.getMessage(), false, true);
+                FirebaseAuth.getInstance().getCurrentUser().getUid(), viewModel.getLiveEvent().getValue().getChatid()),
+                viewModel.getLiveEvent().getValue().getMessage(), false, true);
     }
 
-    private void repaintMyState(UserEventStatus state) {
-        int i = 0;
-        boolean b = true;
-        while (i < userEventStates.size() && b) {
-            if (userEventStates.get(i).getUserId().equals(activeUser)) {
-                userEventStates.set(i, state);
-                b = false;
-            }
-            i++;
-        }
-        adapter.notifyDataSetChanged();
-    }
+
 
     public void cancleDialog(View view) {
         ReasonDialog rd = new ReasonDialog(this);
         rd.show();
-        //todo: send state to server
 
-        // sendToFB: eventTitle + userEventStatus
     }
 
     public void cancleState(String reason) {
-        Log.d("ViewEvent dialog", "Reason: " + reason);
+        UserEventStatus mystate = viewModel.getMyLiveState().getValue();
+        mystate.setReason(reason);
+        mystate.setStatus(2);
+
+        DBStatements.updateUserEventStatus(mystate); //remove firebas have to do it
+        //todo send to other to Firebase, remove line befor
+
     }
 
 
@@ -155,19 +162,19 @@ public class ViewEventActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= 14) {  // Check if SDK is high enough for extra infos
             calendarIntent = new Intent(Intent.ACTION_INSERT)
                     .setData(CalendarContract.Events.CONTENT_URI)
-                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.getDate().getTimeInMillis())
+                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, viewModel.getLiveEvent().getValue().getDate().getTimeInMillis())
                     .putExtra(CalendarContract.EXTRA_EVENT_END_TIME,
-                            event.getDate().getTimeInMillis() + 1000 * 60 * 60 * 3)  // Default Length of Event = 3h
-                    .putExtra(CalendarContract.Events.TITLE, event.getMessage())
-                    .putExtra(CalendarContract.Events.DESCRIPTION, event.getDescription())
+                            viewModel.getLiveEvent().getValue().getDate().getTimeInMillis() + 1000 * 60 * 60 * 3)  // Default Length of Event = 3h
+                    .putExtra(CalendarContract.Events.TITLE, viewModel.getLiveEvent().getValue().getMessage())
+                    .putExtra(CalendarContract.Events.DESCRIPTION, viewModel.getLiveEvent().getValue().getDescription())
                     .putExtra(CalendarContract.Events.AVAILABILITY, CalendarContract.Events.AVAILABILITY_BUSY);
         } else {
             calendarIntent = new Intent(Intent.ACTION_EDIT);
             calendarIntent.setType("vnd.android.cursor.item/event");
-            calendarIntent.putExtra("beginTime", event.getDate().getTimeInMillis());
+            calendarIntent.putExtra("beginTime", viewModel.getLiveEvent().getValue().getDate().getTimeInMillis());
             calendarIntent.putExtra("endTime",
-                    event.getDate().getTimeInMillis() + 1000 * 60 * 60 * 3);
-            calendarIntent.putExtra("title", event.getMessage());
+                    viewModel.getLiveEvent().getValue().getDate().getTimeInMillis() + 1000 * 60 * 60 * 3);
+            calendarIntent.putExtra("title", viewModel.getLiveEvent().getValue().getMessage());
         }
         startActivity(calendarIntent);
     }

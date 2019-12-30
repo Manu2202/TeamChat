@@ -145,7 +145,7 @@ public class DBStatements {
     return insertsuccesfull;
 }
 
-    public static boolean updateChatMembers(String[] userIDs, String chatId) {
+    public static boolean updateChatMembers(List<String> userIDs, String chatId) {
         SQLiteDatabase db = dbConnection.getReadableDatabase();
         db.beginTransaction();
 

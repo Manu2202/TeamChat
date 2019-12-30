@@ -71,6 +71,7 @@ public class FirebaseConnection {
 
                         chat.setId(chatid);
                         DBStatements.insertChat(chat);
+                        DBStatements.updateChatMembers(userids,chatid);
 
                     }
                 }).addOnFailureListener(new OnFailureListener() {
