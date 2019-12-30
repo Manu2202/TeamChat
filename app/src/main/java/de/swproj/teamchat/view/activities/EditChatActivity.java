@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -36,7 +37,7 @@ public class EditChatActivity extends AppCompatActivity {
     private static Random random = new Random();
     private HashMap<String, User> allUser = new HashMap<String, User>();
     private HashMap<String, User> groupMember = new HashMap<String, User>();
-
+    private Button btnSaveChanges;
 
     private FirebaseConnection firebaseConnection;
 
@@ -50,11 +51,11 @@ public class EditChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_chat);
 
-
         // Connect Firebase
         firebaseConnection = new FirebaseConnection();
 
         etChatName = (TextInputEditText) findViewById(R.id.edit_chat_et_name);
+        btnSaveChanges = (Button)findViewById(R.id.edit_chat_btn_create);
         llUsers = findViewById(R.id.edit_chat_linear_layout);
 
         // Get own Intent
@@ -67,6 +68,8 @@ public class EditChatActivity extends AppCompatActivity {
         if (!chatId.equals("0")) {
             chat = DBStatements.getChat(chatId);
             etChatName.setText(chat.getName());
+            btnSaveChanges.setText(R.string.updateChat);
+
             for (User user : DBStatements.getUsersOfChat(chatId)) {
                 if(!FirebaseAuth.getInstance().getCurrentUser().getUid().equals(user.getGoogleId()))
                 groupMember.put(user.getGoogleId(), user);
@@ -197,7 +200,7 @@ public class EditChatActivity extends AppCompatActivity {
 
 
     public void saveChanges(View view) {
-
+        // Decide between new Chat or Update Chat
         if (chatId.equals("0")) {
             int[] androidColors = getResources().getIntArray((R.array.androidcolors));
             int color =  androidColors[random.nextInt(androidColors.length)];
@@ -209,8 +212,6 @@ public class EditChatActivity extends AppCompatActivity {
 
         }else{
             List<String> userIDs = new ArrayList<>(groupMember.keySet());
-            //userIDs.add(FirebaseAuth.getInstance().getCurrentUser().getUid());
-            //userIDs = dbStatements.getUsersOfChat(chatId);
             firebaseConnection.updateUsers(chatId,chat.getName(),userIDs);
 
         }

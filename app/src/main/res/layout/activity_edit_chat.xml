@@ -51,7 +51,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="42dp"
         android:onClick="saveChanges"
-        android:text="Erstelle Chats"
+        android:text="@string/createChat"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.448"

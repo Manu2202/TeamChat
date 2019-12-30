@@ -19,6 +19,9 @@
     <!-- Strings related to Chats -->
     <string name="newEvent">Create Event</string>
     <string name="editChat">Edit Chat</string>
+    <string name="newChat">New Chat</string>
+    <string name="createChat">Create Chat</string>
+    <string name="updateChat">Update Chat</string>
 
     <!-- Strings related to User -->
     <string name="first_name">First Name</string>
