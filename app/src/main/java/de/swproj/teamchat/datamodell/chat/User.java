@@ -60,4 +60,14 @@ public class User {
     public String getFirstName() {
         return firstName;
     }
+/*
+    @Override
+    public int compareTo(Object o) {
+        try{
+            return accountName.compareTo(((User)o).accountName);
+        }catch (Exception e){
+
+        }
+        return 0;
+    }*/
 }

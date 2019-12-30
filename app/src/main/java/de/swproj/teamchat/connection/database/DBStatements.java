@@ -555,7 +555,7 @@ public class DBStatements {
 
 
             Cursor c = db.query(DBCreate.TABLE_USER, new String[]{DBCreate.COL_USER_G_ID, DBCreate.COL_USER_MAIL, DBCreate.COL_USER_ACCNAME, DBCreate.COL_USER_FIRSTNAME, DBCreate.COL_USER_NAME},
-                    null, null, null, null, null);
+                    null, null, null, null, DBCreate.COL_USER_ACCNAME+" ASC");
             if (c.moveToFirst()) {
                 // String googleId, String googleMail, String accountName, String name, String firstName
                 int id = c.getColumnIndex(DBCreate.COL_USER_G_ID);
@@ -881,6 +881,13 @@ public class DBStatements {
         return res;
     }
     public static boolean updateEvent(Event event){
+        boolean res = false;
+        //todo: implement funktion
+
+
+        return res;
+    }
+    public static  boolean deleteUser(){
         boolean res = false;
         //todo: implement funktion
 
