@@ -240,6 +240,8 @@ public class ViewEventActivity extends AppCompatActivity {
         });
 
         AlertDialog alert = builder.create();
+
+
         alert.show();
     }
 
