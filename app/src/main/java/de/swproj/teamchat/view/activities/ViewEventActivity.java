@@ -100,6 +100,10 @@ public class ViewEventActivity extends AppCompatActivity {
              }
          });
 
+
+         //registart viewModel onDB
+        DBStatements.addUpdateable(viewModel);
+
         lvStates.setAdapter(adapter);
 
 
@@ -119,23 +123,30 @@ public class ViewEventActivity extends AppCompatActivity {
         UserEventStatus mystate = viewModel.getMyLiveState().getValue();
         mystate.setReason("-");
         mystate.setStatus(1);
-        DBStatements.updateUserEventStatus(mystate);
 
 
 
+      Thread thread = new test(mystate);
+      thread.start();//remove firebase have to do it on Success
+        //todo send to other to Firebase, remove line before
 
-        String message = FirebaseAuth.getInstance().getCurrentUser().getDisplayName().split(" ")[0]
+      /*  String message = FirebaseAuth.getInstance().getCurrentUser().getDisplayName().split(" ")[0]
                 + " " + mystate.getStatusString();
-
-
-
-        fbConnection.addToFirestore(new Message(GregorianCalendar.getInstance().getTime(),
-                message, false,
-                FirebaseAuth.getInstance().getCurrentUser().getUid(), viewModel.getLiveEvent().getValue().getChatid()),
-                viewModel.getLiveEvent().getValue().getMessage(), false, true);
+       */
     }
+   //todo: Delete Class after firebase implementation
+    class test extends Thread{
+        UserEventStatus status;
+        public test(UserEventStatus status) {
+            this.status=status;
+        }
 
-
+        @Override
+        public void run() {
+            super.run();
+            DBStatements.updateUserEventStatus(status);
+        }
+    }
 
     public void cancleDialog(View view) {
         ReasonDialog rd = new ReasonDialog(this);
@@ -144,12 +155,15 @@ public class ViewEventActivity extends AppCompatActivity {
     }
 
     public void cancleState(String reason) {
+
+
         UserEventStatus mystate = viewModel.getMyLiveState().getValue();
         mystate.setReason(reason);
         mystate.setStatus(2);
 
-        DBStatements.updateUserEventStatus(mystate); //remove firebas have to do it
-        //todo send to other to Firebase, remove line befor
+        Thread thread = new test(mystate);
+        thread.start();//remove firebas have to do it
+        //todo send to other to Firebase, remove line before
 
     }
 

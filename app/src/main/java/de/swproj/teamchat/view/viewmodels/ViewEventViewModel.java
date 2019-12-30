@@ -40,7 +40,7 @@ public class ViewEventViewModel extends ViewModel implements Updateable {
     private void updateStatus(UserEventStatus status){
       if(myLiveState.getValue().getUserId().equals(status.getUserId())){
         myLiveState.postValue(status);
-      }else {
+      }
         List<UserEventStatus> stats = liveStates.getValue();
         for (int i = 0; i < stats.size(); i++) {
           if (stats.get(i).getUserId().equals(status.getUserId())) {
@@ -48,7 +48,6 @@ public class ViewEventViewModel extends ViewModel implements Updateable {
             liveStates.postValue(stats);
             break;
           }
-        }
       }
     }
 
