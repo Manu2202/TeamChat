@@ -873,4 +873,20 @@ public class DBStatements {
     }
 
 
+    public static boolean deleteEvent(String eventID){
+        boolean res = false;
+        //todo: implement funktion
+
+
+        return res;
+    }
+    public static boolean updateEvent(Event event){
+        boolean res = false;
+        //todo: implement funktion
+
+
+        return res;
+    }
+
+
 }

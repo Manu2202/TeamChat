@@ -11,7 +11,7 @@ import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.datamodell.chat.User;
 import de.swproj.teamchat.datamodell.chat.UserEventStatus;
 
-public class ViewEventViewModel extends ViewModel implements Updateable {
+public class ViewEventViewModel extends Updateable {
   private MutableLiveData<UserEventStatus> myLiveState=new MutableLiveData<>();
   private MutableLiveData<List<UserEventStatus>> liveStates= new MutableLiveData<>();
   private MutableLiveData<Event> liveEvent = new MutableLiveData<>();
@@ -56,31 +56,7 @@ public class ViewEventViewModel extends ViewModel implements Updateable {
       liveStates.postValue(liveStates.getValue());
     }
 
-    @Override
-    public void insertObject(Chat obj) {
 
-    }
-
-    @Override
-    public void insertObject(Message obj) {
-
-    }
-
-    @Override
-    public void insertObject(User obj) {
-
-    }
-
-    @Override
-    public void updateObject(Chat obj) {
-
-
-    }
-
-    @Override
-    public void updateObject(User obj) {
-
-    }
     //todo: implement update event
   //todo: implement insert UserEvent State
 
@@ -92,8 +68,5 @@ public class ViewEventViewModel extends ViewModel implements Updateable {
 
     }
 
-    @Override
-    public void updateObject(ChatMembers chatMembers) {
 
-    }
 }

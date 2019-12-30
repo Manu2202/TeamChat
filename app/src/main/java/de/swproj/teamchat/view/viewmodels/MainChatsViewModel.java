@@ -11,7 +11,7 @@ import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.datamodell.chat.User;
 import de.swproj.teamchat.datamodell.chat.UserEventStatus;
 
-public class MainChatsViewModel extends ViewModel implements Updateable {
+public class MainChatsViewModel extends  Updateable {
     private MutableLiveData<LinkedList<Chat>> liveChats=new MutableLiveData<>();
 
     public MainChatsViewModel(LinkedList<Chat> chats) {
@@ -51,20 +51,7 @@ public class MainChatsViewModel extends ViewModel implements Updateable {
         }
     }
 
-    @Override
-    public void updateObject(User obj) {
 
-    }
-
-    @Override
-    public void updateObject(UserEventStatus obj) {
-
-    }
-
-    @Override
-    public void updateObject(ChatMembers chatMembers) {
-
-    }
 
     @Override
     public void insertObject(Chat obj) {
@@ -82,9 +69,5 @@ public class MainChatsViewModel extends ViewModel implements Updateable {
        }
     }
 
-    @Override
-    public void insertObject(User obj) {
-
-    }
 
 }
