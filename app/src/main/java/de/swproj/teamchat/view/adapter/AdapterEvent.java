@@ -2,7 +2,6 @@ package de.swproj.teamchat.view.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.Space;
 import android.widget.TextView;
 
-import androidx.annotation.ColorInt;
 import androidx.cardview.widget.CardView;
 import androidx.core.graphics.ColorUtils;
 
@@ -117,10 +115,6 @@ public class AdapterEvent extends BaseAdapter {
              boolean isInPast = YearisInPast || MonthisInPast;
              // Separator
              // Will be displayed only once above Events happening on the same month
-            //TODO still buggy if scrolled from bottom to top..
-             boolean displaySeparator = false;
-             boolean month=false,year=false;
-
              //!isinpast
 
 
@@ -140,13 +134,9 @@ public class AdapterEvent extends BaseAdapter {
             spaceBetweenSeparators.setVisibility(View.GONE);
         }
 
-
              // Make event cardview color the same as the color of the corresponding chat
              if (evColorIsGroupColor) {
                  CardView cardView = convertView.findViewById(R.id.li_message_cv);
-                 /*if (System.currentTimeMillis() > ev.getDate().getTimeInMillis()){
-                     cardView.setVisibility(View.GONE);
-                 }*/
                  cardView.setCardBackgroundColor(DBStatements.getChat(ev.getChatid()).getColor());
 
                  //Calculate Contrast Ratio between Background color and White Text
