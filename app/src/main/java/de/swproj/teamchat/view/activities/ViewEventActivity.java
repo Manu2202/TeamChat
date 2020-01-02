@@ -41,6 +41,7 @@ public class ViewEventActivity extends AppCompatActivity {
     private AdapterUserEventStatus adapter;
     private FirebaseConnection fbConnection;
     private boolean actUserIsAdmin;
+    private String id;
 
 
     @Override
@@ -48,7 +49,7 @@ public class ViewEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_event);
 
-        String id = getIntent().getStringExtra("eventID");
+        id = getIntent().getStringExtra("eventID");
 
         viewModel = new ViewEventViewModel(DBStatements.getUserEventStatus(id, activeUser), DBStatements.getUserEventStatus(id), DBStatements.getEvent(id));
 
@@ -193,10 +194,13 @@ public class ViewEventActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.view_event_menu, menu);
-        if (actUserIsAdmin)  // if user is admin, set delete Button true
+        if (actUserIsAdmin) {  // if user is admin, set delete Button true
             menu.findItem(R.id.btn_view_event_delete).setVisible(true);
-        else
+            menu.findItem(R.id.view_event_btn_edit_event).setVisible(true);
+        } else {
             menu.findItem(R.id.btn_view_event_delete).setVisible(false);
+            menu.findItem(R.id.view_event_btn_edit_event).setVisible(false);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -206,6 +210,14 @@ public class ViewEventActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.btn_view_event_delete:
                 acceptDeleteDialog();
+                return true;
+
+            case R.id.view_event_btn_edit_event:
+                Intent editEventIntent = new Intent(this, EditEventActivity.class);
+                editEventIntent.putExtra("ID", id);
+                editEventIntent.putExtra("chatID", viewModel.getLiveEvent().getValue().getChatid());
+
+                startActivity(editEventIntent);
                 return true;
 
             default:
@@ -233,7 +245,6 @@ public class ViewEventActivity extends AppCompatActivity {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
                 // Do nothing
                 dialog.dismiss();
             }

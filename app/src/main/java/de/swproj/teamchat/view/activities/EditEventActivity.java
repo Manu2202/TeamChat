@@ -54,15 +54,8 @@ public class EditEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_event);
 
-        // Initialize Local Database Statements
-
-
         // Connect Firebase
         firebaseConnection = new FirebaseConnection();
-
-        // Initialize the Calendar
-        cal = (GregorianCalendar) GregorianCalendar.getInstance();
-
 
         // Connect the Layout Components
         tv_selectDate = (TextView) findViewById(R.id.edit_event_tv_select_date);
@@ -70,6 +63,21 @@ public class EditEventActivity extends AppCompatActivity {
         et_title = (EditText) findViewById(R.id.edit_event_et_title);
         et_description = (EditText) findViewById(R.id.edit_event_et_description);
 
+        // get the own intent of the Activity
+        Intent ownIntent = getIntent();
+        msgId = ownIntent.getStringExtra("ID");
+        chatID = ownIntent.getStringExtra("chatID");
+
+        if (!msgId.equals("0")) {  // If it`s not a new event
+            event = DBStatements.getEvent(msgId);
+            et_title.setText(event.getMessage());
+            et_description.setText(event.getDescription());
+            cal = event.getDate();
+
+        } else {
+            // Initialize the Calendar
+            cal = (GregorianCalendar) GregorianCalendar.getInstance();
+        }
 
         tv_selectDate.setText(FormatHelper.formatDate(cal));
         tv_selectTime.setText(FormatHelper.formatTime(cal));
@@ -83,11 +91,6 @@ public class EditEventActivity extends AppCompatActivity {
 
         // Call the Listener Method to intitalize them
         dateTimeOnClickListener();
-
-        // get the own intent of the Activity
-        Intent ownIntent = getIntent();
-        msgId = ownIntent.getStringExtra("ID");
-        chatID = ownIntent.getStringExtra("chatID");
     }
 
     /*
