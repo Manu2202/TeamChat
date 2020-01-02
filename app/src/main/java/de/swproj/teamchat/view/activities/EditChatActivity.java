@@ -86,8 +86,9 @@ public class EditChatActivity extends AppCompatActivity {
             // Check if user from DB is yourself -> skip, because yourself is admin
             if (!selfUserID.equals(user.getGoogleId()))
                 allUser.put(user.getGoogleId(), user);
-            if(!allUser.isEmpty())
-                Log.d("EditChat 2", "GetUser " + allUser.get(user.getGoogleId()).getGoogleId());
+            if (!allUser.isEmpty()) {
+                //     Log.d("EditChat 2", "GetUser " + allUser.get(user.getGoogleId()).getGoogleId());
+            }
         }
     }
 

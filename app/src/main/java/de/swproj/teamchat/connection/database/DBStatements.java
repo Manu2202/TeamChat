@@ -12,6 +12,7 @@ import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 import de.swproj.teamchat.datamodell.chat.Chat;
@@ -146,14 +147,19 @@ public class DBStatements {
 }
 
     public static boolean updateChatMembers(List<String> userIDs, String chatId) {
-        SQLiteDatabase db = dbConnection.getReadableDatabase();
+        SQLiteDatabase db = dbConnection.getWritableDatabase();
         db.beginTransaction();
 
         boolean success = true;
 
         ContentValues values = null;
+        List<String> actChatMemmbers = getChatMembers(chatId);
+
+
+
+
         try {
-            db.delete(DBCreate.TABLE_USERCHAT, DBCreate.COL_USERCHAT_FK_CHAT + "=?", new String[]{"" + chatId}); // todo: Delete USer from Chat (Events)
+            db.delete(DBCreate.TABLE_USERCHAT, DBCreate.COL_USERCHAT_FK_CHAT + "=?", new String[]{chatId}); // todo: Delete User from Chat (Events)
 
             for (String s : userIDs) {
                 values = new ContentValues();
@@ -167,6 +173,20 @@ public class DBStatements {
             for (Updateable u:updateables
             ) {
                 u.updateObject(cm);
+            }
+
+            //Update UserEventStatus
+            for (String s:actChatMemmbers
+            ) {
+                if(userIDs.contains(s)){
+                    userIDs.remove(s);
+                }else {
+                    deleteUserEventStatus(chatId,s);
+                }
+            }
+            for (String s:userIDs
+                 ) {
+                insertUserEventStatus(chatId,s);
             }
 
         } catch (Exception e) {
@@ -645,8 +665,6 @@ public class DBStatements {
 
     }
 
-
-
     public static List<Chat> getChat() {
         LinkedList<Chat> chats = new LinkedList<>();
         SQLiteDatabase db = dbConnection.getReadableDatabase();
@@ -844,6 +862,30 @@ public class DBStatements {
 
         return events;
     }
+    public static  List<String> getEvents(String chatID){
+      ArrayList<String> events = new ArrayList<>();
+
+        SQLiteDatabase db = dbConnection.getReadableDatabase();
+        db.beginTransaction();
+        try{
+            Cursor c = db.query(DBCreate.TABLE_MESSAGE, new String[]{DBCreate.COL_MESSAGE_ID},DBCreate.COL_MESSAGE_ISEVENT+"=1 AND "+DBCreate.COL_MESSAGE_FK_CHATID+"=?",new String[]{chatID},null,null,null);
+            if (c.moveToFirst()) {
+                do {
+                    events.add(c.getString(c.getColumnIndex(DBCreate.COL_MESSAGE_ID)));
+                }while (c.moveToNext());
+            }
+            db.setTransactionSuccessful();
+
+        }catch (Exception e){
+            Log.e("DB error", "Unable to get Events from Chat "+chatID);
+
+        }finally {
+            db.endTransaction();
+        }
+
+
+      return events;
+    }
 
     public static Message getLastMessage(String chatId) {
         Message message = null;
@@ -873,8 +915,75 @@ public class DBStatements {
     }
 
 
+    private static boolean insertUserEventStatus(String chatID, String userId){
+
+        List<String> eventIDs = getEvents(chatID);
+
+        SQLiteDatabase db = dbConnection.getWritableDatabase();
+
+        for (String eventID:eventIDs) {
+
+            db.beginTransaction();
+            try {
+              ContentValues  values = new ContentValues();
+                values.put(DBCreate.COL_EVENTUSER_FK_EVENT, eventID);
+                values.put(DBCreate.COL_EVENTUSER_FK_USER, userId);
+                values.put(DBCreate.COL_EVENTUSER_REASON, "-");
+                values.put(DBCreate.COL_EVENTUSER_STATUS, 0);
+                db.insertOrThrow(DBCreate.TABLE_EVENTUSER, null, values);
+
+                db.setTransactionSuccessful();
+                db.endTransaction();
+                for (Updateable u:updateables
+                     ) {
+                    u.updateObject(new UserEventStatus(userId,eventID,0,"-"));
+                }
+
+            }catch (Exception e){
+                Log.e("DB error", "Unable to write USerEventstatus for Event: "+eventID);
+            }
+
+        }
+
+        return true;
+    }
+    private  static boolean deleteUserEventStatus(String chatID, String userID){
+        SQLiteDatabase db = dbConnection.getWritableDatabase();
+
+        List<String> eventIDs = getEvents(chatID);
+
+        for (String eventId: eventIDs){
+            try {
+                db.delete(DBCreate.TABLE_EVENTUSER,DBCreate.COL_EVENTUSER_FK_USER+"=? AND "+DBCreate.COL_EVENT_FK_MESSAGEID+"=?",new String[]{userID,eventId});
+                db.setTransactionSuccessful();
+                db.endTransaction();
+                for (Updateable u:updateables
+                ) {
+                    u.removeObject(new UserEventStatus(userID,eventId,0,"-"));
+
+                }
+
+            }catch (Exception e){
+                Log.e("DatabaseError","Unable to delete witt id "+ userID);
+                return false;
+            }
+        }
+        db.beginTransaction();
+
+
+
+
+
+        return true;
+    }
+
+
     public static boolean deleteEvent(String eventID){
         boolean res = false;
+        SQLiteDatabase db = dbConnection.getWritableDatabase();
+        db.beginTransaction();
+
+
         //todo: implement funktion
 
 
@@ -882,14 +991,74 @@ public class DBStatements {
     }
     public static boolean updateEvent(Event event){
         boolean res = false;
-        //todo: implement funktion
 
+        //check existents
+        Message message = getMessage(event.getId());
+        if(message.isEvent()) {
+            SQLiteDatabase db = dbConnection.getWritableDatabase();
+            try {
+
+             ContentValues values = new ContentValues();
+
+                values.put(DBCreate.COL_MESSAGE_FK_CREATOR, event.getCreator());
+                values.put(DBCreate.COL_MESSAGE_FK_CHATID, event.getChatid());
+                values.put(DBCreate.COL_MESSAGE_ISEVENT, 1);
+                values.put(DBCreate.COL_MESSAGE_MESSAGE, event.getMessage());
+                values.put(DBCreate.COL_MESSAGE_ID, event.getId());
+                values.put(DBCreate.COL_MESSAGE_TIMESTAMP, String.valueOf(event.getTimeStampDate().getTime()));
+
+                db.update(DBCreate.TABLE_MESSAGE,values,DBCreate.COL_MESSAGE_ID+"=?",new String[]{event.getId()});
+
+                db.setTransactionSuccessful();
+                db.endTransaction();
+
+                db.beginTransaction();
+
+                values = new ContentValues();
+
+                values.put(DBCreate.COL_EVENT_ID, message.getId());
+                values.put(DBCreate.COL_EVENT_DATE, event.getDate().getTime().getTime() + "");
+                values.put(DBCreate.COL_EVENT_DESCRIPTION, event.getDescription());
+
+                db.update(DBCreate.TABLE_EVENT,values,DBCreate.COL_EVENT_ID+"=?",new String[]{event.getId()});
+
+                db.setTransactionSuccessful();
+
+
+                for (Updateable u:updateables
+                     ) {
+                    u.updateObject(event);
+                }
+
+                res=true;
+
+
+            } catch (Exception e) {
+                  Log.e("DatabaseError","Unable to update Event wit id "+event.getId());
+            }
+            finally {
+                db.endTransaction();
+            }
+
+
+        }
 
         return res;
     }
-    public static  boolean deleteUser(){
+    public static  boolean deleteUser(String userID){
         boolean res = false;
-        //todo: implement funktion
+
+        SQLiteDatabase db = dbConnection.getWritableDatabase();
+
+        db.beginTransaction();
+        try {
+            db.delete(DBCreate.TABLE_USER,DBCreate.COL_USER_G_ID+"=?",new String[]{userID});
+            db.setTransactionSuccessful();
+            db.endTransaction();
+            res = true;
+        }catch (Exception e){
+            Log.e("DatabaseError","Unable to delete witt id "+ userID);
+        }
 
 
         return res;

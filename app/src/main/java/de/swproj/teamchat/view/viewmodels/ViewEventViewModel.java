@@ -57,10 +57,16 @@ public class ViewEventViewModel extends Updateable {
     }
 
 
-    //todo: implement update event
-  //todo: implement insert UserEvent State
 
-    @Override
+
+  @Override
+  public void updateObject(Event obj) {
+       if(obj.getId().equals(liveEvent.getValue().getId())){
+         liveEvent.postValue(obj);
+       }
+  }
+
+  @Override
     public void updateObject(UserEventStatus obj) {
       if(obj.getEventId().equals(liveEvent.getValue().getId())){
         updateStatus(obj);
