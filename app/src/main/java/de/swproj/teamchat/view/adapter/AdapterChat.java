@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,8 +73,12 @@ public class AdapterChat extends BaseAdapter {
 
         // Avoid NullpointerException if Chat is empty
         if (lastMsg != null) {
-            User msgSender = DBStatements.getUser(lastMsg.getCreator());
-            lastMessage.setText(msgSender.getFirstName() + ": " + lastMsg.getMessage());
+            if (FirebaseAuth.getInstance().getCurrentUser().getUid().equals(lastMsg.getCreator())) {
+                lastMessage.setText("Me: " + lastMsg.getMessage());
+            } else {
+                User msgSender = DBStatements.getUser(lastMsg.getCreator());
+                lastMessage.setText(msgSender.getFirstName() + ": " + lastMsg.getMessage());
+            }
 
             // Date
             TextView messageDate = (TextView) convertView.findViewById(R.id.chatListLastMessageDate);
