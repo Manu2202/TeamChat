@@ -14,6 +14,7 @@ import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.datamodell.chat.Chat;
 import de.swproj.teamchat.datamodell.chat.Message;
+import de.swproj.teamchat.datamodell.chat.User;
 
 
 /*
@@ -70,7 +71,8 @@ public class AdapterChat extends BaseAdapter {
 
         // Avoid NullpointerException if Chat is empty
         if (lastMsg != null) {
-            lastMessage.setText(lastMsg.getMessage());
+            User msgSender = DBStatements.getUser(lastMsg.getCreator());
+            lastMessage.setText(msgSender.getFirstName() + ": " + lastMsg.getMessage());
 
             // Date
             TextView messageDate = (TextView) convertView.findViewById(R.id.chatListLastMessageDate);
