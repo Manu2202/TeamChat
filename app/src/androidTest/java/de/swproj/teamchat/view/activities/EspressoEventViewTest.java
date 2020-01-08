@@ -82,7 +82,7 @@ public class EspressoEventViewTest {
         DBStatements.insertUser(new User("Test2", "test2@mail.d", "Test User 2", "Gott2", "Herr"));
         DBStatements.insertUser(new User("emusk", "elon@mail.d", "Elon Musk", "Musk", "Elon"));
         DBStatements.insertChat(new Chat("Gugel", (mActivity.getResources().getIntArray(R.array.androidcolors))[0], "123", "Admin"));
-        DBStatements.updateChatMembers(new String[]{"Test1", "Admin", "abc", "Test2", "emusk"}, "123");
+        //DBStatements.updateChatMembers(new String[]{"Test1", "Admin", "abc", "Test2", "emusk"}, "123");
 
         Date currentTime = Calendar.getInstance().getTime();
         GregorianCalendar gc = new GregorianCalendar();

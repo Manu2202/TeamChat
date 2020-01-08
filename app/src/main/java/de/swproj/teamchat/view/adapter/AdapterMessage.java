@@ -85,7 +85,7 @@ public class AdapterMessage extends BaseAdapter {
 
 
       }
-            Log.d("MessageAdapter Message: ", message.getMessage()+"  "+message.getCreator());
+        //Log.d("MessageAdapter Message: ", message.getMessage()+"  "+message.getCreator());
             TextView tvMessage = convertView.findViewById(R.id.viewevent_tvtitle);
             TextView tvTime = convertView.findViewById(R.id.viewevent_tvtime);
             TextView tvUser = convertView.findViewById(R.id.viewevent_tvcreator);
@@ -105,7 +105,7 @@ public class AdapterMessage extends BaseAdapter {
                 tvEventDate.setText(FormatHelper.formatDate(event.getDate()));
                 tvEventTime.setText(FormatHelper.formatTime(event.getDate()));
                 final CardView cv = convertView.findViewById(R.id.li_message_cv);
-
+                cv.setCardBackgroundColor(DBStatements.getChat(message.getChatid()).getColor());
 
                 cv.setOnClickListener(new View.OnClickListener() {
                     @Override

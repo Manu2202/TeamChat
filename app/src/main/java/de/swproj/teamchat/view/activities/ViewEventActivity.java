@@ -19,6 +19,7 @@ import java.util.List;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.lifecycle.Observer;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.connection.database.DBStatements;
@@ -34,8 +35,6 @@ public class ViewEventActivity extends AppCompatActivity {
 
 
     private String activeUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-    // private List<UserEventStatus> userEventStates;
-    //   private UserEventStatus mystate;
     private TextView tvStatus;
     private ViewEventViewModel viewModel;
     private AdapterUserEventStatus adapter;
@@ -63,6 +62,10 @@ public class ViewEventActivity extends AppCompatActivity {
         final TextView tvTime = findViewById(R.id.viewevent_tveventtime);
         final TextView tvDescription = findViewById(R.id.viewevent_tvdescription);
         tvStatus = findViewById(R.id.viewevent_tvstatus);
+
+        // Set the background color of the Event
+        CardView cardView = findViewById(R.id.li_message_cv);
+        cardView.setCardBackgroundColor(DBStatements.getChat(DBStatements.getEvent(id).getChatid()).getColor());
 
         //set Observer
         viewModel.getLiveEvent().observe(this, new Observer<Event>() {
@@ -120,7 +123,6 @@ public class ViewEventActivity extends AppCompatActivity {
         UserEventStatus mystate = viewModel.getMyLiveState().getValue();
         mystate.setReason("-");
         mystate.setStatus(1);
-
 
         Thread thread = new test(mystate);
         thread.start();//remove firebase have to do it on Success
