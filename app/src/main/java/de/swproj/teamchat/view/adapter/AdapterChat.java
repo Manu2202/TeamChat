@@ -9,11 +9,10 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.R;
+import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.datamodell.chat.Chat;
 import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.datamodell.chat.User;
@@ -68,8 +67,6 @@ public class AdapterChat extends BaseAdapter {
         // Last message
         TextView lastMessage = (TextView) convertView.findViewById(R.id.chatListLastMessage);
         final Message lastMsg = DBStatements.getLastMessage(chat.getId());
-
-
 
         // Avoid NullpointerException if Chat is empty
         if (lastMsg != null) {
