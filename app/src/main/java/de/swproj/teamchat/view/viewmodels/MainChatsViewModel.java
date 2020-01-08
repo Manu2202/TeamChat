@@ -41,7 +41,12 @@ public class MainChatsViewModel extends Updateable {
     public void updateObject(Chat obj) {
         if (obj != null) {
             List<Chat> chats = liveChats.getValue();
-            Chat chat = chats.remove(findChat(obj.getId()));
+            Chat chat = obj;
+            try {
+                chats.remove(findChat(obj.getId()));
+            } catch (IndexOutOfBoundsException e) {
+                e.printStackTrace();
+            }
             insertLiveChat(chat);
 
         }
@@ -58,7 +63,12 @@ public class MainChatsViewModel extends Updateable {
     public void insertObject(Message obj) {
         if (obj != null) {
             List<Chat> chats = liveChats.getValue();
-            Chat chat = chats.remove(findChat(obj.getChatid()));
+            Chat chat = null;
+            try {
+                chat = chats.remove(findChat(obj.getChatid()));
+            } catch (IndexOutOfBoundsException e) {
+                e.printStackTrace();
+            }
             insertLiveChat(chat);
 
         }

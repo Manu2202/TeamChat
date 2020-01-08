@@ -58,7 +58,12 @@ public class AdapterChat extends BaseAdapter {
 
         // Color
         View colorBox = convertView.findViewById(R.id.list_color_box);
-        colorBox.setBackgroundColor(chat.getColor());
+        try {
+            colorBox.setBackgroundColor(chat.getColor());
+        } catch (Exception e) {
+            e.printStackTrace();
+            colorBox.setBackgroundColor(parent.getResources().getColor(R.color.black));
+        }
 
         // Name
         TextView chatName = (TextView) convertView.findViewById(R.id.chatListChatName);
