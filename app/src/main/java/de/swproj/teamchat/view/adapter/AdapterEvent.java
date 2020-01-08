@@ -155,6 +155,8 @@ public class AdapterEvent extends BaseAdapter {
                  }
              }
 
+
+
              // Display name of group this event belongs to (this is the event overview, so
              // it makes more sense here to display the group name instead of the event creator name)
              tvGroupname.setText(DBStatements.getChat(ev.getChatid()).getName());
