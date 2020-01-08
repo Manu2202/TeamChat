@@ -172,7 +172,6 @@ public class FragmentMainChats extends ListFragment {
                 break;
 
             case R.id.btn_main_new_chat:
-
                 Intent createChatIntent = new Intent(getActivity(), EditChatActivity.class);
                 // ID = 0 -> new Chat
                 createChatIntent.putExtra("ID", "0");
@@ -184,11 +183,9 @@ public class FragmentMainChats extends ListFragment {
                 AdapterChat updateViewAdapter = (AdapterChat) getListAdapter();
                 for (FrameLayout fl : markedMenuItems) {
                     fl.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.background));
-                    Log.d("Fragments:", "Item Pos 2 : " + updateViewAdapter.getItem(2).getId());
                     updateViewAdapter.notifyDataSetChanged();
                 }
 
-                Log.d("Fragments:", "Item Pos 2 : " + updateViewAdapter.getItem(2).getId());
                 for (Chat c : markedForDeletion) {
                     Log.d("Fragments:", "Chat should be white now : " + c.getId());
                 }
@@ -203,7 +200,9 @@ public class FragmentMainChats extends ListFragment {
             case R.id.btn_chat_menu_delete:
                 for (Chat c : markedForDeletion) {
                     // TODO: dbStatements deleteChat(String chatId) Function needed
-                    // db.deleteChat(c.getId());
+                    // DBStatements.deleteChat(c.getId());
+                    // TODO: Notify Firebase that user left the chat
+
                     Log.d("Fragments:", "Chat deleted : " + c.getId());
                 }
                 markedMenuItems.clear();

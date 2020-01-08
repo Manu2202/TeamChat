@@ -96,7 +96,7 @@ public class UserSearchDialog extends Dialog implements
         cancelButton.setOnClickListener(this);
 
         space = (Space)findViewById(R.id.userSearch_SPACE);
-        space.setVisibility(View.GONE);
+        space.setVisibility(View.INVISIBLE);
 
         // Search Field for username - Visible at start
         searchField = (EditText)findViewById(R.id.dialog_userSearch_name_et);
@@ -186,6 +186,7 @@ public class UserSearchDialog extends Dialog implements
         responseText.setText("Enter user email address or first name");
         responseText.setVisibility(View.VISIBLE);
 
+
     }
 
 
@@ -209,11 +210,10 @@ public class UserSearchDialog extends Dialog implements
                             // Prepare UI
                             searchButton.setEnabled(false);
                             searchButton.setText("Searching");
-                            //searchField.setText("");
                             searchField.setVisibility(View.GONE);
 
 
-                            space.setVisibility(View.INVISIBLE);
+                            space.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.VISIBLE);
                             responseText.setText("");
                             searchField.setVisibility(View.GONE);
@@ -277,7 +277,7 @@ public class UserSearchDialog extends Dialog implements
 
             // Firebase Server did not respond (maybe no Internet Connection)
             case USER_WAS_NOT_SEARCHED_FOR:
-                space.setVisibility(View.GONE);
+                space.setVisibility(View.INVISIBLE);
                 progressBar.setVisibility(View.GONE);
                 searchField.setVisibility(View.GONE);
                 responseText.setText("Failed to connect to server.");
