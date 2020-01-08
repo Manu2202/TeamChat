@@ -1,19 +1,5 @@
 package de.swproj.teamchat.view.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import androidx.transition.TransitionManager;
-import de.swproj.teamchat.connection.database.DBStatements;
-import de.swproj.teamchat.R;
-import de.swproj.teamchat.connection.firebase.FirebaseConnection;
-import de.swproj.teamchat.connection.firebase.services.TeamChatMessagingService;
-import de.swproj.teamchat.datamodell.chat.Chat;
-import de.swproj.teamchat.datamodell.chat.Message;
-import de.swproj.teamchat.view.adapter.AdapterMessage;
-import de.swproj.teamchat.view.viewmodels.ChatViewModel;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.transition.Fade;
@@ -24,11 +10,22 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
 
-
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import de.swproj.teamchat.R;
+import de.swproj.teamchat.connection.database.DBStatements;
+import de.swproj.teamchat.connection.firebase.FirebaseConnection;
+import de.swproj.teamchat.connection.firebase.services.TeamChatMessagingService;
+import de.swproj.teamchat.datamodell.chat.Chat;
+import de.swproj.teamchat.datamodell.chat.Message;
+import de.swproj.teamchat.view.adapter.AdapterMessage;
+import de.swproj.teamchat.view.viewmodels.ChatViewModel;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -37,7 +34,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private String chatID;
 
-    private  AdapterMessage adapterMessage;
+    private AdapterMessage adapterMessage;
 
     private ChatViewModel viewModel;
 
@@ -61,32 +58,29 @@ public class ChatActivity extends AppCompatActivity {
         etMessage = findViewById(R.id.etMessage);
 
 
-
         chatID = getIntent().getStringExtra("chatID");
 
-         viewModel= new ChatViewModel(DBStatements.getChat(chatID),DBStatements.getMessages(chatID));
+        viewModel = new ChatViewModel(DBStatements.getChat(chatID), DBStatements.getMessages(chatID));
 
 
-         DBStatements.addUpdateable(viewModel);
+        DBStatements.addUpdateable(viewModel);
 
-         adapterMessage = new AdapterMessage(viewModel.getLiveMessages().getValue(),this);
-          lvMessages.setAdapter(adapterMessage);
-         viewModel.getLiveChat().observe(this, new Observer<Chat>() {
-             @Override
-             public void onChanged(Chat chat) {
-                 setTitle(chat.getName());
-             }
-         });
+        adapterMessage = new AdapterMessage(viewModel.getLiveMessages().getValue(), this);
+        lvMessages.setAdapter(adapterMessage);
+        viewModel.getLiveChat().observe(this, new Observer<Chat>() {
+            @Override
+            public void onChanged(Chat chat) {
+                setTitle(chat.getName());
+            }
+        });
 
-         viewModel.getLiveMessages().observe(this, new Observer<ArrayList<Message>>() {
-             @Override
-             public void onChanged(ArrayList<Message> messages) {
-             adapterMessage.notifyDataSetChanged();
-             scrollListViewToBottom();
-             }
-         });
-
-
+        viewModel.getLiveMessages().observe(this, new Observer<ArrayList<Message>>() {
+            @Override
+            public void onChanged(ArrayList<Message> messages) {
+                adapterMessage.notifyDataSetChanged();
+                scrollListViewToBottom();
+            }
+        });
 
 
         firebaseConnection = new FirebaseConnection();
@@ -96,8 +90,8 @@ public class ChatActivity extends AppCompatActivity {
         Fade fade = new Fade();
         View deco = getWindow().getDecorView();
         fade.excludeTarget(deco, true);
-        fade.excludeTarget(android.R.id.statusBarBackground,true);
-        fade.excludeTarget(android.R.id.navigationBarBackground,true);
+        fade.excludeTarget(android.R.id.statusBarBackground, true);
+        fade.excludeTarget(android.R.id.navigationBarBackground, true);
         getWindow().setEnterTransition(fade);
         getWindow().setExitTransition(fade);
         // end of exclude
@@ -114,7 +108,7 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-    public void sendMessage(View view){
+    public void sendMessage(View view) {
         //hide Keyboard
         InputMethodManager imm = (InputMethodManager) this.getSystemService(AppCompatActivity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
@@ -142,7 +136,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         super.onOptionsItemSelected(item);
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.btn_chat_menu_newEvent:
                 Intent newEventIntent = new Intent(this, EditEventActivity.class);
                 newEventIntent.putExtra("chatID", chatID);

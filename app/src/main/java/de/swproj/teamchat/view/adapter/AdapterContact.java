@@ -29,8 +29,6 @@ public class AdapterContact extends BaseAdapter {
     private List<User> contacts;
 
     public AdapterContact(List<User> contacts) {
-
-
         contacts.remove(DBStatements.getUser(FirebaseAuth.getInstance().getCurrentUser().getUid()));
         this.contacts = contacts;
 

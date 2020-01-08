@@ -4,12 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 import de.swproj.teamchat.datamodell.chat.Chat;
-import de.swproj.teamchat.datamodell.chat.ChatMembers;
 import de.swproj.teamchat.datamodell.chat.Message;
-import de.swproj.teamchat.datamodell.chat.User;
-import de.swproj.teamchat.datamodell.chat.UserEventStatus;
 
 public class MainChatsViewModel extends Updateable {
     private MutableLiveData<LinkedList<Chat>> liveChats = new MutableLiveData<>();
