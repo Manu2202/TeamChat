@@ -79,5 +79,4 @@ public class FormatHelper {
         SimpleDateFormat sdfMonth = new SimpleDateFormat("MMMM yyyy");
         return sdfMonth.format(date.getTime());
     }
-
 }

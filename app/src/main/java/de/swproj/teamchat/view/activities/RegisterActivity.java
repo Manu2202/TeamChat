@@ -1,10 +1,5 @@
 package de.swproj.teamchat.view.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,8 +17,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import de.swproj.teamchat.R;
-import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.connection.firebase.FirebaseConnection;
 import de.swproj.teamchat.datamodell.chat.User;
 
@@ -54,11 +50,11 @@ public class RegisterActivity extends AppCompatActivity {
 
         fbconnect = new FirebaseConnection();
 
-        mFirstName=(TextInputLayout)findViewById(R.id.reg_first_name);
-        mName=(TextInputLayout)findViewById(R.id.reg_name);
-        mEmail=(TextInputLayout)findViewById(R.id.reg_email);
-        mPassword=(TextInputLayout)findViewById(R.id.reg_password);
-        btn_create=(Button)findViewById(R.id.btn_reg_create);
+        mFirstName = (TextInputLayout) findViewById(R.id.reg_first_name);
+        mName = (TextInputLayout) findViewById(R.id.reg_name);
+        mEmail = (TextInputLayout) findViewById(R.id.reg_email);
+        mPassword = (TextInputLayout) findViewById(R.id.reg_password);
+        btn_create = (Button) findViewById(R.id.btn_reg_create);
 
         btn_create.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,12 +63,12 @@ public class RegisterActivity extends AppCompatActivity {
                 String first_name = mFirstName.getEditText().getText().toString();
                 String email = mEmail.getEditText().getText().toString();
                 String password = mPassword.getEditText().getText().toString();
-                if(!TextUtils.isEmpty(first_name)|| !TextUtils.isEmpty(name) || !TextUtils.isEmpty(email) || !TextUtils.isEmpty(password)){
+                if (!TextUtils.isEmpty(first_name) || !TextUtils.isEmpty(name) || !TextUtils.isEmpty(email) || !TextUtils.isEmpty(password)) {
                     mRegProgress.setTitle("Registering User");
                     mRegProgress.setMessage("Please wait while we create your account");
                     mRegProgress.setCanceledOnTouchOutside(false);
                     mRegProgress.show();
-                    register_user(first_name,name,email,password);
+                    register_user(first_name, name, email, password);
                 }
 
             }
@@ -88,9 +84,9 @@ public class RegisterActivity extends AppCompatActivity {
                             mRegProgress.dismiss();
                             FirebaseUser user = mAuth.getCurrentUser();
                             //Assign Token from Shared Preference
-                            String token=get_token();
-                            FirebaseConnection.updateToken(FirebaseAuth.getInstance().getCurrentUser().getUid(),token);
-                            fbconnect.addToFirestore(new User(user.getUid(),user.getEmail(),first_name+" "+name,name,first_name));
+                            String token = get_token();
+                            FirebaseConnection.updateToken(FirebaseAuth.getInstance().getCurrentUser().getUid(), token);
+                            fbconnect.addToFirestore(new User(user.getUid(), user.getEmail(), first_name + " " + name, name, first_name));
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("Firebase", "createUserWithEmail:success");
                             Intent mainIntent = new Intent(RegisterActivity.this, MainActivity.class);
@@ -107,9 +103,9 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
-    private String get_token(){
+    private String get_token() {
         SharedPreferences sharedPreferences = getSharedPreferences(PREFERENCE_FILE_KEY, MODE_PRIVATE);
-        return sharedPreferences.getString("Token","--noTokenAvailable--");
+        return sharedPreferences.getString("Token", "--noTokenAvailable--");
 
     }
 }

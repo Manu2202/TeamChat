@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.connection.firebase.FirebaseConnection;
+import de.swproj.teamchat.datamodell.chat.User;
 
 public class LoginActivity extends AppCompatActivity {
     private TextInputLayout mLoginEmail;

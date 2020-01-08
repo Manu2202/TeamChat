@@ -8,9 +8,10 @@ package de.swproj.teamchat.datamodell.chat;
 import androidx.annotation.Nullable;
 
 public class User {
-    public User (){
+    public User() {
 
     }
+
     //Todo googleID in UserID und googleMail in Email umbenennen
     private String googleId;
     private String googleMail;
@@ -28,8 +29,8 @@ public class User {
             return false;
         }
         User u = (User) obj;
-        if(googleId.equals(u.googleId)&&googleMail.equals(u.googleMail)&&accountName.equals(u.accountName))
-        return true;
+        if (googleId.equals(u.googleId) && googleMail.equals(u.googleMail) && accountName.equals(u.accountName))
+            return true;
         return false;
     }
 
