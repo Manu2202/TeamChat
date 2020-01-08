@@ -7,12 +7,15 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.swproj.teamchat.R;
+import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.datamodell.chat.User;
 
 
@@ -27,6 +30,7 @@ public class AdapterContact extends BaseAdapter {
 
     public AdapterContact(List<User> contacts) {
         this.contacts = contacts;
+        this.contacts.remove(DBStatements.getUser(FirebaseAuth.getInstance().getCurrentUser().getUid()));
     }
 
     public void add(User user) {

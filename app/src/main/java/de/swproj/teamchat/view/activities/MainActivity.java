@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
             TeamChatMessagingService.enableFCM();
             Log.d("User-Problem", "Logged in as User" + currentUser.getDisplayName() + " with UID of:" + currentUser.getUid());
 
-             // DBStatements.insertUser(new User(currentUser.getUid(),currentUser.getEmail(),currentUser.getDisplayName(),"hh","nch"));
+            DBStatements.insertUser(new User(currentUser.getUid(),currentUser.getEmail(),currentUser.getDisplayName(),"hh","nch"));
 
             setUpUI();
         }
