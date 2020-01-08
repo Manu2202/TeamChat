@@ -65,12 +65,7 @@ public class FragmentMainChats extends ListFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-
-
         menuModus = STD;
-      //  Log.d("Fragments:", "In Chat Fragment" + " Chatcount " + chats.size());
-
         setHasOptionsMenu(true);
 
         return super.onCreateView(inflater, container, savedInstanceState);

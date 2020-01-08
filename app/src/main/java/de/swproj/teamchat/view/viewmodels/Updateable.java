@@ -3,6 +3,7 @@ package de.swproj.teamchat.view.viewmodels;
 import androidx.lifecycle.ViewModel;
 import de.swproj.teamchat.datamodell.chat.Chat;
 import de.swproj.teamchat.datamodell.chat.ChatMembers;
+import de.swproj.teamchat.datamodell.chat.Event;
 import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.datamodell.chat.User;
 import de.swproj.teamchat.datamodell.chat.UserEventStatus;
@@ -24,7 +25,11 @@ public abstract class Updateable extends ViewModel {
 
     ;
 
-    // public void updateObject(Object obj);
+    public void insertObject(Event obj) {
+    }
+
+    ;
+
     public void updateObject(Chat obj) {
     }
 
@@ -45,7 +50,10 @@ public abstract class Updateable extends ViewModel {
 
     ;
 
-    //todo: implement update event
+    public void updateObject(Event obj) {
+    }
+
+    ;
 
 
     //implemtation if there is time
