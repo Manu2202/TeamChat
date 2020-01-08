@@ -23,9 +23,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.SignInMethodQueryResult;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.sql.Time;
 import java.util.Calendar;
@@ -39,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     private ListFragment contactFragment;
     private static Fragment lastSelectedFragment;
     private FirebaseConnection fbconnect;
+    private User userDetails;
+
 
     //FirebaseAuth
     private FirebaseAuth mAuth;
@@ -88,7 +97,9 @@ public class MainActivity extends AppCompatActivity {
         } else {
             TeamChatMessagingService.enableFCM();
             Log.d("User-Problem", "Logged in as User" + currentUser.getDisplayName() + " with UID of:" + currentUser.getUid());
-            DBStatements.insertUser(new User(currentUser.getUid(),currentUser.getEmail(),currentUser.getDisplayName(),"hh","nch"));
+
+             // DBStatements.insertUser(new User(currentUser.getUid(),currentUser.getEmail(),currentUser.getDisplayName(),"hh","nch"));
+
             setUpUI();
         }
 
@@ -132,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
                             extras.getString("description"),
                             extras.getString("chatid"),
                             extras.getInt("status"));
-                    Log.d("Save FCM Event from Intent", event.getMessage() + "Status: "+event.getStatus());
+                //    Log.d("Save FCM Event from Intent", event.getMessage() + "Status: "+event.getStatus());
 
                     //Insert in Database
                     DBStatements.insertMessage(event);
@@ -146,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
                             Boolean.valueOf((String) extras.get("isEvent")),
                             extras.getString("creator"),
                             extras.getString("chatid"));
-                    Log.d("Save FCM Message from Intent", msg.getMessage());
+                 //   Log.d("Save FCM Message from Intent", msg.getMessage());
 
                     //Insert in Database
                     DBStatements.insertMessage(msg);
@@ -169,8 +180,8 @@ public class MainActivity extends AppCompatActivity {
         contactFragment = new FragmentMainContacts();
 
         //---------------------------------------------------------------  Test
-        // addTestdat();
-        // db.dropAll();
+        //addTestdat();
+       // DBStatements.dropAll();
 
         //Set Up the first Fragment, if lastSelectedFragment is NULL, else use this
         if (lastSelectedFragment == null) {
