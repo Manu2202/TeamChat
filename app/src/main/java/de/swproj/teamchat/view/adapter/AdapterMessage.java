@@ -130,8 +130,10 @@ public class AdapterMessage extends BaseAdapter {
                     // [0] = Hue ,  [1] = Saturation , [2] = Value
                     hsv[1] = hsv[1] * 0.55f;
 
-                    cv.setBackgroundColor(Color.HSVToColor(hsv));
+                    int desaturatedBackgroundColor = Color.HSVToColor(hsv);
+                    cv.setCardBackgroundColor(desaturatedBackgroundColor);
 
+                    Log.d("Color: " , "Desaturated" + desaturatedBackgroundColor + " - Original: " + eventColor  );
                 }
 
                 // TODO: ues.getStatus() == 2 means this user cancelled the event
