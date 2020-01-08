@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Collections;
 import java.util.List;
 
 import de.swproj.teamchat.R;
@@ -30,6 +31,7 @@ public class AdapterChat extends BaseAdapter {
 
     public AdapterChat(List<Chat> chats) {
         this.chats = chats;
+        Collections.sort(this.chats, Collections.reverseOrder());
     }
 
     @Override

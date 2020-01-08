@@ -5,14 +5,10 @@ package de.swproj.teamchat.datamodell.chat;
  * For the project: TeamChat.
  */
 
-import android.content.res.Resources;
-
-import java.util.Random;
-
 import androidx.annotation.Nullable;
-import de.swproj.teamchat.R;
+import de.swproj.teamchat.connection.database.DBStatements;
 
-public class Chat {
+public class Chat implements Comparable<Chat> {
     private String id;
     private String name;
     private String admin;
@@ -76,6 +72,13 @@ public class Chat {
 
     public String getAdmin() {
         return admin;
+    }
+
+    @Override
+    public int compareTo(Chat c) {
+
+        return DBStatements.getLastMessage(id).getTimeStampDate()
+                .compareTo(DBStatements.getLastMessage(c.getId()).getTimeStampDate());
     }
 
 }
