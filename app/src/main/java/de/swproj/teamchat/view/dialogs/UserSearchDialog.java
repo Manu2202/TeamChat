@@ -218,6 +218,8 @@ public class UserSearchDialog extends Dialog implements
                             responseText.setText("");
                             searchField.setVisibility(View.GONE);
 
+
+
                             if (enteredQuery.contains("@")) {
                                 queryDBbyEmail(enteredQuery);
                             } else {
@@ -307,11 +309,6 @@ public class UserSearchDialog extends Dialog implements
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        /*
-                        for (User u : searchResultUsers) {
-                            adapter.add(u);
-                        }
-                         */
                         adapterContact.notifyDataSetChanged();
                     }
                 });
@@ -345,7 +342,10 @@ public class UserSearchDialog extends Dialog implements
                                     User firebaseUser = document.toObject(User.class);
                                     Log.d("FirebaseUser", firebaseUser.getAccountName() + ", " + firebaseUser.getGoogleMail());
                                     // dbStatements.insertUser(firebaseUser);
-                                    searchResultUsers.add(firebaseUser);
+
+                                    if (firebaseUser.getGoogleId() != FirebaseAuth.getInstance().getCurrentUser().getUid()) {
+                                        searchResultUsers.add(firebaseUser);
+                                    }
                                     //<--------------------------------------
                                 }
 
@@ -372,7 +372,6 @@ public class UserSearchDialog extends Dialog implements
         //Check if Email exists for User in Auth------------------------------------------
         final String userFirstName = firstName;
 
-        String name_to_search = firstName;
         final ArrayList<User> firestoreResults = new ArrayList<User>();
 
         //Get User from Firestore (gets saved in Database)
@@ -385,7 +384,10 @@ public class UserSearchDialog extends Dialog implements
                         User firebaseUser = document.toObject(User.class);
                         Log.d("FirebaseUser", firebaseUser.getAccountName() + ", " + firebaseUser.getFirstName());
                         // dbStatements.insertUser(firebaseUser);
-                        firestoreResults.add(firebaseUser);
+
+                        if (firebaseUser.getGoogleId() != FirebaseAuth.getInstance().getCurrentUser().getUid()) {
+                            firestoreResults.add(firebaseUser);
+                        }
                         //<--------------------------------------
                     }
                     // Removes Search Results that already exist in local database
@@ -398,8 +400,7 @@ public class UserSearchDialog extends Dialog implements
                     if (searchResultUsers.size() > 0) {
                         reactToSearchResult(USER_WAS_FOUND);
                     }
-                    // TODO: Extra: Show that users were found, but they already exist in database
-                     // else { } ...
+
                 } else {
                     reactToSearchResult(USER_DOES_NOT_EXIST);
                     Log.d("Firebase User", "Error getting user: ", task.getException());

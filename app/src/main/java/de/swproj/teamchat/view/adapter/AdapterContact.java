@@ -1,6 +1,7 @@
 package de.swproj.teamchat.view.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,8 +30,12 @@ public class AdapterContact extends BaseAdapter {
     private List<User> contacts;
 
     public AdapterContact(List<User> contacts) {
-        contacts.remove(DBStatements.getUser(FirebaseAuth.getInstance().getCurrentUser().getUid()));
         this.contacts = contacts;
+        /*
+        if (this.contacts.contains(DBStatements.getUser(FirebaseAuth.getInstance().getCurrentUser().getUid()))) {
+            this.contacts.remove(DBStatements.getUser(FirebaseAuth.getInstance().getCurrentUser().getUid()));
+        }
+ */
 
     }
 

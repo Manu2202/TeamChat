@@ -46,8 +46,6 @@ public class MainActivity extends AppCompatActivity {
     private ListFragment contactFragment;
     private static Fragment lastSelectedFragment;
     private FirebaseConnection fbconnect;
-    private User userDetails;
-
 
     //FirebaseAuth
     private FirebaseAuth mAuth;
