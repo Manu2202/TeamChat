@@ -12,6 +12,8 @@
     <color name="colorOnBackground">#212121</color>
     <color name="background">#F6F6FC</color>
     <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="lighter_grey">#B0F3F3F3</color>
     <color name="light_grey">#40838383</color>
 
     <!--Colors for ok, send, cancle, etc -->

@@ -210,15 +210,13 @@ public class UserSearchDialog extends Dialog implements
                             // Prepare UI
                             searchButton.setEnabled(false);
                             searchButton.setText("Searching");
+                            searchButton.setTextColor(getContext().getResources().getColor(R.color.lighter_grey));
                             searchField.setVisibility(View.GONE);
-
 
                             space.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.VISIBLE);
-                            responseText.setText("");
-                            searchField.setVisibility(View.GONE);
-
-
+                            searchField.setVisibility(View.INVISIBLE);
+                            responseText.setVisibility(View.GONE);
 
                             if (enteredQuery.contains("@")) {
                                 queryDBbyEmail(enteredQuery);
@@ -283,6 +281,7 @@ public class UserSearchDialog extends Dialog implements
                 responseText.setText("Failed to connect to server.");
                 responseText.setVisibility(View.VISIBLE);
                 searchButton.setText("Retry");
+                searchButton.setTextColor(getContext().getResources().getColor(R.color.white));
                 searchButton.setEnabled(true);
                 break;
 
@@ -293,6 +292,7 @@ public class UserSearchDialog extends Dialog implements
                 responseText.setText("User unknown");
                 responseText.setVisibility(View.VISIBLE);
                 searchButton.setText("Search");
+                searchButton.setTextColor(getContext().getResources().getColor(R.color.white));
                 searchButton.setEnabled(true);
                 searchField.setText("");
                 searchField.setVisibility(View.VISIBLE);
@@ -313,6 +313,7 @@ public class UserSearchDialog extends Dialog implements
                     }
                 });
                 searchButton.setText("Add all");
+                searchButton.setTextColor(getContext().getResources().getColor(R.color.white));
                 searchButton.setEnabled(true);
                 break;
         }

@@ -34,6 +34,10 @@
     <string name="first_name">First Name</string>
     <string name="reg_name">Name</string>
 
+    <!-- Strings related to User Search -->
+    <string name="cancel">Cancel</string>
+    <string name="search">Search</string>
+
     <!-- Strings related to Bottom NavBar -->
     <string name="nav_chats">Chats</string>
     <string name="nav_events">Events</string>
