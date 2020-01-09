@@ -31,11 +31,11 @@ public class AdapterContact extends BaseAdapter {
 
     public AdapterContact(List<User> contacts) {
         this.contacts = contacts;
-        /*
+
         if (this.contacts.contains(DBStatements.getUser(FirebaseAuth.getInstance().getCurrentUser().getUid()))) {
             this.contacts.remove(DBStatements.getUser(FirebaseAuth.getInstance().getCurrentUser().getUid()));
         }
- */
+
 
     }
 
