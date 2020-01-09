@@ -39,28 +39,35 @@ public class DBStatementsTest {
         Context context = ApplicationProvider.getApplicationContext();
        DBStatements.setDbConnection(new DBConnection(context));
         DBStatements.dropAll();
+
+        //insert User
         for (int i=0;i<10;i++){
             User u = new User("hduwuf3ihu4nkn8u83hr"+i, "test"+i+"@mail.de", "TestAcc"+i, "Mustermann"+i, "Max"+i);
             users.add(u);
             DBStatements.insertUser(u);
         }
+        //insert Chats
         for (int i=0;i<5;i++){
             Chat c =new Chat("TestChat"+i, i, "gf23uficfg37829"+i, users.get(i).getGoogleId());
             chats.add(c);
             DBStatements.insertChat(c);
         }
-        for (int i=0;i<10;i++){
-            String[] us = new String[users.size()];
-            for (int j = 0; j<us.length;j++) {
-                us[j]=users.get(j).getGoogleId();
+        //add user to chats
+        for (int i=0;i<chats.size();i++){
+          ArrayList<String>us = new ArrayList<>();
+            for (int j = 0; j<users.size();j++) {
+                us.add(users.get(j).getGoogleId());
             }
-            //DBStatements.updateChatMembers(us,chats.get(1).getId());
+            DBStatements.updateChatMembers(us, chats.get(i).getId());
+
         }
+        //add Messages to Chat 1
         for (int i=0;i<5;i++){
             Message m = new Message(new Date(System.currentTimeMillis()+i*30000), "Test Nachricht"+i, "ghdfghdtrgfx"+i, false, users.get(i).getGoogleId(), chats.get(1).getId());
             messages.add(m);
             DBStatements.insertMessage(m);
         }
+        // add Events to Chat 1
         for (int i=0;i<3;i++){
              Event e = new Event(new Date(System.currentTimeMillis()+(i+5)*30000), "TourdeFrance"+i, "ergbu34gfgfr7v4zd7u"+i,
                      true, users.get(i).getGoogleId(), new GregorianCalendar(2020+i, i, 13+i, 9+i, 6+i),
@@ -102,12 +109,20 @@ public class DBStatementsTest {
 
     @Test
     public void updateChatMembers() {
-        String[] userList = new String[]{users.get(0).getGoogleId(),users.get(2).getGoogleId(),users.get(1).getGoogleId()};
-        //DBStatements.updateChatMembers(userList,chats.get(0).getId());
+        ArrayList<String>userList =new ArrayList<>();
+        userList.add(users.get(0).getGoogleId());
+        userList.add(users.get(1).getGoogleId());
+        userList.add(users.get(2).getGoogleId());
+
+        DBStatements.updateChatMembers(userList,chats.get(1).getId());
         ArrayList<String> members =DBStatements.getChatMembers(chats.get(0).getId());
-        assertThat(members.get(0), equalTo(userList[0]));
-        assertThat(members.get(1), equalTo(userList[1]));
-        assertThat(members.get(2), equalTo(userList[2]));
+        assertThat(members.get(0), equalTo(userList.get(0)));
+        assertThat(members.get(1), equalTo(userList.get(1)));
+        assertThat(members.get(2), equalTo(userList.get(2)));
+
+        List<UserEventStatus> uess = DBStatements.getUserEventStatus(events.get(1).getId());
+        assertThat(uess.size(),equalTo(members.size()));
+
     }
 
     @Test
@@ -119,7 +134,6 @@ public class DBStatementsTest {
         assertThat(m, equalTo(m2));
 
 
-        time = new Time(System.currentTimeMillis());
 
     }
 
@@ -134,7 +148,7 @@ public class DBStatementsTest {
 
     }
 
-    @Test
+  @Test
     public void updateUserEventStatus() {
         UserEventStatus ues = DBStatements.getUserEventStatus(events.get(1).getId(), users.get(1).getGoogleId());
         ues.setReason("Blabla");
@@ -147,7 +161,11 @@ public class DBStatementsTest {
 
     @Test
     public void getUserEventStatus() {
-
+            ArrayList<UserEventStatus> uestates= DBStatements.getUserEventStatus(events.get(1).getId());
+        for (UserEventStatus ues:uestates
+             ) {
+            Log.d("ues",ues.getStatusString());
+        }
     }
 
 

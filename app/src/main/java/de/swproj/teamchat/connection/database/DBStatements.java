@@ -48,63 +48,7 @@ public class DBStatements {
     }
 
 
-    public static void updateChat(Chat chat) {
 
-
-        String chatId = chat.getId();
-        boolean isNew = true;
-        SQLiteDatabase db = dbConnection.getReadableDatabase();
-
-        // check if allready exists
-
-        db.beginTransaction();
-        Cursor c = db.query(DBCreate.TABLE_CHAT, new String[]{DBCreate.COL_CHAT_ID}, DBCreate.COL_CHAT_ID + "=?", new String[]{chatId}, null, null, null, null);
-        isNew = c.getCount() == 0;
-        db.setTransactionSuccessful();
-        db.endTransaction();
-
-        //Start writing
-
-        ContentValues values = new ContentValues();
-        //put values
-        values.put(DBCreate.COL_CHAT_ID, chatId);
-        values.put(DBCreate.COL_CHAT_NAME, chat.getName());
-        values.put(DBCreate.COL_CHAT_COLOR, chat.getColor());
-        values.put(DBCreate.COL_CHAT_FK_CREATOR, chat.getAdmin());
-
-        db = dbConnection.getWritableDatabase();
-        db.beginTransaction();
-        try {
-            //create new Chat
-            if (isNew) {
-
-             Long i=   db.insertOrThrow(DBCreate.TABLE_CHAT, null, values);
-                for (Updateable u:updateables
-                ) {
-                    u.insertObject(chat);
-                }
-
-
-            }//update Chat with ID...
-            else {
-              int i=  db.update(DBCreate.TABLE_CHAT, values, DBCreate.COL_CHAT_ID + "=?", new String[]{chatId});
-                for (Updateable u:updateables
-                ) {
-                    u.updateObject(chat);
-                }
-
-            }
-
-               db.setTransactionSuccessful();
-        } catch (Exception e) {
-
-            Log.d("DB_Error class DBStatements", "Unable to write CHAT in db");
-        } finally {
-            db.endTransaction();
-        }
-
-
-    }
 
     public static boolean insertChat(Chat chat){
     boolean insertsuccesfull = true;
@@ -146,76 +90,6 @@ public class DBStatements {
     return insertsuccesfull;
 }
 
-    public static boolean updateChatMembers(List<String> userIDs, String chatId) {
-        SQLiteDatabase db = dbConnection.getWritableDatabase();
-        db.beginTransaction();
-
-        boolean success = true;
-
-        ContentValues values = null;
-        List<String> actChatMemmbers = getChatMembers(chatId);
-
-
-
-
-        try {
-            db.delete(DBCreate.TABLE_USERCHAT, DBCreate.COL_USERCHAT_FK_CHAT + "=?", new String[]{chatId}); // todo: Delete User from Chat (Events)
-
-            for (String s : userIDs) {
-                values = new ContentValues();
-                values.put(DBCreate.COL_USERCHAT_FK_CHAT, chatId);
-                values.put(DBCreate.COL_USERCHAT_FK_USER, s);
-                db.insertOrThrow(DBCreate.TABLE_USERCHAT, null, values);
-
-            }
-            db.setTransactionSuccessful();
-           ChatMembers cm=  new ChatMembers(userIDs,chatId);
-            for (Updateable u:updateables
-            ) {
-                u.updateObject(cm);
-            }
-
-            //Update UserEventStatus
-            for (String s:actChatMemmbers
-            ) {
-                if(userIDs.contains(s)){
-                    userIDs.remove(s);
-                }else {
-                    deleteUserEventStatus(chatId,s);
-                }
-            }
-            for (String s:userIDs
-                 ) {
-                insertUserEventStatus(chatId,s);
-            }
-
-        } catch (Exception e) {
-            success = false;
-            Log.d("DB_Error class DBStatements:", "Unable to write CHAT_USER in db");
-        } finally {
-
-            db.endTransaction();
-        }
-
-        return success;
-    }
-
-
-    private static void updateLastMessage(Message message){
-
-        SQLiteDatabase db = dbConnection.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(DBCreate.COL_CHAT_FK_LASTMESSAGE,message.getId());
-
-        db.beginTransaction();
-
-        int i=  db.update(DBCreate.TABLE_CHAT, values, DBCreate.COL_CHAT_ID + "=?", new String[]{message.getChatid()});
-        db.setTransactionSuccessful();
-        db.endTransaction();
-
-
-    }
-
     public static boolean insertMessage(Message message) {
 
         boolean insertsuccesfull = true;
@@ -249,7 +123,7 @@ public class DBStatements {
             updateLastMessage(message);
         }
 
-    //    Log.d("InsertEvent: ",message.isEvent()+"");
+        //    Log.d("InsertEvent: ",message.isEvent()+"");
         if (message.isEvent()) {
             Event e = (Event) message;
             values = new ContentValues();
@@ -342,18 +216,184 @@ public class DBStatements {
         } catch (Exception e) {
             insertsuccesfull = false;
             Log.d("DB_Error class DBStatements:", "Unable to write User in db");
-           // e.printStackTrace();
+            // e.printStackTrace();
         } finally {
             db.endTransaction();
         }
         if(insertsuccesfull){
-        for (Updateable u:updateables
-        ) {
-            u.insertObject(user);
-        }
+            for (Updateable u:updateables
+            ) {
+                u.insertObject(user);
+            }
         }
 
         return insertsuccesfull;
+    }
+
+    private static boolean insertUserEventStatus(String chatID, String userId){
+
+        List<String> eventIDs = getEvents(chatID);
+
+        SQLiteDatabase db = dbConnection.getWritableDatabase();
+
+        for (String eventID:eventIDs) {
+
+            db.beginTransaction();
+            try {
+                ContentValues  values = new ContentValues();
+                values.put(DBCreate.COL_EVENTUSER_FK_EVENT, eventID);
+                values.put(DBCreate.COL_EVENTUSER_FK_USER, userId);
+                values.put(DBCreate.COL_EVENTUSER_REASON, "-");
+                values.put(DBCreate.COL_EVENTUSER_STATUS, 0);
+                db.insertOrThrow(DBCreate.TABLE_EVENTUSER, null, values);
+
+                db.setTransactionSuccessful();
+                db.endTransaction();
+                for (Updateable u:updateables
+                ) {
+                    u.updateObject(new UserEventStatus(userId,eventID,0,"-"));
+                }
+
+            }catch (Exception e){
+                Log.e("DB error", "Unable to write USerEventstatus for Event: "+eventID);
+            }
+
+        }
+
+        return true;
+    }
+
+
+
+    private static void updateLastMessage(Message message){
+
+        SQLiteDatabase db = dbConnection.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DBCreate.COL_CHAT_FK_LASTMESSAGE,message.getId());
+
+        db.beginTransaction();
+
+        int i=  db.update(DBCreate.TABLE_CHAT, values, DBCreate.COL_CHAT_ID + "=?", new String[]{message.getChatid()});
+        db.setTransactionSuccessful();
+        db.endTransaction();
+
+
+    }
+
+    public static boolean updateChatMembers(List<String> userIDs, String chatId) {
+
+        boolean success;
+        ContentValues values;
+        List<String> actChatMembers = getChatMembers(chatId);
+        List<String> newMembers = new LinkedList<>();
+        newMembers.addAll(userIDs);
+
+        SQLiteDatabase db = dbConnection.getWritableDatabase();
+        db.beginTransaction();
+
+
+        try {
+            int i = db.delete(DBCreate.TABLE_USERCHAT, DBCreate.COL_USERCHAT_FK_CHAT + "=?", new String[]{chatId});
+            db.setTransactionSuccessful();
+            db.endTransaction();
+            db.beginTransaction();
+            for (String s : newMembers) {
+                values = new ContentValues();
+                values.put(DBCreate.COL_USERCHAT_FK_CHAT, chatId);
+                values.put(DBCreate.COL_USERCHAT_FK_USER, s);
+                db.insertOrThrow(DBCreate.TABLE_USERCHAT, null, values);
+
+            }
+            db.setTransactionSuccessful();
+            ChatMembers cm=  new ChatMembers(newMembers,chatId);
+            for (Updateable u:updateables
+            ) {
+                u.updateObject(cm);
+            }
+
+            //Update UserEventStatus
+            for (String s:actChatMembers
+            ) {
+                if(newMembers.contains(s)){
+                    newMembers.remove(s);
+                }else {
+                    deleteUserEventStatus(chatId,s);
+                }
+            }
+            for (String s:newMembers
+            ) {
+                insertUserEventStatus(chatId,s);
+            }
+            success=true;
+
+
+        } catch (Exception e) {
+            success = false;
+            Log.d("DB_Error class DBStatements:", "Unable to write CHAT_USER in db");
+        } finally {
+
+            db.endTransaction();
+        }
+
+        return success;
+    }
+
+    public static void updateChat(Chat chat) {
+
+
+        String chatId = chat.getId();
+        boolean isNew = true;
+        SQLiteDatabase db = dbConnection.getReadableDatabase();
+
+        // check if allready exists
+
+        db.beginTransaction();
+        Cursor c = db.query(DBCreate.TABLE_CHAT, new String[]{DBCreate.COL_CHAT_ID}, DBCreate.COL_CHAT_ID + "=?", new String[]{chatId}, null, null, null, null);
+        isNew = c.getCount() == 0;
+        db.setTransactionSuccessful();
+        db.endTransaction();
+
+        //Start writing
+
+        ContentValues values = new ContentValues();
+        //put values
+        values.put(DBCreate.COL_CHAT_ID, chatId);
+        values.put(DBCreate.COL_CHAT_NAME, chat.getName());
+        values.put(DBCreate.COL_CHAT_COLOR, chat.getColor());
+        values.put(DBCreate.COL_CHAT_FK_CREATOR, chat.getAdmin());
+
+        db = dbConnection.getWritableDatabase();
+        db.beginTransaction();
+        try {
+            //create new Chat
+            if (isNew) {
+
+                Long i=   db.insertOrThrow(DBCreate.TABLE_CHAT, null, values);
+                for (Updateable u:updateables
+                ) {
+                    u.insertObject(chat);
+                }
+
+
+            }//update Chat with ID...
+            else {
+                int i=  db.update(DBCreate.TABLE_CHAT, values, DBCreate.COL_CHAT_ID + "=?", new String[]{chatId});
+                for (Updateable u:updateables
+                ) {
+                    u.updateObject(chat);
+                }
+
+            }
+
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+
+            Log.d("DB_Error class DBStatements", "Unable to write CHAT in db");
+        } finally {
+            db.endTransaction();
+        }
+
+
     }
 
     public static boolean updateUserEventStatus(UserEventStatus status) {
@@ -391,6 +431,64 @@ public class DBStatements {
         return insertsuccesfull;
     }
 
+    public static boolean updateEvent(Event event){
+        boolean res = false;
+
+        //check existents
+        Message message = getMessage(event.getId());
+        if(message.isEvent()) {
+            SQLiteDatabase db = dbConnection.getWritableDatabase();
+            try {
+
+                ContentValues values = new ContentValues();
+
+                values.put(DBCreate.COL_MESSAGE_FK_CREATOR, event.getCreator());
+                values.put(DBCreate.COL_MESSAGE_FK_CHATID, event.getChatid());
+                values.put(DBCreate.COL_MESSAGE_ISEVENT, 1);
+                values.put(DBCreate.COL_MESSAGE_MESSAGE, event.getMessage());
+                values.put(DBCreate.COL_MESSAGE_ID, event.getId());
+                values.put(DBCreate.COL_MESSAGE_TIMESTAMP, String.valueOf(event.getTimeStampDate().getTime()));
+
+                db.update(DBCreate.TABLE_MESSAGE,values,DBCreate.COL_MESSAGE_ID+"=?",new String[]{event.getId()});
+
+                db.setTransactionSuccessful();
+                db.endTransaction();
+
+                db.beginTransaction();
+
+                values = new ContentValues();
+
+                values.put(DBCreate.COL_EVENT_ID, message.getId());
+                values.put(DBCreate.COL_EVENT_DATE, event.getDate().getTime().getTime() + "");
+                values.put(DBCreate.COL_EVENT_DESCRIPTION, event.getDescription());
+
+                db.update(DBCreate.TABLE_EVENT,values,DBCreate.COL_EVENT_ID+"=?",new String[]{event.getId()});
+
+                db.setTransactionSuccessful();
+
+
+                for (Updateable u:updateables
+                ) {
+                    u.updateObject(event);
+                }
+
+                res=true;
+
+
+            } catch (Exception e) {
+                Log.e("DatabaseError","Unable to update Event wit id "+event.getId());
+            }
+            finally {
+                db.endTransaction();
+            }
+
+
+        }
+
+        return res;
+    }
+
+
     public static ArrayList<UserEventStatus> getUserEventStatus(String eventId) {
         ArrayList<UserEventStatus> userEventStats = new ArrayList<>();
 
@@ -399,7 +497,7 @@ public class DBStatements {
         db.beginTransaction();
         try {
             Cursor c = db.query(DBCreate.TABLE_EVENTUSER, new String[]{DBCreate.COL_EVENTUSER_ID,DBCreate.COL_EVENTUSER_FK_EVENT, DBCreate.COL_EVENTUSER_FK_USER, DBCreate.COL_EVENTUSER_REASON, DBCreate.COL_EVENTUSER_STATUS},
-                    DBCreate.COL_EVENTUSER_FK_EVENT + "=?", new String[]{"" + eventId}, null, null, null);
+                    DBCreate.COL_EVENTUSER_FK_EVENT + "=?", new String[]{eventId}, null, null, null);
             if (c.moveToFirst()) {
 
                 int event = c.getColumnIndex(DBCreate.COL_EVENTUSER_FK_EVENT);
@@ -475,6 +573,7 @@ public class DBStatements {
 
                 } while (c.moveToNext());
             }
+            db.setTransactionSuccessful();
 
         } catch (Exception e) {
             Log.d("DB_Error class DBStatements:", "Unable to read Users in Chat from  " + chatId + "db");
@@ -673,7 +772,6 @@ public class DBStatements {
         try {
 
           Cursor  c= db.rawQuery("SELECT * FROM "+DBCreate.TABLE_CHAT,null);
-           // Log.d("GetChat","Cursor count "+  c.getCount());
 
 
             int id = c.getColumnIndex(DBCreate.COL_CHAT_ID);
@@ -683,7 +781,7 @@ public class DBStatements {
 
             if (c.moveToFirst()) {
                 do {
-               //     Log.d("GetChat","Schleife");
+
                     chats.add(new Chat(c.getString(name), c.getInt(color), c.getString(id), c.getString(creator)));
                 }while (c.moveToNext());
 
@@ -862,6 +960,7 @@ public class DBStatements {
 
         return events;
     }
+
     public static  List<String> getEvents(String chatID){
       ArrayList<String> events = new ArrayList<>();
 
@@ -915,38 +1014,7 @@ public class DBStatements {
     }
 
 
-    private static boolean insertUserEventStatus(String chatID, String userId){
 
-        List<String> eventIDs = getEvents(chatID);
-
-        SQLiteDatabase db = dbConnection.getWritableDatabase();
-
-        for (String eventID:eventIDs) {
-
-            db.beginTransaction();
-            try {
-              ContentValues  values = new ContentValues();
-                values.put(DBCreate.COL_EVENTUSER_FK_EVENT, eventID);
-                values.put(DBCreate.COL_EVENTUSER_FK_USER, userId);
-                values.put(DBCreate.COL_EVENTUSER_REASON, "-");
-                values.put(DBCreate.COL_EVENTUSER_STATUS, 0);
-                db.insertOrThrow(DBCreate.TABLE_EVENTUSER, null, values);
-
-                db.setTransactionSuccessful();
-                db.endTransaction();
-                for (Updateable u:updateables
-                     ) {
-                    u.updateObject(new UserEventStatus(userId,eventID,0,"-"));
-                }
-
-            }catch (Exception e){
-                Log.e("DB error", "Unable to write USerEventstatus for Event: "+eventID);
-            }
-
-        }
-
-        return true;
-    }
     private  static boolean deleteUserEventStatus(String chatID, String userID){
         SQLiteDatabase db = dbConnection.getWritableDatabase();
 
@@ -977,7 +1045,6 @@ public class DBStatements {
         return true;
     }
 
-
     public static boolean deleteEvent(String eventID){
         boolean res = false;
         SQLiteDatabase db = dbConnection.getWritableDatabase();
@@ -989,62 +1056,7 @@ public class DBStatements {
 
         return res;
     }
-    public static boolean updateEvent(Event event){
-        boolean res = false;
 
-        //check existents
-        Message message = getMessage(event.getId());
-        if(message.isEvent()) {
-            SQLiteDatabase db = dbConnection.getWritableDatabase();
-            try {
-
-             ContentValues values = new ContentValues();
-
-                values.put(DBCreate.COL_MESSAGE_FK_CREATOR, event.getCreator());
-                values.put(DBCreate.COL_MESSAGE_FK_CHATID, event.getChatid());
-                values.put(DBCreate.COL_MESSAGE_ISEVENT, 1);
-                values.put(DBCreate.COL_MESSAGE_MESSAGE, event.getMessage());
-                values.put(DBCreate.COL_MESSAGE_ID, event.getId());
-                values.put(DBCreate.COL_MESSAGE_TIMESTAMP, String.valueOf(event.getTimeStampDate().getTime()));
-
-                db.update(DBCreate.TABLE_MESSAGE,values,DBCreate.COL_MESSAGE_ID+"=?",new String[]{event.getId()});
-
-                db.setTransactionSuccessful();
-                db.endTransaction();
-
-                db.beginTransaction();
-
-                values = new ContentValues();
-
-                values.put(DBCreate.COL_EVENT_ID, message.getId());
-                values.put(DBCreate.COL_EVENT_DATE, event.getDate().getTime().getTime() + "");
-                values.put(DBCreate.COL_EVENT_DESCRIPTION, event.getDescription());
-
-                db.update(DBCreate.TABLE_EVENT,values,DBCreate.COL_EVENT_ID+"=?",new String[]{event.getId()});
-
-                db.setTransactionSuccessful();
-
-
-                for (Updateable u:updateables
-                     ) {
-                    u.updateObject(event);
-                }
-
-                res=true;
-
-
-            } catch (Exception e) {
-                  Log.e("DatabaseError","Unable to update Event wit id "+event.getId());
-            }
-            finally {
-                db.endTransaction();
-            }
-
-
-        }
-
-        return res;
-    }
     public static  boolean deleteUser(String userID){
         boolean res = false;
 
