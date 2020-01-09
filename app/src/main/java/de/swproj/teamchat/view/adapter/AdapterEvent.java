@@ -20,6 +20,7 @@ import java.util.Collections;
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.datamodell.chat.Event;
+import de.swproj.teamchat.helper.ColorHelper;
 import de.swproj.teamchat.helper.FormatHelper;
 
 
@@ -140,18 +141,22 @@ public class AdapterEvent extends BaseAdapter {
                  cardView.setCardBackgroundColor(DBStatements.getChat(ev.getChatid()).getColor());
 
                  //Calculate Contrast Ratio between Background color and White Text
-                 double contrast_ratio = ColorUtils.calculateContrast(DBStatements.getChat(ev.getChatid()).getColor(), Color.parseColor("#FFFFFF"));
+                 String colorString = ColorHelper.cardViewColorContrast(
+                         DBStatements.getChat(ev.getChatid()).getColor());
 
-                 if (contrast_ratio < 4) {
-                     //Black Text should be used
-                     tvDescription.setTextColor(Color.parseColor("#000000"));
-                     tvDate.setTextColor(Color.parseColor("#000000"));
-                     tvGroupname.setTextColor(Color.parseColor("#000000"));
-                     tvTime.setTextColor(Color.parseColor("#000000"));
-                     tvTitle.setTextColor(Color.parseColor("#000000"));
-                     //Black Icon should be used
+                 tvDescription.setTextColor(Color.parseColor(colorString));
+                 tvDate.setTextColor(Color.parseColor(colorString));
+                 tvGroupname.setTextColor(Color.parseColor(colorString));
+                 tvTime.setTextColor(Color.parseColor(colorString));
+                 tvTitle.setTextColor(Color.parseColor(colorString));
+
+                 // Set the icons belong to the colorstring
+                 if (colorString.equals("#FFFFFF")) {
                      icon_date.setImageResource(R.drawable.ic_event_black_24dp);
                      icon_time.setImageResource(R.drawable.ic_access_time_black_24dp);
+                 } else {
+                     icon_date.setImageResource(R.drawable.ic_event_white_24dp);
+                     icon_time.setImageResource(R.drawable.ic_access_time_white_24dp);
                  }
              }
 
