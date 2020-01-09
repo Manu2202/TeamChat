@@ -24,6 +24,7 @@ import java.util.Map;
 
 import androidx.core.app.NotificationCompat;
 import de.swproj.teamchat.R;
+import de.swproj.teamchat.connection.database.DBConnection;
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.connection.firebase.FirebaseConnection;
 import de.swproj.teamchat.datamodell.chat.Event;
@@ -82,7 +83,8 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         Map<String, String> data = remoteMessage.getData();
-        Log.d("Messaging Service, Message FROM", remoteMessage.getFrom());
+        //Log.d("Messaging Service, Message FROM", remoteMessage.getFrom());
+
         sendNotification(notification, data);
         save_message(notification, data);
     }
@@ -114,8 +116,8 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
                         data.get("description"),
                         data.get("chatid"),
                         Integer.parseInt(data.get("status")));
-                Log.d("Save FCM Event from onMessageReceived", event.getMessage() +
-                        "Status:" + event.getStatus());
+                //Log.d("Save FCM Event from onMessageReceived", event.getMessage() +
+                //"Status:" + event.getStatus());
                 //Save in Database
                 DBStatements.insertMessage(event);
 
@@ -142,7 +144,7 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
                     Boolean.valueOf(data.get("isEvent")),
                     data.get("creator"),
                     data.get("chatid"));
-            Log.d("Save FCM Message from onMessageReceived", msg.getMessage());
+                //Log.d("Save FCM Message from onMessageReceived", msg.getMessage());
             //Save in Database
                 DBStatements.insertMessage(msg);
         }

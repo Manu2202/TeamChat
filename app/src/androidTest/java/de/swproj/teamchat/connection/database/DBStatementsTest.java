@@ -54,7 +54,7 @@ public class DBStatementsTest {
             for (int j = 0; j<us.length;j++) {
                 us[j]=users.get(j).getGoogleId();
             }
-            DBStatements.updateChatMembers(us,chats.get(1).getId());
+            //DBStatements.updateChatMembers(us,chats.get(1).getId());
         }
         for (int i=0;i<5;i++){
             Message m = new Message(new Date(System.currentTimeMillis()+i*30000), "Test Nachricht"+i, "ghdfghdtrgfx"+i, false, users.get(i).getGoogleId(), chats.get(1).getId());
@@ -103,7 +103,7 @@ public class DBStatementsTest {
     @Test
     public void updateChatMembers() {
         String[] userList = new String[]{users.get(0).getGoogleId(),users.get(2).getGoogleId(),users.get(1).getGoogleId()};
-        DBStatements.updateChatMembers(userList,chats.get(0).getId());
+        //DBStatements.updateChatMembers(userList,chats.get(0).getId());
         ArrayList<String> members =DBStatements.getChatMembers(chats.get(0).getId());
         assertThat(members.get(0), equalTo(userList[0]));
         assertThat(members.get(1), equalTo(userList[1]));

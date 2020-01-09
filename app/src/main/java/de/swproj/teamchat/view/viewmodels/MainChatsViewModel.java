@@ -4,18 +4,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 import de.swproj.teamchat.datamodell.chat.Chat;
-import de.swproj.teamchat.datamodell.chat.ChatMembers;
 import de.swproj.teamchat.datamodell.chat.Message;
-import de.swproj.teamchat.datamodell.chat.User;
-import de.swproj.teamchat.datamodell.chat.UserEventStatus;
 
-public class MainChatsViewModel extends  Updateable {
-    private MutableLiveData<LinkedList<Chat>> liveChats=new MutableLiveData<>();
+public class MainChatsViewModel extends Updateable {
+    private MutableLiveData<LinkedList<Chat>> liveChats = new MutableLiveData<>();
 
     public MainChatsViewModel(LinkedList<Chat> chats) {
-       liveChats.setValue(chats);
+        liveChats.setValue(chats);
     }
 
     public MutableLiveData<LinkedList<Chat>> getLiveChats() {
@@ -23,16 +19,16 @@ public class MainChatsViewModel extends  Updateable {
     }
 
     private void insertLiveChat(Chat chat) {
-     liveChats.getValue().add(0,chat);
-     liveChats.postValue(liveChats.getValue());
+        liveChats.getValue().add(0, chat);
+        liveChats.postValue(liveChats.getValue());
 
     }
 
-    private int findChat(String chatID){
-        int res=-1;
+    private int findChat(String chatID) {
+        int res = -1;
         List<Chat> chats = liveChats.getValue();
-        for (int i=0;i<chats.size();i++){
-            if(chats.get(i).getId().equals(chatID)){
+        for (int i = 0; i < chats.size(); i++) {
+            if (chats.get(i).getId().equals(chatID)) {
                 return i;
             }
         }
@@ -43,30 +39,39 @@ public class MainChatsViewModel extends  Updateable {
 
     @Override
     public void updateObject(Chat obj) {
-        if(obj!=null){
+        if (obj != null) {
             List<Chat> chats = liveChats.getValue();
-            Chat chat = chats.remove(findChat(obj.getId()));
+            Chat chat = obj;
+            try {
+                chats.remove(findChat(obj.getId()));
+            } catch (IndexOutOfBoundsException e) {
+                e.printStackTrace();
+            }
             insertLiveChat(chat);
 
         }
     }
 
 
-
     @Override
     public void insertObject(Chat obj) {
-        if(obj!=null)
-         insertLiveChat(obj);
+        if (obj != null)
+            insertLiveChat(obj);
     }
 
     @Override
     public void insertObject(Message obj) {
-       if(obj!=null){
-           List<Chat> chats = liveChats.getValue();
-           Chat chat = chats.remove(findChat(obj.getChatid()));
-           insertLiveChat(chat);
+        if (obj != null) {
+            List<Chat> chats = liveChats.getValue();
+            Chat chat = null;
+            try {
+                chat = chats.remove(findChat(obj.getChatid()));
+            } catch (IndexOutOfBoundsException e) {
+                e.printStackTrace();
+            }
+            insertLiveChat(chat);
 
-       }
+        }
     }
 
 

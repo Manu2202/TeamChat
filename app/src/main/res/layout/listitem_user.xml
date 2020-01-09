@@ -7,7 +7,7 @@
 
     <TextView
         android:id="@+id/li_user_icon"
-        android:layout_width="wrap_content"
+        android:layout_width="75dp"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
@@ -19,6 +19,7 @@
         android:gravity="center"
         android:padding="2dp"
         android:text="AA"
+        android:maxLines="1"
         android:textColor="@color/colorOnPrimary"
         android:textSize="40dp" />
 
@@ -28,7 +29,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="5dp"
         android:layout_toRightOf="@+id/li_user_icon"
         android:text="AccName" />
 
@@ -37,6 +39,7 @@
         style="@style/TextAppearance.MaterialComponents.Body1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
         android:layout_below="@+id/li_user_accname"
         android:layout_toRightOf="@+id/li_user_icon"
         android:text="Forname" />

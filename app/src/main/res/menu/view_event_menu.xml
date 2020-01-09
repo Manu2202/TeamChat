@@ -6,4 +6,9 @@
         android:icon="@drawable/ic_delete_black_24dp"
         android:title="@string/event_delete"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/view_event_btn_edit_event"
+        android:icon="@drawable/ic_edit_white"
+        android:title="Edit Event"
+        app:showAsAction="always" />
 </menu>

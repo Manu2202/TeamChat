@@ -46,7 +46,7 @@ public class StartActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
-    private FirebaseConnection fbconnect;
+    private FirebaseConnection fbconnect = new FirebaseConnection();
 
     /////////////////////
 

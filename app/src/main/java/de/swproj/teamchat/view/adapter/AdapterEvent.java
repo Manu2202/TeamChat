@@ -2,7 +2,6 @@ package de.swproj.teamchat.view.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.Space;
 import android.widget.TextView;
 
-import androidx.annotation.ColorInt;
 import androidx.cardview.widget.CardView;
 import androidx.core.graphics.ColorUtils;
 
@@ -33,15 +31,42 @@ import de.swproj.teamchat.helper.FormatHelper;
 public class AdapterEvent extends BaseAdapter {
 
     private ArrayList<Event> events;
+    private ArrayList<EventSeparator> eventsAndSeparators;
 
-    private Event lastEvent;
-    private int last_pos;
     private boolean evColorIsGroupColor = true;
 
 
     public AdapterEvent(ArrayList<Event> events) {
         this.events = events;
-        Collections.sort(this.events);
+        prepareList();
+    }
+
+    /**
+     * Sorts Events by Date (most recent first)
+     * Prepares a list which determines whether the separator (title with Date) should be displayed or not
+     * Doing it here means we only have to do it once for the entire list, and we avoid a display bug
+     */
+    private void prepareList() {
+        if (events.size() > 0) {
+            Collections.sort(this.events);
+            eventsAndSeparators = new ArrayList<>();
+            EventSeparator prevEvSep = null;
+
+            for (Event ev : events) {
+                if (prevEvSep != null) {
+                    if ((ev.getDate().get(Calendar.YEAR) != prevEvSep.getEv().getDate().get(Calendar.YEAR)) ||
+                            (ev.getDate().get(Calendar.MONTH) != prevEvSep.getEv().getDate().get(Calendar.MONTH))) {
+                        prevEvSep = new EventSeparator(true, ev);
+                    } else {
+                        prevEvSep = new EventSeparator(false, ev);
+                    }
+                } else {
+                    prevEvSep = new EventSeparator(true, ev);
+                }
+
+                eventsAndSeparators.add(prevEvSep);
+            }
+        }
     }
 
     public void toggleEventColorToGroupColor() {
@@ -66,7 +91,7 @@ public class AdapterEvent extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Context context = parent.getContext();
-        Event ev = events.get(position);
+        Event ev = eventsAndSeparators.get(position).getEv();
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.listitem_event_for_overview_menu, null, false);
              TextView separator = convertView.findViewById(R.id.listitem_event_separator);
@@ -90,44 +115,28 @@ public class AdapterEvent extends BaseAdapter {
              boolean isInPast = YearisInPast || MonthisInPast;
              // Separator
              // Will be displayed only once above Events happening on the same month
-            //TODO still buggy if scrolled from bottom to top..
-             boolean displaySeparator = false;
-             boolean month=false,year=false;
-
              //!isinpast
-             if (events.size() > 0) {
-                 if (ev.getId().equals(events.get(0).getId())) {
-                     spaceStart.setVisibility(View.VISIBLE);
-                 }
-                 if (lastEvent!=null){
 
-                     if ( (ev.getDate().get(Calendar.YEAR) != lastEvent.getDate().get(Calendar.YEAR)) ||
-                             (ev.getDate().get(Calendar.MONTH) != lastEvent.getDate().get(Calendar.MONTH))){
-                         Log.d("Trennung zwischen",FormatHelper.getMonthfromDate(ev.getDate())+" und "+FormatHelper.getMonthfromDate(events.get(last_pos).getDate()));
-                         displaySeparator = true;
-                     }
 
-                 }
-                 lastEvent = ev;
-                 last_pos = position;
-             }
-
-             separator.setText(FormatHelper.getMonthfromDate(ev.getDate()));
-
-             if (displaySeparator ) {
-                 separator.setVisibility(View.VISIBLE);
-                 spaceBetweenSeparators.setVisibility(View.VISIBLE);
-             } else {
-                 separator.setVisibility(View.GONE);
-             }
-
+        if (eventsAndSeparators.get(position).needsSeparator()) {
+            separator.setText(FormatHelper.getMonthfromDate(eventsAndSeparators.get(position).getEv().getDate()));
+            separator.setVisibility(View.VISIBLE);
+            if (position != 0) {
+                // Larger space between Events on different months
+                spaceBetweenSeparators.setVisibility(View.VISIBLE);
+            } else {
+                // Small space before the very first Event in the List
+                spaceStart.setVisibility(View.VISIBLE);
+            }
+        } else {
+            // If Events happen in the same month and year, there is no Date title or separating space between them
+            separator.setVisibility(View.GONE);
+            spaceBetweenSeparators.setVisibility(View.GONE);
+        }
 
              // Make event cardview color the same as the color of the corresponding chat
              if (evColorIsGroupColor) {
                  CardView cardView = convertView.findViewById(R.id.li_message_cv);
-                 /*if (System.currentTimeMillis() > ev.getDate().getTimeInMillis()){
-                     cardView.setVisibility(View.GONE);
-                 }*/
                  cardView.setCardBackgroundColor(DBStatements.getChat(ev.getChatid()).getColor());
 
                  //Calculate Contrast Ratio between Background color and White Text
@@ -145,6 +154,8 @@ public class AdapterEvent extends BaseAdapter {
                      icon_time.setImageResource(R.drawable.ic_access_time_black_24dp);
                  }
              }
+
+
 
              // Display name of group this event belongs to (this is the event overview, so
              // it makes more sense here to display the group name instead of the event creator name)

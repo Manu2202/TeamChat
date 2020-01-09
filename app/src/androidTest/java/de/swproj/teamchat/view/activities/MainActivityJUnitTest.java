@@ -54,7 +54,7 @@ public class MainActivityJUnitTest {
 
             // For Chat Tests
             DBStatements.insertChat(new Chat("TestGruppe " + i, 0xFF004888 + i, "1000" + i, "10" + i));
-            DBStatements.updateChatMembers(new String[]{"10"+i, "1"}, "1000" + i);
+            //DBStatements.updateChatMembers(new String[]{"10"+i, "1"}, "1000" + i);
             DBStatements.insertMessage(new Message(time, "Message Text " + i, "1000" + i, false,
                     "10"+i, "1000"+i));
 

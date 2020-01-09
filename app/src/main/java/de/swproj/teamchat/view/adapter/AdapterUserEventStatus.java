@@ -90,10 +90,10 @@ public class AdapterUserEventStatus extends BaseAdapter {
             switch(state.getStatus()){
 
                 case 1: tvStatus.setTextColor(parent.getResources().getColor(R.color.save_green,null));
-                        tvStatus.setText(state.getStatusString());
+                        tvStatus.setText("zugesagt");
                         break;
-                case 2: tvStatus.setTextColor(parent.getResources().getColor(R.color.cancel_red,null));
-                        tvStatus.setText(state.getStatusString());
+                case 2: tvStatus.setTextColor(parent.getResources().getColor(R.color.save_green,null));
+                        tvStatus.setText("abgesagt");
                         break;
                 default: tvStatus.setText("-");
                          break;

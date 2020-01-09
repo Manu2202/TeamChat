@@ -81,7 +81,7 @@
         android:layout_marginBottom="24dp"
         android:backgroundTint="@color/save_green"
         android:onClick="onClickSaveChanges"
-        android:text="Speichern"
+        android:text="@string/save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -93,7 +93,7 @@
         android:layout_marginBottom="24dp"
         android:backgroundTint="@color/cancel_red"
         android:onClick="onClickCancel"
-        android:text="Abbrechen"
+        android:text="@string/cancle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

@@ -1,19 +1,5 @@
 package de.swproj.teamchat.view.activities;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.Observer;
-import de.swproj.teamchat.connection.database.DBStatements;
-import de.swproj.teamchat.R;
-import de.swproj.teamchat.connection.firebase.FirebaseConnection;
-import de.swproj.teamchat.datamodell.chat.Event;
-import de.swproj.teamchat.datamodell.chat.Message;
-import de.swproj.teamchat.datamodell.chat.UserEventStatus;
-import de.swproj.teamchat.helper.FormatHelper;
-import de.swproj.teamchat.view.adapter.AdapterUserEventStatus;
-import de.swproj.teamchat.view.dialogs.ReasonDialog;
-import de.swproj.teamchat.view.viewmodels.ViewEventViewModel;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -29,22 +15,32 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.sql.Time;
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.List;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.lifecycle.Observer;
+import de.swproj.teamchat.R;
+import de.swproj.teamchat.connection.database.DBStatements;
+import de.swproj.teamchat.connection.firebase.FirebaseConnection;
+import de.swproj.teamchat.datamodell.chat.Event;
+import de.swproj.teamchat.datamodell.chat.UserEventStatus;
+import de.swproj.teamchat.helper.FormatHelper;
+import de.swproj.teamchat.view.adapter.AdapterUserEventStatus;
+import de.swproj.teamchat.view.dialogs.ReasonDialog;
+import de.swproj.teamchat.view.viewmodels.ViewEventViewModel;
 
 public class ViewEventActivity extends AppCompatActivity {
 
 
     private String activeUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-   // private List<UserEventStatus> userEventStates;
- //   private UserEventStatus mystate;
     private TextView tvStatus;
     private ViewEventViewModel viewModel;
     private AdapterUserEventStatus adapter;
     private FirebaseConnection fbConnection;
     private boolean actUserIsAdmin;
+    private String id;
 
 
     @Override
@@ -58,20 +54,24 @@ public class ViewEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_event);
 
-        String id = getIntent().getStringExtra("eventID");
+        id = getIntent().getStringExtra("eventID");
 
-        viewModel= new ViewEventViewModel(DBStatements.getUserEventStatus(id,activeUser),DBStatements.getUserEventStatus(id),DBStatements.getEvent(id));
+        viewModel = new ViewEventViewModel(DBStatements.getUserEventStatus(id, activeUser), DBStatements.getUserEventStatus(id), DBStatements.getEvent(id));
 
         actUserIsAdmin = FirebaseAuth.getInstance().getCurrentUser().getUid()
                 .equals(viewModel.getLiveEvent().getValue().getCreator());
 
-      final TextView tvCreator = findViewById(R.id.viewevent_tvcreator);
-       final TextView tvtime = findViewById(R.id.viewevent_tvtime);
-       final TextView tvtitle = findViewById(R.id.viewevent_tvtitle);
-       final TextView tvDate = findViewById(R.id.viewevent_tveveventdate);
-       final TextView tvTime = findViewById(R.id.viewevent_tveventtime);
-       final TextView tvDescription = findViewById(R.id.viewevent_tvdescription);
+        final TextView tvCreator = findViewById(R.id.viewevent_tvcreator);
+        final TextView tvtime = findViewById(R.id.viewevent_tvtime);
+        final TextView tvtitle = findViewById(R.id.viewevent_tvtitle);
+        final TextView tvDate = findViewById(R.id.viewevent_tveveventdate);
+        final TextView tvTime = findViewById(R.id.viewevent_tveventtime);
+        final TextView tvDescription = findViewById(R.id.viewevent_tvdescription);
         tvStatus = findViewById(R.id.viewevent_tvstatus);
+
+        // Set the background color of the Event
+        CardView cardView = findViewById(R.id.li_message_cv);
+        cardView.setCardBackgroundColor(DBStatements.getChat(DBStatements.getEvent(id).getChatid()).getColor());
 
         //set Observer
         viewModel.getLiveEvent().observe(this, new Observer<Event>() {
@@ -86,7 +86,7 @@ public class ViewEventActivity extends AppCompatActivity {
             }
         });
 
-        Log.d("MYLOG","ID: "+id+" User: "+ activeUser);
+        Log.d("MYLOG", "ID: " + id + " User: " + activeUser);
 
         viewModel.getMyLiveState().observe(this, new Observer<UserEventStatus>() {
             @Override
@@ -99,15 +99,15 @@ public class ViewEventActivity extends AppCompatActivity {
         ListView lvStates = findViewById(R.id.viewevent_lvstates);
         lvStates.setDivider(null);
         adapter = new AdapterUserEventStatus(viewModel.getLiveStates().getValue());
-         viewModel.getLiveStates().observe(this, new Observer<List<UserEventStatus>>() {
-             @Override
-             public void onChanged(List<UserEventStatus> userEventStatuses) {
-                 adapter.notifyDataSetChanged();
-             }
-         });
+        viewModel.getLiveStates().observe(this, new Observer<List<UserEventStatus>>() {
+            @Override
+            public void onChanged(List<UserEventStatus> userEventStatuses) {
+                adapter.notifyDataSetChanged();
+            }
+        });
 
 
-         //registart viewModel onDB
+        //registart viewModel onDB
         DBStatements.addUpdateable(viewModel);
 
         lvStates.setAdapter(adapter);
@@ -130,21 +130,21 @@ public class ViewEventActivity extends AppCompatActivity {
         mystate.setReason("-");
         mystate.setStatus(1);
 
-
-
-      Thread thread = new test(mystate);
-      thread.start();//remove firebase have to do it on Success
+        Thread thread = new test(mystate);
+        thread.start();//remove firebase have to do it on Success
         //todo send to other to Firebase, remove line before
 
       /*  String message = FirebaseAuth.getInstance().getCurrentUser().getDisplayName().split(" ")[0]
                 + " " + mystate.getStatusString();
        */
     }
-   //todo: Delete Class after firebase implementation
-    class test extends Thread{
+
+    //todo: Delete Class after firebase implementation
+    class test extends Thread {
         UserEventStatus status;
+
         public test(UserEventStatus status) {
-            this.status=status;
+            this.status = status;
         }
 
         @Override
@@ -177,7 +177,7 @@ public class ViewEventActivity extends AppCompatActivity {
     /*
      * On Click Method to send Event directly to phone calendar
      */
-    public void sendToCalendar(View view){
+    public void sendToCalendar(View view) {
         Intent calendarIntent;
         if (Build.VERSION.SDK_INT >= 14) {  // Check if SDK is high enough for extra infos
             calendarIntent = new Intent(Intent.ACTION_INSERT)
@@ -202,19 +202,30 @@ public class ViewEventActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.view_event_menu, menu);
-        if(actUserIsAdmin)  // if user is admin, set delete Button true
+        if (actUserIsAdmin) {  // if user is admin, set delete Button true
             menu.findItem(R.id.btn_view_event_delete).setVisible(true);
-        else
+            menu.findItem(R.id.view_event_btn_edit_event).setVisible(true);
+        } else {
             menu.findItem(R.id.btn_view_event_delete).setVisible(false);
+            menu.findItem(R.id.view_event_btn_edit_event).setVisible(false);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.btn_view_event_delete:
                 acceptDeleteDialog();
+                return true;
+
+            case R.id.view_event_btn_edit_event:
+                Intent editEventIntent = new Intent(this, EditEventActivity.class);
+                editEventIntent.putExtra("ID", id);
+                editEventIntent.putExtra("chatID", viewModel.getLiveEvent().getValue().getChatid());
+
+                startActivity(editEventIntent);
                 return true;
 
             default:
@@ -223,7 +234,7 @@ public class ViewEventActivity extends AppCompatActivity {
     }
 
     // Method to show Accepting Dialog and handle Button
-    private void acceptDeleteDialog(){
+    private void acceptDeleteDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setTitle("Delete Event");
@@ -248,6 +259,8 @@ public class ViewEventActivity extends AppCompatActivity {
         });
 
         AlertDialog alert = builder.create();
+
+
         alert.show();
     }
 

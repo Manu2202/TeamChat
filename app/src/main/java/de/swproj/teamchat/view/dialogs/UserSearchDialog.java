@@ -96,7 +96,7 @@ public class UserSearchDialog extends Dialog implements
         cancelButton.setOnClickListener(this);
 
         space = (Space)findViewById(R.id.userSearch_SPACE);
-        space.setVisibility(View.GONE);
+        space.setVisibility(View.INVISIBLE);
 
         // Search Field for username - Visible at start
         searchField = (EditText)findViewById(R.id.dialog_userSearch_name_et);
@@ -186,6 +186,7 @@ public class UserSearchDialog extends Dialog implements
         responseText.setText("Enter user email address or first name");
         responseText.setVisibility(View.VISIBLE);
 
+
     }
 
 
@@ -209,14 +210,15 @@ public class UserSearchDialog extends Dialog implements
                             // Prepare UI
                             searchButton.setEnabled(false);
                             searchButton.setText("Searching");
-                            //searchField.setText("");
                             searchField.setVisibility(View.GONE);
 
 
-                            space.setVisibility(View.INVISIBLE);
+                            space.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.VISIBLE);
                             responseText.setText("");
                             searchField.setVisibility(View.GONE);
+
+
 
                             if (enteredQuery.contains("@")) {
                                 queryDBbyEmail(enteredQuery);
@@ -275,7 +277,7 @@ public class UserSearchDialog extends Dialog implements
 
             // Firebase Server did not respond (maybe no Internet Connection)
             case USER_WAS_NOT_SEARCHED_FOR:
-                space.setVisibility(View.GONE);
+                space.setVisibility(View.INVISIBLE);
                 progressBar.setVisibility(View.GONE);
                 searchField.setVisibility(View.GONE);
                 responseText.setText("Failed to connect to server.");
@@ -307,11 +309,6 @@ public class UserSearchDialog extends Dialog implements
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        /*
-                        for (User u : searchResultUsers) {
-                            adapter.add(u);
-                        }
-                         */
                         adapterContact.notifyDataSetChanged();
                     }
                 });
@@ -345,7 +342,10 @@ public class UserSearchDialog extends Dialog implements
                                     User firebaseUser = document.toObject(User.class);
                                     Log.d("FirebaseUser", firebaseUser.getAccountName() + ", " + firebaseUser.getGoogleMail());
                                     // dbStatements.insertUser(firebaseUser);
-                                    searchResultUsers.add(firebaseUser);
+
+                                    if (firebaseUser.getGoogleId() != FirebaseAuth.getInstance().getCurrentUser().getUid()) {
+                                        searchResultUsers.add(firebaseUser);
+                                    }
                                     //<--------------------------------------
                                 }
 
@@ -372,7 +372,6 @@ public class UserSearchDialog extends Dialog implements
         //Check if Email exists for User in Auth------------------------------------------
         final String userFirstName = firstName;
 
-        String name_to_search = firstName;
         final ArrayList<User> firestoreResults = new ArrayList<User>();
 
         //Get User from Firestore (gets saved in Database)
@@ -385,7 +384,10 @@ public class UserSearchDialog extends Dialog implements
                         User firebaseUser = document.toObject(User.class);
                         Log.d("FirebaseUser", firebaseUser.getAccountName() + ", " + firebaseUser.getFirstName());
                         // dbStatements.insertUser(firebaseUser);
-                        firestoreResults.add(firebaseUser);
+
+                        if (firebaseUser.getGoogleId() != FirebaseAuth.getInstance().getCurrentUser().getUid()) {
+                            firestoreResults.add(firebaseUser);
+                        }
                         //<--------------------------------------
                     }
                     // Removes Search Results that already exist in local database
@@ -398,8 +400,7 @@ public class UserSearchDialog extends Dialog implements
                     if (searchResultUsers.size() > 0) {
                         reactToSearchResult(USER_WAS_FOUND);
                     }
-                    // TODO: Extra: Show that users were found, but they already exist in database
-                     // else { } ...
+
                 } else {
                     reactToSearchResult(USER_DOES_NOT_EXIST);
                     Log.d("Firebase User", "Error getting user: ", task.getException());

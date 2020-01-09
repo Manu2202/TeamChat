@@ -1,17 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent" android:layout_height="match_parent"
     style="@style/Theme.MaterialComponents.Dialog">
 
 
+    <ImageView
+        android:id="@+id/ic_event_cancle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_event_busy_black_24dp" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
         android:id="@+id/dialog_reason_et"
+
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/ic_event_cancle"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:paddingLeft="8dp">
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="1dp"
+        android:paddingLeft="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ic_event_cancle">
 
         <EditText
             android:id="@+id/dialog_reason_etreason"
@@ -19,19 +40,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="reason..."
+            android:hint="@string/dialog_reason_hint"
             android:inputType="textAutoCorrect"
             android:selectAllOnFocus="true"
             android:textIsSelectable="true" />
     </com.google.android.material.textfield.TextInputLayout>
+
     <Button
         android:id="@+id/dialog_reason_btnsend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/dialog_reason_et"
         android:layout_alignParentRight="true"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:text="send" />
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginEnd="5dp"
+        android:backgroundTint="@color/save_green"
+        android:text="@string/send"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/dialog_reason_btncancle"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_reason_et" />
 
     <Button
         android:id="@+id/dialog_reason_btncancle"
@@ -39,6 +67,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/dialog_reason_et"
         android:layout_alignParentLeft="true"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:text="cancle" />
-</RelativeLayout>
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="7dp"
+        android:backgroundTint="@color/cancel_red"
+        android:text="@string/cancle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_reason_et" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

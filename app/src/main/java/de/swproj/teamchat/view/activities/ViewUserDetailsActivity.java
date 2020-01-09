@@ -67,16 +67,8 @@ public class ViewUserDetailsActivity extends AppCompatActivity {
         commonChatsList = (ListView) findViewById(R.id.user_details_common_groups_lv);
         commonGroupsTitleText = (TextView) findViewById(R.id.user_details_shared_groups_title);
 
-        /////////////////////////////////////////////////////////////////
-        // TODO: dbStatement  ArrayList<Chat>getChatsContainingUser(String userId)
-        // returns ArrayList of Chats containing the currently selected user
 
-//        commonChats = db.getChatsContainingUser(user.getGoogleId());
 
-        // If this db method exists, you can delete this section
-
-//        db.insertChat(new Chat("DUMMY CHAT ", 0xFF004888, "9999000", user.getGoogleId()));
-//       db.updateChatMembers(new String[]{user.getGoogleId()}, "9999000");
 
         List<Chat> allChats;
         allChats = DBStatements.getChat();
@@ -86,7 +78,6 @@ public class ViewUserDetailsActivity extends AppCompatActivity {
                 commonChats.add(c);
             }
         }
-        ///////////////////////////////////////////////////////////////////
 
 
         if (commonChats.size() > 0) {
