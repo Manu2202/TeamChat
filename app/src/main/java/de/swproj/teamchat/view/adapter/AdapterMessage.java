@@ -135,12 +135,12 @@ public class AdapterMessage extends BaseAdapter {
                     icon_time.setImageResource(R.drawable.ic_access_time_white_24dp);
                 }
 
-                if (ues.getStatus() == 1 || ues.getStatus() == 2) {
+                if (event.getStatus() == 1 || event.getStatus() == 2) {
                     cv.setAlpha(0.55f);
                 }
 
 
-                if (ues.getStatus() == 0 ) {
+                if (event.getStatus() == 0) {
                     cv.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -157,6 +157,8 @@ public class AdapterMessage extends BaseAdapter {
 
 
                 }
+
+
             }
 
 
