@@ -1,5 +1,6 @@
 package de.swproj.teamchat.view.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -22,6 +24,7 @@ import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.datamodell.chat.Chat;
 import de.swproj.teamchat.datamodell.chat.User;
 import de.swproj.teamchat.view.adapter.AdapterChat;
+import de.swproj.teamchat.view.adapter.AdapterContact;
 
 
 public class ViewUserDetailsActivity extends AppCompatActivity {
@@ -36,15 +39,14 @@ public class ViewUserDetailsActivity extends AppCompatActivity {
     private TextView lastname;
     private TextView emailAddress;
     private TextView commonGroupsTitleText;
-
     private ListView commonChatsList;
     private AdapterChat adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_user_details);
-
 
 
         String id = getIntent().getStringExtra("currentContactID");
@@ -66,9 +68,6 @@ public class ViewUserDetailsActivity extends AppCompatActivity {
 
         commonChatsList = (ListView) findViewById(R.id.user_details_common_groups_lv);
         commonGroupsTitleText = (TextView) findViewById(R.id.user_details_shared_groups_title);
-
-
-
 
         List<Chat> allChats;
         allChats = DBStatements.getChat();
@@ -125,10 +124,7 @@ public class ViewUserDetailsActivity extends AppCompatActivity {
         super.onOptionsItemSelected(item);
         switch(item.getItemId()){
             case R.id.btn_contact_details_menu_delete:
-                // TODO: Maybe ask user for confirmation
-                // TODO: dbStatements deleteUser(String userID) Function needed
-                // db.deleteUser(user.getGoogleId());
-
+                DBStatements.deleteUser(user.getGoogleId());
                 Log.d("Contact Detail List: ", "User deleted : " + user.getGoogleId());
                 finish();
                 break;
@@ -136,8 +132,5 @@ public class ViewUserDetailsActivity extends AppCompatActivity {
 
         return true;
     }
-
-
-
 
 }

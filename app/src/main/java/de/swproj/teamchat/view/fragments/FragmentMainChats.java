@@ -194,9 +194,7 @@ public class FragmentMainChats extends ListFragment {
                 break;
             case R.id.btn_chat_menu_delete:
                 for (Chat c : markedForDeletion) {
-                    // TODO: dbStatements deleteChat(String chatId) Function needed
-                     DBStatements.deleteChat(c.getId());
-                    // TODO: Notify Firebase that user left the chat
+                    DBStatements.deleteChat(c.getId());
 
                     Log.d("Fragments:", "Chat deleted : " + c.getId());
                 }
