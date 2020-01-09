@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -27,6 +28,7 @@ import de.swproj.teamchat.connection.firebase.FirebaseConnection;
 import de.swproj.teamchat.datamodell.chat.Event;
 import de.swproj.teamchat.datamodell.chat.User;
 import de.swproj.teamchat.datamodell.chat.UserEventStatus;
+import de.swproj.teamchat.helper.ColorHelper;
 import de.swproj.teamchat.helper.FormatHelper;
 import de.swproj.teamchat.view.adapter.AdapterUserEventStatus;
 import de.swproj.teamchat.view.dialogs.ReasonDialog;
@@ -68,11 +70,27 @@ public class ViewEventActivity extends AppCompatActivity {
         final TextView tvDate = findViewById(R.id.viewevent_tveveventdate);
         final TextView tvTime = findViewById(R.id.viewevent_tveventtime);
         final TextView tvDescription = findViewById(R.id.viewevent_tvdescription);
+        ImageView icon_date = findViewById(R.id.li_icon_date);
+        ImageView icon_time = findViewById(R.id.li_icon_time);
         tvStatus = findViewById(R.id.viewevent_tvstatus);
 
         // Set the background color of the Event
+        int chatColor = DBStatements.getChat(DBStatements.getEvent(id).getChatid()).getColor();
         CardView cardView = findViewById(R.id.li_message_cv);
-        cardView.setCardBackgroundColor(DBStatements.getChat(DBStatements.getEvent(id).getChatid()).getColor());
+        cardView.setCardBackgroundColor(chatColor);
+
+        // Get the color String of the text in cv and set the Textviews
+        String colorString = ColorHelper.cardViewColorContrast(chatColor,
+                new TextView[]{tvCreator, tvDate, tvtime, tvTime, tvtitle, tvDescription});
+
+        // Set the icons belong to the colorstring
+        if (colorString.equals("#000000")) {
+            icon_date.setImageResource(R.drawable.ic_event_black_24dp);
+            icon_time.setImageResource(R.drawable.ic_access_time_black_24dp);
+        } else {
+            icon_date.setImageResource(R.drawable.ic_event_white_24dp);
+            icon_time.setImageResource(R.drawable.ic_access_time_white_24dp);
+        }
 
         //set Observer
         viewModel.getLiveEvent().observe(this, new Observer<Event>() {

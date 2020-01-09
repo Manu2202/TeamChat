@@ -116,10 +116,6 @@ public class FragmentMainEvents extends ListFragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
-            case R.id.btn_main_event_debug_displayByGroupColor:
-                adapterEvent.toggleEventColorToGroupColor();
-                adapterEvent.notifyDataSetInvalidated();
-                break;
             case R.id.btn_main_event_logout:
                 //delete Token from uID
                 if (FirebaseAuth.getInstance().getCurrentUser() != null) {

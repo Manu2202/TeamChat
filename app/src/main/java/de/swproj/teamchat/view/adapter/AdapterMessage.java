@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import de.swproj.teamchat.datamodell.chat.Event;
 import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.datamodell.chat.User;
 import de.swproj.teamchat.datamodell.chat.UserEventStatus;
+import de.swproj.teamchat.helper.ColorHelper;
 import de.swproj.teamchat.helper.FormatHelper;
 import de.swproj.teamchat.view.activities.ViewEventActivity;
 
@@ -105,6 +107,8 @@ public class AdapterMessage extends BaseAdapter {
                 TextView tvEventDate = convertView.findViewById(R.id.viewevent_tveveventdate);
                 TextView tvEventTime = convertView.findViewById(R.id.viewevent_tveventtime);
                 TextView tv_Description = convertView.findViewById(R.id.viewevent_tvdescription);
+                ImageView icon_date = convertView.findViewById(R.id.li_icon_date);
+                ImageView icon_time = convertView.findViewById(R.id.li_icon_time);
 
                 tv_Description.setText(event.getDescription());
                 tvEventDate.setText(FormatHelper.formatDate(event.getDate()));
@@ -115,30 +119,28 @@ public class AdapterMessage extends BaseAdapter {
                 int eventColor = DBStatements.getChat(message.getChatid()).getColor();
 
                 // UserEventStatus: Not final yet - I don't know which value means the Event is completely cancelled
-                if (ues.getStatus() == 0  || ues.getStatus() == 1 ) {
-                    cv.setCardBackgroundColor(eventColor);
+
+                cv.setCardBackgroundColor(eventColor);
+
+                //Calculate Contrast Ratio between Background color text. Set the text depending on the result
+                String colorString = ColorHelper.cardViewColorContrast(eventColor,
+                        new TextView[]{tv_Description, tvEventDate, tvUser, tvTime, tvMessage, tvEventTime});
+
+                // Set the icons belong to the colorstring
+                if (colorString.equals("#000000")) {
+                    icon_date.setImageResource(R.drawable.ic_event_black_24dp);
+                    icon_time.setImageResource(R.drawable.ic_access_time_black_24dp);
                 } else {
-                    // Use Chat Color but desaturate it to look greyish
-
-                    int red = Color.red(eventColor);
-                    int green = Color.green(eventColor);
-                    int blue = Color.blue(eventColor);
-                    float[] hsv = new float[3];
-                    Color.RGBToHSV(red, green, blue, hsv);
-
-                    // reduce saturation to 55%
-                    // [0] = Hue ,  [1] = Saturation , [2] = Value
-                    hsv[1] = hsv[1] * 0.55f;
-
-                    int desaturatedBackgroundColor = Color.HSVToColor(hsv);
-                    cv.setCardBackgroundColor(desaturatedBackgroundColor);
-
-                    Log.d("Color: " , "Desaturated" + desaturatedBackgroundColor + " - Original: " + eventColor  );
+                    icon_date.setImageResource(R.drawable.ic_event_white_24dp);
+                    icon_time.setImageResource(R.drawable.ic_access_time_white_24dp);
                 }
 
-                // TODO: ues.getStatus() == 2 means this user cancelled the event
-                 // use whatever status number is used for "event is cancelled for everyone" or "event is in past"
-                if (ues.getStatus() != 2) {
+                if (ues.getStatus() == 1 || ues.getStatus() == 2) {
+                    cv.setAlpha(0.55f);
+                }
+
+
+                if (ues.getStatus() == 0 ) {
                     cv.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
