@@ -15,8 +15,6 @@ import android.widget.ListView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -48,8 +46,6 @@ public class FragmentMainContacts extends ListFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Create DBStatements and get all User
-
         Log.d("Fragments:", "In Contact Fragment");
 
         setHasOptionsMenu(true);
@@ -125,6 +121,25 @@ public class FragmentMainContacts extends ListFragment {
         return true;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+            users = DBStatements.getUser();
+
+            /*
+            adapterContact.notifyDataSetChanged();
+            getListView().invalidate();
+            getListView().invalidateViews();
+            getListView().refreshDrawableState();
+            adapterContact.notifyDataSetInvalidated();
+            */
+
+            // Not good, but none of the others have any effect
+            adapterContact = new AdapterContact(users);
+            setListAdapter(adapterContact);
+
+    }
 
     public void updateMainContactsList() {
         if (adapterContact != null) {
