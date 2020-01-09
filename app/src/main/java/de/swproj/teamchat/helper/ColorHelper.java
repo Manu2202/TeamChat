@@ -37,7 +37,7 @@ public class ColorHelper {
      * Helper Class for changing the color of the Buttons of a f.e. cardView depending on the color
      */
     public static String buttonColorChanger(int color) {
-
+        // TODO: Überlegung Auswahl der Farben für die Button auch im Zusammenhang zu den Chat Farben
         return "";
     }
 }
