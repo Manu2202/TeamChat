@@ -10,6 +10,7 @@ import java.util.List;
 
 import androidx.lifecycle.MutableLiveData;
 import de.swproj.teamchat.datamodell.chat.Event;
+import de.swproj.teamchat.datamodell.chat.Message;
 
 public class EventListViewModel extends Updateable {
 
@@ -54,9 +55,10 @@ public class EventListViewModel extends Updateable {
     }
 
     @Override
-    public void insertObject(Event obj) {
+    public void insertObject(Message obj) {
         if (obj != null) {
-            insertLiveEvent(obj);
+            if(obj.isEvent())
+            insertLiveEvent((Event) obj);
         }
     }
 

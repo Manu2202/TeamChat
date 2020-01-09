@@ -13,7 +13,7 @@ public abstract class Updateable extends ViewModel {
     public void insertObject(Chat obj){}
     public void insertObject(Message obj){}
     public void insertObject(User obj){}
-    public void insertObject(Event obj){}
+
 
     // public void updateObject(Object obj){}
     public void updateObject(Chat obj){}

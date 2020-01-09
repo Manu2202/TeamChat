@@ -30,6 +30,7 @@ public class DBStatements {
     private static HashSet<Updateable> updateables=new HashSet<>();
     private static DBConnection dbConnection;
 
+    // Config Methods
     public static void addUpdateable(Updateable updateable){
         if(updateable!=null)
         updateables.add(updateable);
@@ -47,7 +48,7 @@ public class DBStatements {
         dbConnection.onUpgrade(dbConnection.getWritableDatabase(),0,0);
     }
 
-
+// Database Statemenst
 
 
     public static boolean insertChat(Chat chat){
@@ -178,7 +179,6 @@ public class DBStatements {
         if (insertsuccesfull) {
             for (Updateable u : updateables
             ) {
-
                 u.insertObject(message);
             }
         }
