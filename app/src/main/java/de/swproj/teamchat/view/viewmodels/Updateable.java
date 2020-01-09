@@ -27,4 +27,7 @@ public abstract class Updateable extends ViewModel {
    // public void removeObject(Object obj);
     public void removeObject(User obj){}
     public void removeObject(UserEventStatus obj){}
+    public void removeObject(Chat obj){}
+    public void removeObject(Event obj){}
+
 }

@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.google.protobuf.EnumValue;
+
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -1016,7 +1018,6 @@ public class DBStatements {
     }
 
 
-
     private  static boolean deleteUserEventStatus(String chatID, String userID){
         SQLiteDatabase db = dbConnection.getWritableDatabase();
 
@@ -1067,15 +1068,101 @@ public class DBStatements {
         try {
             db.delete(DBCreate.TABLE_USER,DBCreate.COL_USER_G_ID+"=?",new String[]{userID});
             db.setTransactionSuccessful();
-            db.endTransaction();
+
             res = true;
         }catch (Exception e){
             Log.e("DatabaseError","Unable to delete User with id "+ userID);
+        }finally {
+            db.endTransaction();
         }
 
 
         return res;
     }
 
+    public static boolean deleteChat(String chatID){
+       Chat chat = getChat(chatID);
+        SQLiteDatabase db = dbConnection.getWritableDatabase();
+
+        if(chat!=null) {
+
+            // Delete Chat
+            db.beginTransaction();
+            try {
+                db.delete(DBCreate.TABLE_CHAT, DBCreate.COL_CHAT_ID + "=?", new String[]{chatID});
+                db.setTransactionSuccessful();
+            } catch (Exception e) {
+                return false;
+            } finally {
+                db.endTransaction();
+            }
+
+            //notify updateable
+            for (Updateable u : updateables
+            ) {
+                u.removeObject(chat);
+            }
+
+
+            // Delete Chatmemmbers
+            db.beginTransaction();
+            try {
+                db.delete(DBCreate.TABLE_USERCHAT, DBCreate.COL_USERCHAT_FK_CHAT + "=?", new String[]{chatID});
+                db.setTransactionSuccessful();
+            } catch (Exception e) {
+                return false;
+            } finally {
+                db.endTransaction();
+            }
+            // DELETE EVENTS
+            ArrayList<Event> events = getEvents();
+            for (Event e : events) {
+                if (e.getChatid().equals(chatID)) {
+                    db.beginTransaction();
+                    try {
+                        db.delete(DBCreate.TABLE_EVENT, DBCreate.COL_EVENT_ID + "=?", new String[]{e.getId()});
+                        db.setTransactionSuccessful();
+                    } catch (Exception ex) {
+                        return false;
+                    } finally {
+                        db.endTransaction();
+                    }
+                    //notify updateable
+                    for (Updateable u : updateables
+                    ) {
+                        u.removeObject(e);
+                    }
+
+                    //DELETE USEREVENT STATES
+
+                    db.beginTransaction();
+                    try {
+                        db.delete(DBCreate.TABLE_EVENTUSER, DBCreate.COL_EVENTUSER_FK_EVENT + "=?", new String[]{e.getId()});
+                        db.setTransactionSuccessful();
+                    } catch (Exception ex) {
+                        return false;
+                    } finally {
+                        db.endTransaction();
+                    }
+
+                }
+
+            }
+
+            //DELETE MESSAGES
+            db.beginTransaction();
+            try {
+                db.delete(DBCreate.TABLE_MESSAGE, DBCreate.COL_MESSAGE_FK_CHATID + "=?", new String[]{chatID});
+                db.setTransactionSuccessful();
+            } catch (Exception ex) {
+                return false;
+            } finally {
+                db.endTransaction();
+            }
+
+        }
+
+        return true;
+    }
 
 }
