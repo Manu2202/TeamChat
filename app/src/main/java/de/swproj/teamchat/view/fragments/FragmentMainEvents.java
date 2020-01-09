@@ -41,19 +41,12 @@ import de.swproj.teamchat.view.viewmodels.EventListViewModel;
 
 public class FragmentMainEvents extends ListFragment {
 
-    private ArrayList<Event> eventList;
     private AdapterEvent adapterEvent;
-
     private EventListViewModel viewModel;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        eventList = DBStatements.getEvents();
-        adapterEvent = new AdapterEvent(eventList);
-        Log.d("Fragments:", "In Event Fragment");
-
 
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -69,10 +62,12 @@ public class FragmentMainEvents extends ListFragment {
         super.onActivityCreated(savedInstanceState);
 
         // Convert ArrayList to LinkedList
+
         ArrayList<Event> eventArrayList = DBStatements.getEvents();
+
         LinkedList<Event> eventLinkedList = new LinkedList<>();
         eventLinkedList.addAll(eventArrayList);
-
+        adapterEvent = new AdapterEvent(eventLinkedList);
         viewModel = new EventListViewModel(eventLinkedList);
 
         // Get the ListView out of the fragment

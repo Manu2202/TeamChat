@@ -13,6 +13,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.List;
 
 import androidx.cardview.widget.CardView;
 import de.swproj.teamchat.R;
@@ -29,11 +30,11 @@ import de.swproj.teamchat.helper.FormatHelper;
 
 public class AdapterEvent extends BaseAdapter {
 
-    private ArrayList<Event> events;
+    private List<Event> events;
     private ArrayList<EventSeparator> eventsAndSeparators;
 
 
-    public AdapterEvent(ArrayList<Event> events) {
+    public AdapterEvent(List<Event> events) {
         this.events = events;
         prepareList();
     }
