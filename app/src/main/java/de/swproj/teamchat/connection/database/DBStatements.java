@@ -94,8 +94,10 @@ public class DBStatements {
 }
 
     public static boolean insertMessage(Message message) {
-
-        boolean insertsuccesfull = true;
+            boolean insertsuccesfull=true;
+      if(getChat(message.getChatid())==null){
+          return false;
+      }
 
         SQLiteDatabase db = dbConnection.getWritableDatabase();
         ContentValues values = new ContentValues();
