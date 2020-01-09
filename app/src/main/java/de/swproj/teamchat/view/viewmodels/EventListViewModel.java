@@ -28,18 +28,20 @@ public class EventListViewModel extends Updateable {
     }
 
     private void insertLiveEvent(Event event) {
-        for (int i = 0; i < liveEvents.getValue().size(); i++) {
-            // Check if new event is the nearest
-            if (liveEvents.getValue().get(i).getDate().compareTo(event.getDate()) <= 0 && i == 0) {
-                liveEvents.getValue().add(i, event);
-                break;
+        LinkedList<Event> list = liveEvents.getValue();
+
+        // Check if new event is the nearest
+        if (list.getFirst().getDate().compareTo(event.getDate()) <= 0) {
+            list.add(0, event);
+
+            for (int i = 1; i < liveEvents.getValue().size(); i++) {
+                if (list.get(i).getDate().compareTo(event.getDate()) > 0) {
+                    list.add(i, event);
+                    break;
+                }
             }
-            if (liveEvents.getValue().get(i).getDate().compareTo(event.getDate()) > 0) {
-                liveEvents.getValue().add(i, event);
-                break;
-            }
+            liveEvents.postValue(list);
         }
-        liveEvents.postValue(liveEvents.getValue());
     }
 
     // Find an Event by ID
@@ -50,7 +52,6 @@ public class EventListViewModel extends Updateable {
             if (events.get(i).getId().equals(eventID))
                 return i;
         }
-
         return pos;
     }
 
@@ -58,7 +59,7 @@ public class EventListViewModel extends Updateable {
     public void insertObject(Message obj) {
         if (obj != null) {
             if(obj.isEvent())
-            insertLiveEvent((Event) obj);
+                insertLiveEvent((Event) obj);
         }
     }
 
