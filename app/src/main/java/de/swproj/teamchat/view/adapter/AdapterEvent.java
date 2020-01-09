@@ -131,15 +131,11 @@ public class AdapterEvent extends BaseAdapter {
         CardView cardView = convertView.findViewById(R.id.li_message_cv);
         cardView.setCardBackgroundColor(DBStatements.getChat(ev.getChatid()).getColor());
 
-        //Calculate Contrast Ratio between Background color and White Text
+        //Calculate Contrast Ratio between Background color text. Set the text depending on the result
         String colorString = ColorHelper.cardViewColorContrast(
-                DBStatements.getChat(ev.getChatid()).getColor());
+                DBStatements.getChat(ev.getChatid()).getColor(),
+                new TextView[]{tvDescription, tvDate, tvGroupname, tvTime, tvTitle});
 
-        tvDescription.setTextColor(Color.parseColor(colorString));
-        tvDate.setTextColor(Color.parseColor(colorString));
-        tvGroupname.setTextColor(Color.parseColor(colorString));
-        tvTime.setTextColor(Color.parseColor(colorString));
-        tvTitle.setTextColor(Color.parseColor(colorString));
 
         // Set the icons belong to the colorstring
         if (colorString.equals("#000000")) {

@@ -6,6 +6,8 @@ package de.swproj.teamchat.helper;
  */
 
 import android.graphics.Color;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.core.graphics.ColorUtils;
 
@@ -14,13 +16,21 @@ public class ColorHelper {
     /*
      * Helper Class for changing the text color depending on the color of the cardView
      */
-    public static String cardViewColorContrast(int color) {
+    public static String cardViewColorContrast(int color, TextView[] textViews) {
         double contrast_ratio = ColorUtils.calculateContrast(color, Color.parseColor("#FFFFFF"));
 
+        String colorString;
         if (contrast_ratio > 4)
-            return "#FFFFFF";
+            colorString = "#FFFFFF";
         else
-            return "#000000";
+            colorString = "#000000";
+
+        // Set all Textviews to black or white depending on the contrast ratio
+        for (TextView tv : textViews) {
+            tv.setTextColor(Color.parseColor(colorString));
+        }
+
+        return colorString;
     }
 
     /*
