@@ -70,6 +70,7 @@ public class ViewEventActivity extends AppCompatActivity {
         final TextView tvDate = findViewById(R.id.viewevent_tveveventdate);
         final TextView tvTime = findViewById(R.id.viewevent_tveventtime);
         final TextView tvDescription = findViewById(R.id.viewevent_tvdescription);
+        TextView tvTxtState = findViewById(R.id.viewevent_txtstatus);
         ImageView icon_date = findViewById(R.id.li_icon_date);
         ImageView icon_time = findViewById(R.id.li_icon_time);
         tvStatus = findViewById(R.id.viewevent_tvstatus);
@@ -81,7 +82,7 @@ public class ViewEventActivity extends AppCompatActivity {
 
         // Get the color String of the text in cv and set the Textviews
         String colorString = ColorHelper.cardViewColorContrast(chatColor,
-                new TextView[]{tvCreator, tvDate, tvtime, tvTime, tvtitle, tvDescription});
+                new TextView[]{tvCreator, tvDate, tvtime, tvTime, tvtitle, tvDescription, tvStatus, tvTxtState});
 
         // Set the icons belong to the colorstring
         if (colorString.equals("#000000")) {
