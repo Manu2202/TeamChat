@@ -17,10 +17,10 @@ public class ColorHelper {
     public static String cardViewColorContrast(int color) {
         double contrast_ratio = ColorUtils.calculateContrast(color, Color.parseColor("#FFFFFF"));
 
-        if (contrast_ratio < 4)
+        if (contrast_ratio > 4)
             return "#FFFFFF";
         else
-            return "000000";
+            return "#000000";
     }
 
     /*
