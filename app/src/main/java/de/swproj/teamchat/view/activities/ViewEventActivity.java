@@ -25,6 +25,7 @@ import de.swproj.teamchat.R;
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.connection.firebase.FirebaseConnection;
 import de.swproj.teamchat.datamodell.chat.Event;
+import de.swproj.teamchat.datamodell.chat.User;
 import de.swproj.teamchat.datamodell.chat.UserEventStatus;
 import de.swproj.teamchat.helper.FormatHelper;
 import de.swproj.teamchat.view.adapter.AdapterUserEventStatus;
@@ -130,13 +131,17 @@ public class ViewEventActivity extends AppCompatActivity {
         mystate.setReason("-");
         mystate.setStatus(1);
 
-        Thread thread = new test(mystate);
-        thread.start();//remove firebase have to do it on Success
-        //todo send to other to Firebase, remove line before
 
       /*  String message = FirebaseAuth.getInstance().getCurrentUser().getDisplayName().split(" ")[0]
                 + " " + mystate.getStatusString();
        */
+    }
+
+    private void sendMyState(UserEventStatus mystate){
+        Thread thread = new test(mystate);
+        thread.start();//remove firebase have to do it on Success
+        //todo: send to other to Firebase, remove line before
+
     }
 
     //todo: Delete Class after firebase implementation
@@ -169,7 +174,7 @@ public class ViewEventActivity extends AppCompatActivity {
 
         Thread thread = new test(mystate);
         thread.start();//remove firebas have to do it
-        //todo send to other to Firebase, remove line before
+        sendMyState(mystate);
 
     }
 

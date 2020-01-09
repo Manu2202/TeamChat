@@ -90,6 +90,16 @@ public class Event extends Message implements Comparable<Event> {
         this.status = status;
     }
 
+    public String getStatusString(){
+        if(status==0){
+            return "will take place";
+        }else if(status==1){
+            return "expired";
+        }
+        // status == 2
+            return "called off";
+    }
+
     @Override
     public void setId(String id) {
         super.setId(id);

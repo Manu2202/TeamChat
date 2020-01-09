@@ -137,7 +137,7 @@ public class DBStatements {
                 values.put(DBCreate.COL_EVENT_ID, message.getId());
                 values.put(DBCreate.COL_EVENT_DATE, e.getDate().getTime().getTime() + "");
                 values.put(DBCreate.COL_EVENT_DESCRIPTION, e.getDescription());
-                //  values.put(DBCreate.COL_EVENT_FK_MESSAGEID, message.getId());
+               values.put(DBCreate.COL_EVENT_STATE, e.getStatus());
 
                 db.insertOrThrow(DBCreate.TABLE_EVENT, null, values);
 
@@ -461,6 +461,7 @@ public class DBStatements {
                 values.put(DBCreate.COL_EVENT_ID, message.getId());
                 values.put(DBCreate.COL_EVENT_DATE, event.getDate().getTime().getTime() + "");
                 values.put(DBCreate.COL_EVENT_DESCRIPTION, event.getDescription());
+                values.put(DBCreate.COL_MESSAGE_TIMESTAMP, String.valueOf(message.getTimeStampDate().getTime()));
 
                 db.update(DBCreate.TABLE_EVENT,values,DBCreate.COL_EVENT_ID+"=?",new String[]{event.getId()});
 
@@ -888,7 +889,7 @@ public class DBStatements {
             db.beginTransaction();
             try {
 
-                Cursor c = db.query(DBCreate.TABLE_EVENT, new String[]{DBCreate.COL_EVENT_DATE, DBCreate.COL_EVENT_DESCRIPTION},
+                Cursor c = db.query(DBCreate.TABLE_EVENT, new String[]{DBCreate.COL_EVENT_DATE, DBCreate.COL_EVENT_DESCRIPTION, DBCreate.COL_EVENT_STATE},
                         DBCreate.COL_EVENT_ID + "=?", new String[]{messageId}, null, null, null);
 
 
@@ -896,7 +897,7 @@ public class DBStatements {
 
                     int date = c.getColumnIndex(DBCreate.COL_EVENT_DATE);
                     int description = c.getColumnIndex(DBCreate.COL_EVENT_DESCRIPTION);
-
+                    int state = c.getColumnIndex(DBCreate.COL_EVENT_STATE);
 
                     //public Event(Time timeStamp, String message, int id, boolean isEvent, String creatorID, Date date,
                     //                          String description,int chatid, int status) {
@@ -905,7 +906,7 @@ public class DBStatements {
                     GregorianCalendar d = new GregorianCalendar();
                     d.setTime(new Date(Long.parseLong(c.getString(date))));
                     event = new Event(message.getTimeStampDate(), message.getMessage(), message.getId(), true, message.getCreator(),
-                            d, c.getString(description), message.getChatid(), 0);
+                            d, c.getString(description), message.getChatid(), c.getInt(state));
 
 
                 }
@@ -923,6 +924,7 @@ public class DBStatements {
     }
 
     public static ArrayList<Event> getEvents() {
+        //todo: make it mor efficient with INNERJOIN
          ArrayList<String> eventIDs= new ArrayList<>();
 
         SQLiteDatabase db = dbConnection.getReadableDatabase();
@@ -1046,15 +1048,14 @@ public class DBStatements {
     }
 
     public static boolean deleteEvent(String eventID){
-        boolean res = false;
-        SQLiteDatabase db = dbConnection.getWritableDatabase();
-        db.beginTransaction();
+      Event event = getEvent(eventID);
+      if(event==null){
+          return false;
+      }
+      event.setStatus(2);
+      updateEvent(event);
 
-
-        //todo: implement funktion
-
-
-        return res;
+        return true;
     }
 
     public static  boolean deleteUser(String userID){
@@ -1069,7 +1070,7 @@ public class DBStatements {
             db.endTransaction();
             res = true;
         }catch (Exception e){
-            Log.e("DatabaseError","Unable to delete witt id "+ userID);
+            Log.e("DatabaseError","Unable to delete User with id "+ userID);
         }
 
 

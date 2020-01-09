@@ -99,13 +99,15 @@ public class DBCreate {
     public static final String COL_EVENT_ID = BaseColumns._ID;
     public static final String COL_EVENT_DATE = "date";
     public static final String COL_EVENT_DESCRIPTION = "description";
+    public static final String COL_EVENT_STATE = "state";
     public static final String COL_EVENT_FK_MESSAGEID = "fk_MessageID";
 
     protected static String getEventTable() {
         return "CREATE TABLE " + TABLE_EVENT + " ("
                 + COL_EVENT_ID + " TEXT PRIMARY KEY, "
                 + COL_EVENT_DATE + " TEXT, "
-                + COL_EVENT_DESCRIPTION + " TEXT"
+                + COL_EVENT_DESCRIPTION + " TEXT,"
+                + COL_EVENT_STATE + " INTEGER"
               //  + ","+COL_EVENT_FK_MESSAGEID + "TEXT NOT NULL REFERENCES " + TABLE_MESSAGE
                 + " )";
     }
