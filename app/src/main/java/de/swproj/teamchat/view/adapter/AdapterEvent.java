@@ -30,13 +30,13 @@ import de.swproj.teamchat.helper.FormatHelper;
 
 public class AdapterEvent extends BaseAdapter {
 
-    private List<Event> events;
-    private ArrayList<EventSeparator> eventsAndSeparators;
+
+    private List<EventSeparator> eventsAndSeparators;
 
 
-    public AdapterEvent(List<Event> events) {
-        this.events = events;
-        prepareList();
+    public AdapterEvent(List<EventSeparator> events) {
+        eventsAndSeparators = events;
+
     }
 
     /**
@@ -44,37 +44,16 @@ public class AdapterEvent extends BaseAdapter {
      * Prepares a list which determines whether the separator (title with Date) should be displayed or not
      * Doing it here means we only have to do it once for the entire list, and we avoid a display bug
      */
-    private void prepareList() {
-        if (events.size() > 0) {
-            Collections.sort(this.events);
-            eventsAndSeparators = new ArrayList<>();
-            EventSeparator prevEvSep = null;
 
-            for (Event ev : events) {
-                if (prevEvSep != null) {
-                    if ((ev.getDate().get(Calendar.YEAR) != prevEvSep.getEv().getDate().get(Calendar.YEAR)) ||
-                            (ev.getDate().get(Calendar.MONTH) != prevEvSep.getEv().getDate().get(Calendar.MONTH))) {
-                        prevEvSep = new EventSeparator(true, ev);
-                    } else {
-                        prevEvSep = new EventSeparator(false, ev);
-                    }
-                } else {
-                    prevEvSep = new EventSeparator(true, ev);
-                }
-
-                eventsAndSeparators.add(prevEvSep);
-            }
-        }
-    }
 
     @Override
     public int getCount() {
-        return events.size();
+        return eventsAndSeparators.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return events.get(position);
+        return eventsAndSeparators.get(position);
     }
 
     @Override

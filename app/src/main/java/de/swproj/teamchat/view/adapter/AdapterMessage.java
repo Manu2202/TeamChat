@@ -40,11 +40,10 @@ import de.swproj.teamchat.view.activities.ViewEventActivity;
 public class AdapterMessage extends BaseAdapter {
 
     private ArrayList<Message> messages;
-
     private AppCompatActivity activity;
+
     public AdapterMessage(ArrayList<Message> messages, AppCompatActivity activity) {
         this.messages = messages;
-
         this.activity = activity;
     }
 

@@ -16,7 +16,10 @@ import android.widget.ListView;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,6 +34,7 @@ import de.swproj.teamchat.datamodell.chat.Event;
 import de.swproj.teamchat.view.activities.StartActivity;
 import de.swproj.teamchat.view.activities.ViewEventActivity;
 import de.swproj.teamchat.view.adapter.AdapterEvent;
+import de.swproj.teamchat.view.adapter.EventSeparator;
 import de.swproj.teamchat.view.viewmodels.EventListViewModel;
 
 
@@ -61,15 +65,12 @@ public class FragmentMainEvents extends ListFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        // Convert ArrayList to LinkedList
+        // Convert EVENT List to EVENTSEPERATOR List
+        List<EventSeparator> eventList =prepareList(DBStatements.getEvents());
 
-        ArrayList<Event> eventArrayList = DBStatements.getEvents();
 
-        LinkedList<Event> eventLinkedList = new LinkedList<>();
-        eventLinkedList.addAll(eventArrayList);
-        adapterEvent = new AdapterEvent(eventLinkedList);
-        viewModel = new EventListViewModel(eventLinkedList);
-
+        viewModel = new EventListViewModel(eventList);
+        adapterEvent = new AdapterEvent(viewModel.getLiveEvents().getValue());
         // Get the ListView out of the fragment
         ListView list = getListView();
 
@@ -81,9 +82,9 @@ public class FragmentMainEvents extends ListFragment {
         // Register ViewModel in DBStatements
         DBStatements.addUpdateable(viewModel);
 
-        viewModel.getLiveEvents().observe(this, new Observer<LinkedList<Event>>() {
+        viewModel.getLiveEvents().observe(this, new Observer<List<EventSeparator>>() {
             @Override
-            public void onChanged(LinkedList<Event> events) {
+            public void onChanged(List<EventSeparator> eventSeparators) {
                 adapterEvent.notifyDataSetChanged();
             }
         });
@@ -94,8 +95,8 @@ public class FragmentMainEvents extends ListFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent eventIntent = new Intent(getActivity(), ViewEventActivity.class);
-                Event selectedItem = (Event)adapterEvent.getItem(position);
-                eventIntent.putExtra("eventID", selectedItem.getId());
+                EventSeparator selectedItem = (EventSeparator)adapterEvent.getItem(position);
+                eventIntent.putExtra("eventID", selectedItem.getEv().getId());
                 startActivityForResult(eventIntent, position);
             }
         });
@@ -124,5 +125,30 @@ public class FragmentMainEvents extends ListFragment {
                 break;
         }
         return true;
+    }
+
+    private List<EventSeparator> prepareList(List<Event> events) {
+        List<EventSeparator> eventsAndSeparators = new LinkedList<>();
+        if (events.size() > 0) {
+            Collections.sort(events);
+            EventSeparator prevEvSep = null;
+
+            for (Event ev : events) {
+                if (prevEvSep != null) {
+                    if ((ev.getDate().get(Calendar.YEAR) != prevEvSep.getEv().getDate().get(Calendar.YEAR)) ||
+                            (ev.getDate().get(Calendar.MONTH) != prevEvSep.getEv().getDate().get(Calendar.MONTH))) {
+                        prevEvSep = new EventSeparator(true, ev);
+                    } else {
+                        prevEvSep = new EventSeparator(false, ev);
+                    }
+                } else {
+                    prevEvSep = new EventSeparator(true, ev);
+                }
+
+                eventsAndSeparators.add(prevEvSep);
+            }
+        }
+
+        return  eventsAndSeparators;
     }
 }
