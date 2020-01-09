@@ -115,30 +115,15 @@ public class AdapterMessage extends BaseAdapter {
                 int eventColor = DBStatements.getChat(message.getChatid()).getColor();
 
                 // UserEventStatus: Not final yet - I don't know which value means the Event is completely cancelled
-                if (ues.getStatus() == 0  || ues.getStatus() == 1 ) {
-                    cv.setCardBackgroundColor(eventColor);
-                } else {
-                    // Use Chat Color but desaturate it to look greyish
 
-                    int red = Color.red(eventColor);
-                    int green = Color.green(eventColor);
-                    int blue = Color.blue(eventColor);
-                    float[] hsv = new float[3];
-                    Color.RGBToHSV(red, green, blue, hsv);
+                cv.setCardBackgroundColor(eventColor);
 
-                    // reduce saturation to 55%
-                    // [0] = Hue ,  [1] = Saturation , [2] = Value
-                    hsv[1] = hsv[1] * 0.55f;
-
-                    int desaturatedBackgroundColor = Color.HSVToColor(hsv);
-                    cv.setCardBackgroundColor(desaturatedBackgroundColor);
-
-                    Log.d("Color: " , "Desaturated" + desaturatedBackgroundColor + " - Original: " + eventColor  );
+                if (ues.getStatus() == 1 || ues.getStatus() == 2) {
+                    cv.setAlpha(0.55f);
                 }
 
-                // TODO: ues.getStatus() == 2 means this user cancelled the event
-                 // use whatever status number is used for "event is cancelled for everyone" or "event is in past"
-                if (ues.getStatus() != 2) {
+
+                if (ues.getStatus() == 0 ) {
                     cv.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
