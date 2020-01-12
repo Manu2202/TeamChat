@@ -53,6 +53,7 @@
     <string name="dialog_delete_event_title">Delete the Event</string>
     <string name="dialog_delete_event_msg">Are you sure you want to delete this event?</string>
     <string name="dialog_reason_hint">Reason...</string>
+    <string name="cancelled">Cancelled</string>
 
     <!-- Strings related to Contact Details -->
     <string name="common_groups">Common groups</string>

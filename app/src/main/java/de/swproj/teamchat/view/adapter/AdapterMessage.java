@@ -136,6 +136,17 @@ public class AdapterMessage extends BaseAdapter {
 
                 if (event.getStatus() == 1 || event.getStatus() == 2) {
                     cv.setAlpha(0.55f);
+
+                    TextView cancelledOrExpired = (TextView)convertView.findViewById(R.id.viewevent_cancelled);
+                    if (event.getStatus() == 1){
+                        cancelledOrExpired.setText("  Expired");
+                        cancelledOrExpired.setVisibility(View.VISIBLE);
+                    }
+
+                    if (event.getStatus() == 2){
+                        cancelledOrExpired.setText("Cancelled");
+                        cancelledOrExpired.setVisibility(View.VISIBLE);
+                    }
                 }
 
 
