@@ -7,6 +7,9 @@
     <string name="ok">OK</string>
     <string name="save">Save</string>
 
+    <!-- Info Strings -->
+    <string name="datefuture">Date has to be in the future!</string>
+
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>

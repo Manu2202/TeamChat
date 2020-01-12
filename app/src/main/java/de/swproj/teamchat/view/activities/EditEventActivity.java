@@ -19,6 +19,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -171,19 +172,29 @@ public class EditEventActivity extends AppCompatActivity {
 
     public void onClickSaveChanges(View view) {
         if (msgId.equals("0")) {
-            // Own created Event -> User automatically accepted
-            int status = 1;
+            // New created event, automatically status = 0
+            int status = 0;
             try {
                 GregorianCalendar date = new GregorianCalendar(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute);
-                event = new Event(GregorianCalendar.getInstance().getTime(),
-                        et_title.getText().toString(), msgId, true, FirebaseAuth.getInstance().getCurrentUser().getUid(),
-                        date, et_description.getText().toString(), chatID, status);
-                //Push Event to Firebase
-                firebaseConnection.addToFirestore(event,
-                        FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),
-                        false, false);
 
-                finish();
+                // Check if event date is in future
+                if (checkDateFuture(date)) {
+
+
+                    event = new Event(GregorianCalendar.getInstance().getTime(),
+                            et_title.getText().toString(), msgId, true, FirebaseAuth.getInstance().getCurrentUser().getUid(),
+                            date, et_description.getText().toString(), chatID, status);
+                    //Push Event to Firebase
+                    firebaseConnection.addToFirestore(event,
+                            FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),
+                            false, false);
+
+                    finish();
+                } else {
+                    // send Toast as Info, that Time has to be in Future
+                    Toast infoToast = Toast.makeText(getApplicationContext(), R.string.datefuture, Toast.LENGTH_SHORT);
+                    infoToast.show();
+                }
 
             } catch (NullPointerException npe) {
 
@@ -197,5 +208,10 @@ public class EditEventActivity extends AppCompatActivity {
     public void onClickCancel(View view) {
         // Just go back to the previous Activity, safe nothing
         finish();
+    }
+
+    // Private Helper Method to check, if Date is in Future -> no Event creating in the past
+    private boolean checkDateFuture(GregorianCalendar eventDate) {
+        return GregorianCalendar.getInstance().compareTo(eventDate) < 0;
     }
 }
