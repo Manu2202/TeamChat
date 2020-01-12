@@ -1,12 +1,10 @@
 package de.swproj.teamchat.connection.database;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.google.protobuf.EnumValue;
 
 import java.util.Date;
 import java.util.ArrayList;
@@ -14,7 +12,6 @@ import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 
 import de.swproj.teamchat.datamodell.chat.Chat;
@@ -84,7 +81,7 @@ public class DBStatements {
 
     } catch (Exception e) {
         insertsuccesfull = false;
-        Log.d("DB_Error class DBStatements:", "Unable to write Chat in db");
+        Log.d("DB_Error DBStatements", "Unable to write Chat in db");
     } finally {
         db.endTransaction();
     }
@@ -120,7 +117,7 @@ public class DBStatements {
             db.setTransactionSuccessful();
         } catch (Exception e) {
             insertsuccesfull = false;
-            Log.d("DB_Error class DBStatements:", "Unable to write Message in DB from db");
+            Log.d("DB_Error DBStatements", "Unable to write Message in DB from db");
         } finally {
             db.endTransaction();
         }
@@ -148,7 +145,7 @@ public class DBStatements {
                 db.setTransactionSuccessful();
             } catch (Exception d) {
                 insertsuccesfull = false;
-                Log.d("DB_Error class DBStatements:", "Unable to write Event in DB from db");
+                Log.d("DB_Error DBStatements", "Unable to write Event in DB from db");
             } finally {
                 db.endTransaction();
             }
@@ -172,7 +169,7 @@ public class DBStatements {
                     db.setTransactionSuccessful();
                 } catch (Exception ex) {
                     insertsuccesfull = false;
-                    Log.d("DB_Error class DBStatements:", "Unable to write EventUser in DB from db");
+                    Log.d("DB_Error DBStatements", "Unable to write EventUser in DB from db");
                 } finally {
                     db.endTransaction();
                 }
@@ -219,7 +216,7 @@ public class DBStatements {
 
         } catch (Exception e) {
             insertsuccesfull = false;
-            Log.d("DB_Error class DBStatements:", "Unable to write User in db");
+            Log.d("DB_Error DBStatements", "Unable to write User in db");
             // e.printStackTrace();
         } finally {
             db.endTransaction();
@@ -259,7 +256,7 @@ public class DBStatements {
                 }
 
             }catch (Exception e){
-                Log.e("DB error", "Unable to write USerEventstatus for Event: "+eventID);
+                Log.e("DB_Error DBStatements", "Unable to write USerEventstatus for Event: "+eventID);
             }
 
         }
@@ -333,7 +330,7 @@ public class DBStatements {
 
         } catch (Exception e) {
             success = false;
-            Log.d("DB_Error class DBStatements:", "Unable to write CHAT_USER in db");
+            Log.d("DB_Error DBStatements", "Unable to write CHAT_USER in db");
         } finally {
 
             db.endTransaction();
@@ -392,7 +389,7 @@ public class DBStatements {
             db.setTransactionSuccessful();
         } catch (Exception e) {
 
-            Log.d("DB_Error class DBStatements", "Unable to write CHAT in db");
+            Log.d("DB_Error DBStatements", "Unable to write CHAT in db");
         } finally {
             db.endTransaction();
         }
@@ -419,7 +416,7 @@ public class DBStatements {
 
         } catch (Exception e) {
             insertsuccesfull = false;
-            Log.d("DB_Error class DBStatements:", "Unable to update Userevent status in db");
+            Log.d("DB_Error DBStatements", "Unable to update Userevent status in db");
             e.printStackTrace();
         } finally {
             db.endTransaction();
@@ -442,7 +439,15 @@ public class DBStatements {
         Message message = getMessage(event.getId());
         if(message.isEvent()) {
             SQLiteDatabase db = dbConnection.getWritableDatabase();
+
             try {
+                /////////////// TODO: Michi, ich hab diese Zeile hier hinzugefügt, weil sonst eine
+                // IllegalStateException auftaucht (zu testen bei DBStatementsTest.updateEvent() )
+                // Schau bitte nach, ob die hier richtig ist.  -Nikolas
+                // E/TestRunner: java.lang.IllegalStateException: Cannot perform this operation because there is no current transaction.
+                db.beginTransaction();
+                ////////////////////////////////////////////////////////////////////////////////
+
 
                 ContentValues values = new ContentValues();
 
@@ -465,6 +470,7 @@ public class DBStatements {
                 values.put(DBCreate.COL_EVENT_ID, message.getId());
                 values.put(DBCreate.COL_EVENT_DATE, event.getDate().getTime().getTime() + "");
                 values.put(DBCreate.COL_EVENT_DESCRIPTION, event.getDescription());
+                values.put(DBCreate.COL_EVENT_STATE, event.getStatus());  // Was missing?
                 values.put(DBCreate.COL_MESSAGE_TIMESTAMP, String.valueOf(message.getTimeStampDate().getTime()));
 
                 db.update(DBCreate.TABLE_EVENT,values,DBCreate.COL_EVENT_ID+"=?",new String[]{event.getId()});
@@ -472,8 +478,7 @@ public class DBStatements {
                 db.setTransactionSuccessful();
 
 
-                for (Updateable u:updateables
-                ) {
+                for (Updateable u:updateables) {
                     u.updateObject(event);
                 }
 
@@ -518,7 +523,7 @@ public class DBStatements {
             }
 
         } catch (Exception e) {
-            Log.d("DB_Error class DBStatements:", "Unable to read UserEventStatus from db");
+            Log.d("DB_Error DBStatements", "Unable to read UserEventStatus from db");
         } finally {
             db.endTransaction();
         }
@@ -552,7 +557,7 @@ public class DBStatements {
 
 
         } catch (Exception e) {
-            Log.d("DB_Error class DBStatements:", "Unable to read UserEventStatus from User " + userId + " from db");
+            Log.d("DB_Error DBStatements", "Unable to read UserEventStatus from User " + userId + " from db");
             e.printStackTrace();
         } finally {
             db.endTransaction();
@@ -581,7 +586,7 @@ public class DBStatements {
             db.setTransactionSuccessful();
 
         } catch (Exception e) {
-            Log.d("DB_Error class DBStatements:", "Unable to read Users in Chat from  " + chatId + "db");
+            Log.d("DB_Error DBStatements", "Unable to read Users in Chat from  " + chatId + "db");
         } finally {
             db.endTransaction();
         }
@@ -610,7 +615,7 @@ public class DBStatements {
                 user = new User(c.getString(id), c.getString(mail), c.getString(acc), c.getString(name), c.getString(fname));
             }
         } catch (Exception e) {
-            Log.d("DB_Error class DBStatements:", "Unable to read User " + googleID + " from db");
+            Log.d("DB_Error DBStatements", "Unable to read User " + googleID + " from db");
             e.printStackTrace();
         } finally {
             db.endTransaction();
@@ -639,7 +644,7 @@ public class DBStatements {
                 user = new User(c.getString(id), c.getString(mail), c.getString(acc), c.getString(name), c.getString(fname));
             }
         } catch (Exception e) {
-            Log.d("DB_Error class DBStatements:", "Unable to read User " + googleMail + " from db");
+            Log.d("DB_Error DBStatements", "Unable to read User " + googleMail + " from db");
             e.printStackTrace();
         } finally {
             db.endTransaction();
@@ -661,7 +666,7 @@ public class DBStatements {
                 return true;
             }
         } catch (Exception e) {
-            Log.d("DB_Error class DBStatements:", "Unable to read User " + googleMail + " from db");
+            Log.d("DB_Error DBStatements", "Unable to read User " + googleMail + " from db");
             e.printStackTrace();
         } finally {
             db.endTransaction();
@@ -694,7 +699,7 @@ public class DBStatements {
             }
 
         } catch (Exception e) {
-            Log.d("DB_Error class DBStatements:", "Unable to read Users from db");
+            Log.d("DB_Error DBStatements", "Unable to read Users from db");
             e.printStackTrace();
         } finally {
             db.endTransaction();
@@ -728,7 +733,7 @@ public class DBStatements {
             }
 
         } catch (Exception e) {
-            Log.d("DB_Error class DBStatements:", "Unable to read Users of Chat "+chatId+" from DB");
+            Log.d("DB_Error DBStatements", "Unable to read Users of Chat "+chatId+" from DB");
             e.printStackTrace();
         } finally {
             db.endTransaction();
@@ -758,7 +763,7 @@ public class DBStatements {
 
             }
         } catch (Exception e) {
-            Log.d("DB_Error class DBStatements:", "Unable to read Chat " + chatId + " from db");
+            Log.d("DB_Error DBStatements", "Unable to read Chat " + chatId + " from db");
             e.printStackTrace();
         } finally {
             db.endTransaction();
@@ -794,7 +799,7 @@ public class DBStatements {
             }
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.d("DB_Error class DBStatements:", "Unable to read Chats  from db");
+            Log.d("DB_Error DBStatements", "Unable to read Chats  from db");
         } finally {
 
             db.endTransaction();
@@ -834,7 +839,7 @@ public class DBStatements {
             }
 
         } catch (Exception e) {
-            Log.d("DB_Error class DBStatements:", "Unable to read Message of Chat "+chatId+" from db");
+            Log.d("DB_Error DBStatements", "Unable to read Message of Chat "+chatId+" from db");
             e.printStackTrace();
         } finally {
             db.endTransaction();
@@ -874,7 +879,7 @@ public class DBStatements {
 
             }
         } catch (Exception e) {
-            Log.d("DB_Error class DBStatements:", "Unable to read Message "+messageID+" from db");
+            Log.d("DB_Error DBStatements", "Unable to read Message "+messageID+" from db");
             e.printStackTrace();
         } finally {
             db.endTransaction();
@@ -915,7 +920,7 @@ public class DBStatements {
 
                 }
             } catch (Exception e) {
-                Log.d("DB_Error class DBStatements:", "Unable to read Event from db");
+                Log.d("DB_Error DBStatements", "Unable to read Event from db");
             } finally {
                 db.endTransaction();
             }
@@ -950,7 +955,7 @@ public class DBStatements {
             }
 
         } catch (Exception e) {
-            Log.d("DB_Error class DBStatements:", "Unable to read Users from db");
+            Log.d("DB_Error DBStatements", "Unable to read Users from db");
             e.printStackTrace();
         } finally {
             db.endTransaction();
@@ -1008,7 +1013,7 @@ public class DBStatements {
             }
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.d("DB_Error class DBStatements:", "Unable to read Chat " + chatId + " from db");
+            Log.d("DB_Error DBStatements", "Unable to read Chat " + chatId + " from db");
 
         } finally {
             db.endTransaction();

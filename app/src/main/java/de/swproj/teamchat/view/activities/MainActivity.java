@@ -8,10 +8,10 @@ import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.connection.firebase.FirebaseConnection;
 import de.swproj.teamchat.connection.firebase.services.TeamChatMessagingService;
-import de.swproj.teamchat.datamodell.chat.Chat;
 import de.swproj.teamchat.datamodell.chat.Event;
 import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.datamodell.chat.User;
+import de.swproj.teamchat.helper.EventExpirer;
 import de.swproj.teamchat.helper.FormatHelper;
 import de.swproj.teamchat.view.fragments.FragmentMainChats;
 import de.swproj.teamchat.view.fragments.FragmentMainContacts;
@@ -23,21 +23,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.SignInMethodQueryResult;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import java.sql.Time;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 public class MainActivity extends AppCompatActivity {
     private static Context context;
@@ -46,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private ListFragment contactFragment;
     private static Fragment lastSelectedFragment;
     private FirebaseConnection fbconnect;
+    private EventExpirer eventExpirer;
 
     //FirebaseAuth
     private FirebaseAuth mAuth;
@@ -57,6 +47,16 @@ public class MainActivity extends AppCompatActivity {
 
         //Save FCM from Notification Intent
         saveFCMtoDB();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (eventExpirer != null) {
+            eventExpirer.shutdownNow();
+            eventExpirer = null;
+        }
     }
 
     @Override
@@ -75,7 +75,9 @@ public class MainActivity extends AppCompatActivity {
 
         //Setup Database
         DBStatements.setDbConnection(null);
+
     }
+
     public static Context getAppContext() {
         return MainActivity.context;
     }
@@ -101,8 +103,12 @@ public class MainActivity extends AppCompatActivity {
             setUpUI();
         }
 
+        eventExpirer = new EventExpirer(5, 10);
+
         //addTestdat();
     }
+
+
 
     /**
      * If app is in background notification data comes from Intent
@@ -219,6 +225,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 
 }

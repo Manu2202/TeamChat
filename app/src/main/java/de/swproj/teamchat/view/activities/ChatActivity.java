@@ -24,6 +24,7 @@ import de.swproj.teamchat.connection.firebase.FirebaseConnection;
 import de.swproj.teamchat.connection.firebase.services.TeamChatMessagingService;
 import de.swproj.teamchat.datamodell.chat.Chat;
 import de.swproj.teamchat.datamodell.chat.Message;
+import de.swproj.teamchat.helper.EventExpirer;
 import de.swproj.teamchat.view.adapter.AdapterMessage;
 import de.swproj.teamchat.view.viewmodels.ChatViewModel;
 
@@ -41,9 +42,17 @@ public class ChatActivity extends AppCompatActivity {
     private TeamChatMessagingService messagingService;
     private FirebaseConnection firebaseConnection;
 
+    private EventExpirer eventExpirer;
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        if (eventExpirer != null) {
+            eventExpirer.shutdownNow();
+            eventExpirer = null;
+        }
+
         DBStatements.removeUpdateable(viewModel);
     }
 
@@ -84,6 +93,8 @@ public class ChatActivity extends AppCompatActivity {
 
 
         firebaseConnection = new FirebaseConnection();
+
+        eventExpirer = new EventExpirer(5, 10);
 
 
         //Exclude Items from Animation
@@ -131,6 +142,16 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.chat_menu, menu);
         return true;
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        if (eventExpirer != null) {
+            eventExpirer.shutdownNow();
+            eventExpirer = null;
+        }
     }
 
     @Override

@@ -226,4 +226,24 @@ public class DBStatementsTest {
     @Test
     public void getLastMessage() {
     }
+
+
+    @Test
+    public void updateEvent() {
+
+        Event e = events.get(0);
+        e.setStatus(1);
+        DBStatements.updateEvent(e);
+
+        Log.d("DBStatementsTest", "Event Status is " + DBStatements.getEvent(e.getId()).getStatus());
+        assertThat(e.getStatus(), equalTo(DBStatements.getEvent(e.getId()).getStatus()));
+
+        e.setStatus(2);
+        DBStatements.updateEvent(e);
+
+        Log.d("DBStatementsTest", "Event Status is " + DBStatements.getEvent(e.getId()).getStatus());
+        assertThat(e.getStatus(), equalTo(DBStatements.getEvent(e.getId()).getStatus()));
+        assertThat(1, equalTo(DBStatements.getEvent(e.getId()).getStatus()));
+    }
+
 }
