@@ -109,6 +109,9 @@ public class AdapterMessage extends BaseAdapter {
                 ImageView icon_date = convertView.findViewById(R.id.li_icon_date);
                 ImageView icon_time = convertView.findViewById(R.id.li_icon_time);
 
+                TextView cancelledOrExpired = convertView.findViewById(R.id.viewevent_cancelled);
+                cancelledOrExpired.setVisibility(View.GONE);
+
                 tv_Description.setText(event.getDescription());
                 tvEventDate.setText(FormatHelper.formatDate(event.getDate()));
                 tvEventTime.setText(FormatHelper.formatTime(event.getDate()));
@@ -137,7 +140,6 @@ public class AdapterMessage extends BaseAdapter {
                 if (event.getStatus() == 1 || event.getStatus() == 2) {
                     cv.setAlpha(0.55f);
 
-                    TextView cancelledOrExpired = (TextView)convertView.findViewById(R.id.viewevent_cancelled);
                     if (event.getStatus() == 1){
                         cancelledOrExpired.setText("  Expired");
                         cancelledOrExpired.setVisibility(View.VISIBLE);
