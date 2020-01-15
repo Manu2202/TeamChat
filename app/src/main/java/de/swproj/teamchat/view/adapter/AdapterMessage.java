@@ -137,19 +137,18 @@ public class AdapterMessage extends BaseAdapter {
                     icon_time.setImageResource(R.drawable.ic_access_time_white_24dp);
                 }
 
-                if (event.getStatus() == 1 || event.getStatus() == 2) {
-                    cv.setAlpha(0.55f);
+
 
                     if (event.getStatus() == 1){
-                        cancelledOrExpired.setText("  Expired");
+                        cv.setAlpha(0.55f);
+                        cancelledOrExpired.setText(" Expired ");
                         cancelledOrExpired.setVisibility(View.VISIBLE);
-                    }
-
-                    if (event.getStatus() == 2){
+                    }else if (event.getStatus() == 2){
+                        cv.setAlpha(0.55f);
                         cancelledOrExpired.setText("Cancelled");
                         cancelledOrExpired.setVisibility(View.VISIBLE);
                     }
-                }
+
 
 
                 if (event.getStatus() == 0) {
