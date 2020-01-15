@@ -5,7 +5,10 @@ package de.swproj.teamchat.datamodell.chat;
  * For the project: TeamChat.
  */
 
+import android.util.Log;
+
 import java.sql.Time;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -32,6 +35,39 @@ public class Event extends Message implements Comparable<Event> {
         this.description = description;
         this.status = status;
     }
+
+
+    public Event(Date timeStamp, String message, String id, boolean isEvent, String creator,
+                 String date, String description, String chatid, int status) {
+        super(timeStamp, message, id, isEvent, creator, chatid);
+
+        this.description = description;
+        this.status = status;
+        StringToDate(date);
+    }
+
+    private void StringToDate(String s){
+        date = new GregorianCalendar();
+        String[] strings = s.split(";");
+        try {
+            date.set(Integer.parseInt(strings[0]),Integer.parseInt(strings[1]),Integer.parseInt(strings[2]),Integer.parseInt(strings[3]),Integer.parseInt(strings[4]));
+        }catch (Exception e){
+            Log.e("EventError","Unable to Pharse Date out of the DateString");
+        }
+
+
+    }
+
+    public String getDateString(){
+        return   date.get(Calendar.YEAR)+";"+ date.get(Calendar.MONTH)+";"+ date.get(Calendar.DAY_OF_MONTH)+";"+ date.get(Calendar.HOUR_OF_DAY)+";"+date.get(Calendar.MINUTE);
+    }
+
+
+
+
+
+
+
     @Override
     public boolean equals(@Nullable Object obj) {
         if (this == obj) {

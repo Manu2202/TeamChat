@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import androidx.lifecycle.MutableLiveData;
 import de.swproj.teamchat.datamodell.chat.Chat;
+import de.swproj.teamchat.datamodell.chat.Event;
 import de.swproj.teamchat.datamodell.chat.Message;
 
 public class ChatViewModel extends Updateable {
@@ -47,6 +48,22 @@ public class ChatViewModel extends Updateable {
     public void updateObject(Chat chat) {
         if (liveChat.getValue().getId().equals(chat.getId()))
             setLiveChat(chat);
+    }
+
+    @Override
+    public void updateObject(Event event) {
+       if(liveChat.getValue().getId().equals(event.getChatid())){
+           ArrayList<Message> messages = liveMessages.getValue();
+           for(int i =0;i<messages.size();i++){
+               if(messages.get(i).getId().equals(event.getId())){
+                   i=messages.size();
+                   messages.set(i,event);
+                   liveMessages.postValue(messages);
+               }
+
+           }
+
+       }
     }
 
 
