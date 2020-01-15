@@ -17,6 +17,7 @@ import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.datamodell.chat.Chat;
 import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.datamodell.chat.User;
+import de.swproj.teamchat.helper.FormatHelper;
 
 
 /*
@@ -86,7 +87,9 @@ public class AdapterChat extends BaseAdapter {
 
             // Date
             TextView messageDate = (TextView) convertView.findViewById(R.id.chatListLastMessageDate);
-            messageDate.setText(lastMsg.getTimeStamp().toString());
+            messageDate.setText(FormatHelper.formatHoursMinutesFromDate(lastMsg.getTimeStampDate()));
+
+
         }
 
 

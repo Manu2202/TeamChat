@@ -29,12 +29,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.connection.firebase.FirebaseConnection;
-import de.swproj.teamchat.datamodell.chat.Event;
 import de.swproj.teamchat.datamodell.chat.User;
 import de.swproj.teamchat.view.adapter.AdapterContact;
 
@@ -55,7 +53,6 @@ public class UserSearchDialog extends Dialog implements
     private ScrollView searchResultsScrollView;
     private ListView searchResults;
     private Space space;
-   // private User foundUser;         // to be replaced by an array for multiple search results
     private ArrayList<User> searchResultUsers = new ArrayList<User>();
 
 
@@ -158,8 +155,6 @@ public class UserSearchDialog extends Dialog implements
         });
 
 
-
-
         // Progress Bar when a search is being started - Pops up when you start search
         progressBar = (ProgressBar)findViewById(R.id.dialog_userSearch_progressBar);
         progressBar.setVisibility(View.GONE);
@@ -185,7 +180,6 @@ public class UserSearchDialog extends Dialog implements
         responseText = (TextView)findViewById(R.id.dialog_userSearch_response_tv);
         responseText.setText("Enter user email address or first name");
         responseText.setVisibility(View.VISIBLE);
-
 
     }
 
@@ -226,15 +220,9 @@ public class UserSearchDialog extends Dialog implements
                         }
                     }
                 } else {
-                    // If a user was found, the Search-Button will add the user
+                    // If a user was found, the Search-Button will add all found users
                     if (searchButton.getText().equals("Add all")) {
 
-                        // Also loads user into current Listview and updates it
-                        // (might not best way to do this)
-                        // without this, User is only displayed if you leave Contact View
-                        // and come back
-
-                        // Not needed when Live Refresh is active
 
                         activity.runOnUiThread(new Runnable() {
                             @Override

@@ -1,6 +1,5 @@
 package de.swproj.teamchat.view.fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -14,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -35,7 +33,6 @@ import de.swproj.teamchat.view.activities.ChatActivity;
 import de.swproj.teamchat.view.activities.EditChatActivity;
 import de.swproj.teamchat.view.activities.StartActivity;
 import de.swproj.teamchat.view.adapter.AdapterChat;
-import de.swproj.teamchat.view.adapter.AdapterContact;
 import de.swproj.teamchat.view.viewmodels.MainChatsViewModel;
 
 

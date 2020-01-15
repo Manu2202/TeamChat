@@ -92,12 +92,8 @@ public class AdapterEvent extends BaseAdapter {
         tvTitle.setText(ev.getMessage());
         tvTime.setText(ev.getTimeStamp().toString());
 
-        boolean YearisInPast = (Calendar.getInstance().get(Calendar.YEAR) > ev.getDate().get(Calendar.YEAR));
-        boolean MonthisInPast = ((Calendar.getInstance().get(Calendar.MONTH) > ev.getDate().get(Calendar.MONTH)) && (Calendar.getInstance().get(Calendar.YEAR) == ev.getDate().get(Calendar.YEAR)));
-        boolean isInPast = YearisInPast || MonthisInPast;
         // Separator
         // Will be displayed only once above Events happening on the same month
-        //!isinpast
 
 
         if (eventsAndSeparators.get(position).needsSeparator()) {
