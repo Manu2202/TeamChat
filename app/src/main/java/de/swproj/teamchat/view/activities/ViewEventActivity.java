@@ -2,6 +2,7 @@ package de.swproj.teamchat.view.activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -75,6 +77,8 @@ public class ViewEventActivity extends AppCompatActivity {
         ImageView icon_date = findViewById(R.id.li_icon_date);
         ImageView icon_time = findViewById(R.id.li_icon_time);
         tvStatus = findViewById(R.id.viewevent_tvstatus);
+        Button cancelBtn = findViewById(R.id.viewevent_btncancel);
+        Button commitBtn = findViewById(R.id.viewevent_btncomit);
 
         // Set the background color of the Event
         int chatColor = DBStatements.getChat(DBStatements.getEvent(id).getChatid()).getColor();
@@ -84,6 +88,12 @@ public class ViewEventActivity extends AppCompatActivity {
         // Get the color String of the text in cv and set the Textviews
         String colorString = ColorHelper.cardViewColorContrast(chatColor,
                 new TextView[]{tvCreator, tvDate, tvtime, tvTime, tvtitle, tvDescription, tvStatus, tvTxtState});
+
+
+        // Set the button color (lighter than the chat color)
+        ColorHelper.cardViewButtonColor(new Button[]{cancelBtn, commitBtn}, chatColor,
+                getResources(), getApplicationContext());
+
 
         // Set the icons belong to the colorstring
         if (colorString.equals("#000000")) {

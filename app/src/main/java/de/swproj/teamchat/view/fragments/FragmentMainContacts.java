@@ -25,6 +25,7 @@ import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.connection.firebase.FirebaseConnection;
 import de.swproj.teamchat.connection.firebase.services.TeamChatMessagingService;
 import de.swproj.teamchat.datamodell.chat.User;
+import de.swproj.teamchat.view.activities.MainActivity;
 import de.swproj.teamchat.view.activities.StartActivity;
 import de.swproj.teamchat.view.activities.ViewUserDetailsActivity;
 import de.swproj.teamchat.view.adapter.AdapterContact;
@@ -139,12 +140,6 @@ public class FragmentMainContacts extends ListFragment {
             adapterContact = new AdapterContact(users);
             setListAdapter(adapterContact);
 
-    }
-
-    public void updateMainContactsList() {
-        if (adapterContact != null) {
-            adapterContact.notifyDataSetChanged();
-        }
     }
 
 

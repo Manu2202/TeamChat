@@ -143,7 +143,7 @@
                 android:layout_below="@+id/li_icon_date"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="8dp"
-                android:text="Your status:"
+                android:text="@string/viewEvent_yourStatus"
                 android:textSize="16sp" />
 
             <TextView
@@ -155,9 +155,21 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_toRightOf="@id/viewevent_txtstatus"
-                android:text="commited"
+                android:text="@string/viewEvent_committed"
                 android:textSize="16sp"
                 android:textStyle="italic" />
+
+            <Button
+                android:id="@+id/viewevent_btncomit"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/viewevent_tvstatus"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="4dp"
+                android:layout_marginTop="8dp"
+                android:onClick="commit"
+                android:text="@string/viewEvent_commit"  />
 
             <Button
                 android:id="@+id/viewevent_btncancel"
@@ -165,21 +177,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/viewevent_tvstatus"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="4dp"
-                android:onClick="cancleDialog"
-                android:text="cancel" />
-
-            <Button
-                android:id="@+id/viewevent_btncomit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/viewevent_tvstatus"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="16dp"
-                android:onClick="commit"
+                android:layout_marginTop="8dp"
+                android:onClick="cancleDialog"
                 android:textSize="16sp"
-                android:text="commit" />
+                android:text="@string/viewEvent_cancel" />
 
 
         </RelativeLayout>

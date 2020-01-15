@@ -100,7 +100,7 @@ public class AdapterMessage extends BaseAdapter {
 
             if (message.isEvent()) {
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                UserEventStatus ues = DBStatements.getUserEventStatus(message.getId(), mAuth.getCurrentUser().getUid());
+               // UserEventStatus ues = DBStatements.getUserEventStatus(message.getId(), mAuth.getCurrentUser().getUid());
 
                 Event event = DBStatements.getEvent(message.getId());
                 TextView tvEventDate = convertView.findViewById(R.id.viewevent_tveveventdate);
@@ -136,7 +136,6 @@ public class AdapterMessage extends BaseAdapter {
                     icon_date.setImageResource(R.drawable.ic_event_white_24dp);
                     icon_time.setImageResource(R.drawable.ic_access_time_white_24dp);
                 }
-
 
 
                     if (event.getStatus() == 1){

@@ -65,6 +65,10 @@
     <string name="send_email">Send Email</string>
     <string name="deleteUser">Delete Contact from List</string>
     <string name="debug_displayEventByGroupColor">Debug: Toggle Group Colors</string>
+    <string name="viewEvent_commit">commit</string>
+    <string name="viewEvent_cancel">cancel</string>
+    <string name="viewEvent_committed">committed</string>
+    <string name="viewEvent_yourStatus">Your status:</string>
 
 
 </resources>

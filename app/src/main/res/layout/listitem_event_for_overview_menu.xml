@@ -83,6 +83,7 @@
                 android:layout_centerHorizontal="false"
                 android:layout_marginLeft="16dp"
                 android:layout_marginBottom="4dp"
+                android:layout_marginTop="6dp"
                 android:text="Termin"
                 android:textColor="#fcfcfc"
                 android:transitionName="top" />

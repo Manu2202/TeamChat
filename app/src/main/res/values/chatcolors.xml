@@ -1,24 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="chat_red">#F44336</color>
+    <color name="light_red">#FF7961</color>
     <color name="chat_pink">#E91E63</color>
+    <color name="light_pink">#FF6090</color>
     <color name="chat_purple">#9C27B0</color>
+    <color name="light_purple">#D05CE3</color>
     <color name="chat_deeppurple">#673AB7</color>
+    <color name="light_deeppurple">#9A67EA</color>
     <color name="chat_indigo">#3F51B5</color>
+    <color name="light_indigo">#757DE8</color>
     <color name="chat_blue">#2196F3</color>
+    <color name="light_blue">#6EC6FF</color>
     <color name="chat_lightblue">#03A9F4</color>
+    <color name="light_lightblue">#67DAFF</color>
     <color name="chat_cyan">#00BCD4</color>
+    <color name="light_cyan">#67FFFF</color>
     <color name="chat_teal">#009688</color>
+    <color name="light_teal">#52C7B8</color>
     <color name="chat_green">#4CAF50</color>
+    <color name="light_green">#80E27E</color>
     <color name="chat_lightgreen">#8BC34A</color>
+    <color name="light_lightgreen">#BEF67A</color>
     <color name="chat_lime">#CDDC39</color>
+    <color name="light_lime">#FFFF6E</color>
     <color name="chat_yellow">#FFEB3B</color>
+    <color name="light_yellow">#FFFF72</color>
     <color name="chat_amber">#FFC107</color>
+    <color name="light_amber">#FFF350</color>
     <color name="chat_orange">#FF9800</color>
+    <color name="light_orange">#FFC947</color>
     <color name="chat_deeporange">#FF5722</color>
+    <color name="light_deeporange">#FF8A50</color>
     <color name="chat_brown">#795548</color>
+    <color name="light_brown">#A98274</color>
     <color name="chat_gray">#9E9E9E</color>
+    <color name="light_gray">#CFCFCF</color>
     <color name="chat_bluegray">#607D8B</color>
+    <color name="light_bluegray">#8EACBB</color>
 
 
     <integer-array name="androidcolors">
@@ -44,5 +63,27 @@
     </integer-array>
 
 
+
+    <integer-array name="lightcolors">
+        <item>@color/light_red</item>
+        <item>@color/light_pink</item>
+        <item>@color/light_purple</item>
+        <item>@color/light_deeppurple</item>
+        <item>@color/light_indigo</item>
+        <item>@color/light_blue</item>
+        <item>@color/light_lightblue</item>
+        <item>@color/light_cyan</item>
+        <item>@color/light_teal</item>
+        <item>@color/light_green</item>
+        <item>@color/light_lightgreen</item>
+        <item>@color/light_lime</item>
+        <item>@color/light_yellow</item>
+        <item>@color/light_amber</item>
+        <item>@color/light_orange</item>
+        <item>@color/light_deeporange</item>
+        <item>@color/light_brown</item>
+        <item>@color/light_gray</item>
+        <item>@color/light_bluegray</item>
+    </integer-array>
 
 </resources>
