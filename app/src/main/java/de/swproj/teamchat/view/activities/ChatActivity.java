@@ -94,7 +94,7 @@ public class ChatActivity extends AppCompatActivity {
 
         firebaseConnection = new FirebaseConnection();
 
-        eventExpirer = new EventExpirer(5, 10);
+        eventExpirer = new EventExpirer(4, 10);
 
 
         //Exclude Items from Animation

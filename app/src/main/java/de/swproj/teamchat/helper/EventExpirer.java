@@ -28,34 +28,31 @@ public class EventExpirer {
     private void startExpirationChecker() {
         executorService = Executors.newScheduledThreadPool(1);
 
-        Log.d("EventExpiration", "Scheduler started");
+     //   Log.d("EventExpiration", "Scheduler started");
 
         executorService.scheduleWithFixedDelay(new TimerTask() {
             @Override
             public void run() {
                 Calendar now = new GregorianCalendar();
                 ArrayList<Event> eventlist = DBStatements.getEvents();
-                Log.d("EventExpiration", "Executed.");
+               // Log.d("EventExpiration", "Executed.");
 
                 // Event has status "expired" (= 1) if it is later than current time
                 if (eventlist.size() > 0) {
                     for (Event e : eventlist) {
                         if (e != null) {
                             if (e.getStatus() == 0) {
-                                //  Log.d("EventExpiration", "Event is checked " + e.getId());
+                                 // Log.d("EventExpiration", "Event is checked " + e.getId());
                                 //  Log.d("EventExpiration", "Event Date: " + e.getDate());
-                                //   if (e.getDate().after(now))
-                                if (GregorianCalendar.getInstance().compareTo(e.getDate()) > 0) {
+                                 if (GregorianCalendar.getInstance().compareTo(e.getDate()) > 0) {
                                     e.setStatus(1);
-
-                                    // TODO: updateEvent method does not correctly update Event yet
                                     DBStatements.updateEvent(e);
                                     //Log.d("EventExpiration", "Event expired: " + e.getId());
                                 }
                                 //   Log.d("EventExpiration", "(Local) Event " + e.getMessage() + " is " + e.getStatusString());
                             }
                         }
-                        //    Log.d("EventExpiration", "Event " + e.getMessage() + " " + DBStatements.getEvent(e.getId()).getStatusString());
+                       //     Log.d("EventExpiration", "Event " + e.getMessage() + " " + DBStatements.getEvent(e.getId()).getStatusString());
                     }
                 }
 
