@@ -236,14 +236,14 @@ public class DBStatementsTest {
         DBStatements.updateEvent(e);
 
         Log.d("DBStatementsTest", "Event Status is " + DBStatements.getEvent(e.getId()).getStatus());
-        assertThat(e.getStatus(), equalTo(DBStatements.getEvent(e.getId()).getStatus()));
+        assertThat(e, equalTo(DBStatements.getEvent(e.getId())));
 
         e.setStatus(2);
         DBStatements.updateEvent(e);
 
         Log.d("DBStatementsTest", "Event Status is " + DBStatements.getEvent(e.getId()).getStatus());
         assertThat(e.getStatus(), equalTo(DBStatements.getEvent(e.getId()).getStatus()));
-        assertThat(1, equalTo(DBStatements.getEvent(e.getId()).getStatus()));
+
     }
 
 }

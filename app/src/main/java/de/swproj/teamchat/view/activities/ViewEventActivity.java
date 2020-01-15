@@ -26,6 +26,7 @@ import de.swproj.teamchat.R;
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.connection.firebase.FirebaseConnection;
 import de.swproj.teamchat.datamodell.chat.Event;
+import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.datamodell.chat.User;
 import de.swproj.teamchat.datamodell.chat.UserEventStatus;
 import de.swproj.teamchat.helper.ColorHelper;
@@ -151,32 +152,14 @@ public class ViewEventActivity extends AppCompatActivity {
         mystate.setStatus(1);
 
 
-      /*  String message = FirebaseAuth.getInstance().getCurrentUser().getDisplayName().split(" ")[0]
-                + " " + mystate.getStatusString();
-       */
+
     }
 
     private void sendMyState(UserEventStatus mystate){
-        Thread thread = new test(mystate);
-        thread.start();//remove firebase have to do it on Success
+
         //todo: send to other to Firebase, remove line before
-
     }
 
-    //todo: Delete Class after firebase implementation
-    class test extends Thread {
-        UserEventStatus status;
-
-        public test(UserEventStatus status) {
-            this.status = status;
-        }
-
-        @Override
-        public void run() {
-            super.run();
-            DBStatements.updateUserEventStatus(status);
-        }
-    }
 
     public void cancleDialog(View view) {
         ReasonDialog rd = new ReasonDialog(this);
@@ -186,13 +169,10 @@ public class ViewEventActivity extends AppCompatActivity {
 
     public void cancleState(String reason) {
 
-
         UserEventStatus mystate = viewModel.getMyLiveState().getValue();
         mystate.setReason(reason);
         mystate.setStatus(2);
 
-        Thread thread = new test(mystate);
-        thread.start();//remove firebas have to do it
         sendMyState(mystate);
 
     }
