@@ -450,12 +450,8 @@ public class DBStatements {
                 values.put(DBCreate.COL_MESSAGE_MESSAGE, event.getMessage());
                 values.put(DBCreate.COL_MESSAGE_ID, event.getId());
                 values.put(DBCreate.COL_MESSAGE_TIMESTAMP, String.valueOf(event.getTimeStampDate().getTime()));
-                /////////////// TODO: Michi, ich hab diese Zeile hier hinzugefügt, weil sonst eine
-                // IllegalStateException auftaucht (zu testen bei DBStatementsTest.updateEvent() )
-                // Schau bitte nach, ob die hier richtig ist.  -Nikolas
-                // E/TestRunner: java.lang.IllegalStateException: Cannot perform this operation because there is no current transaction.
+
                 db.beginTransaction();
-                ////////////////////////////////////////////////////////////////////////////////
 
 
                 db.update(DBCreate.TABLE_MESSAGE,values,DBCreate.COL_MESSAGE_ID+"=?",new String[]{event.getId()});
