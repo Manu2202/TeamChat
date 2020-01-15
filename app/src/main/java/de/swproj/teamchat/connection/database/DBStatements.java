@@ -942,7 +942,7 @@ public class DBStatements {
 
 
             Cursor c = db.query(DBCreate.TABLE_EVENT, new String[]{DBCreate.COL_EVENT_ID},
-                    null, null, null, null, null);
+                    DBCreate.COL_EVENT_STATE+"=?", new String[]{"0"}, null, null, null);
             if (c.moveToFirst()) {
 
                 int eventId = c.getColumnIndex(DBCreate.COL_EVENT_ID);
