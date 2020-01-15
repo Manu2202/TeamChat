@@ -1,5 +1,6 @@
 package de.swproj.teamchat.view.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -70,7 +71,7 @@ public class FragmentMainEvents extends ListFragment {
 
 
         viewModel = new EventListViewModel(eventList);
-        adapterEvent = new AdapterEvent(viewModel.getLiveEvents().getValue());
+        adapterEvent = new AdapterEvent(viewModel.getLiveEvents().getValue(), getActivity());
         // Get the ListView out of the fragment
         ListView list = getListView();
 
@@ -91,7 +92,7 @@ public class FragmentMainEvents extends ListFragment {
 
         setHasOptionsMenu(true);
 
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      /*  list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent eventIntent = new Intent(getActivity(), ViewEventActivity.class);
@@ -99,7 +100,7 @@ public class FragmentMainEvents extends ListFragment {
                 eventIntent.putExtra("eventID", selectedItem.getEv().getId());
                 startActivityForResult(eventIntent, position);
             }
-        });
+        });*/
     }
 
     @Override
