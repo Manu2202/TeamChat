@@ -441,13 +441,6 @@ public class DBStatements {
             SQLiteDatabase db = dbConnection.getWritableDatabase();
 
             try {
-                /////////////// TODO: Michi, ich hab diese Zeile hier hinzugefügt, weil sonst eine
-                // IllegalStateException auftaucht (zu testen bei DBStatementsTest.updateEvent() )
-                // Schau bitte nach, ob die hier richtig ist.  -Nikolas
-                // E/TestRunner: java.lang.IllegalStateException: Cannot perform this operation because there is no current transaction.
-                db.beginTransaction();
-                ////////////////////////////////////////////////////////////////////////////////
-
 
                 ContentValues values = new ContentValues();
 
@@ -457,6 +450,13 @@ public class DBStatements {
                 values.put(DBCreate.COL_MESSAGE_MESSAGE, event.getMessage());
                 values.put(DBCreate.COL_MESSAGE_ID, event.getId());
                 values.put(DBCreate.COL_MESSAGE_TIMESTAMP, String.valueOf(event.getTimeStampDate().getTime()));
+                /////////////// TODO: Michi, ich hab diese Zeile hier hinzugefügt, weil sonst eine
+                // IllegalStateException auftaucht (zu testen bei DBStatementsTest.updateEvent() )
+                // Schau bitte nach, ob die hier richtig ist.  -Nikolas
+                // E/TestRunner: java.lang.IllegalStateException: Cannot perform this operation because there is no current transaction.
+                db.beginTransaction();
+                ////////////////////////////////////////////////////////////////////////////////
+
 
                 db.update(DBCreate.TABLE_MESSAGE,values,DBCreate.COL_MESSAGE_ID+"=?",new String[]{event.getId()});
 
@@ -467,30 +467,29 @@ public class DBStatements {
 
                 values = new ContentValues();
 
-                values.put(DBCreate.COL_EVENT_ID, message.getId());
+
                 values.put(DBCreate.COL_EVENT_DATE, event.getDate().getTime().getTime() + "");
                 values.put(DBCreate.COL_EVENT_DESCRIPTION, event.getDescription());
-                values.put(DBCreate.COL_EVENT_STATE, event.getStatus());  // Was missing?
-                values.put(DBCreate.COL_MESSAGE_TIMESTAMP, String.valueOf(message.getTimeStampDate().getTime()));
+                values.put(DBCreate.COL_EVENT_STATE, event.getStatus());
 
                 db.update(DBCreate.TABLE_EVENT,values,DBCreate.COL_EVENT_ID+"=?",new String[]{event.getId()});
 
                 db.setTransactionSuccessful();
-
-
-                for (Updateable u:updateables) {
-                    u.updateObject(event);
-                }
 
                 res=true;
 
 
             } catch (Exception e) {
                 Log.e("DatabaseError","Unable to update Event wit id "+event.getId());
+                return false;
             }
             finally {
                 db.endTransaction();
             }
+            for (Updateable u:updateables) {
+                u.updateObject(event);
+            }
+
 
 
         }
