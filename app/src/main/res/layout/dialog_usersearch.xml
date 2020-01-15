@@ -62,6 +62,7 @@
         android:layout_below="@+id/dialog_userSearch_response_tv"
         android:layout_alignParentLeft="true"
         android:layout_marginLeft="12dp"
+        android:layout_marginBottom="12dp"
         android:layout_marginTop="10dp"
         android:backgroundTint="@color/cancel_red"
         android:textColor="@color/white"
