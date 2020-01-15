@@ -251,10 +251,10 @@ public class ViewEventActivity extends AppCompatActivity {
     private void acceptDeleteDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        builder.setTitle("Delete Event");
-        builder.setMessage("Are you sure you want to delete this event?");
+        builder.setTitle(R.string.dialog_delete_event_title);
+        builder.setMessage(R.string.dialog_delete_event_msg);
 
-        builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 
             public void onClick(DialogInterface dialog, int which) {
                 // TODO: Löschen des Events und senden einer Nachricht an andere User
@@ -263,7 +263,7 @@ public class ViewEventActivity extends AppCompatActivity {
             }
         });
 
-        builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {

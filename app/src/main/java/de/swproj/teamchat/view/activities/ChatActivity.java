@@ -1,5 +1,6 @@
 package de.swproj.teamchat.view.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.transition.Fade;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import de.swproj.teamchat.R;
@@ -171,8 +173,42 @@ public class ChatActivity extends AppCompatActivity {
                 editChatIntent.putExtra("ID", chatID);
                 startActivity(editChatIntent);
                 break;
+
+            case R.id.btn_chat_menu_leaveChat:
+                acceptLeaveChatDialog();
         }
 
         return true;
+    }
+
+    // Method to show Accepting Dialog and handle Button
+    private void acceptLeaveChatDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle(R.string.leaveChat);
+        builder.setMessage(R.string.acceptLeaveChat);
+
+        builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO: Verlassen der Gruppe und Update an Gruppen Mitglieder
+
+                dialog.dismiss();
+            }
+        });
+
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Do nothing
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog alert = builder.create();
+
+
+        alert.show();
     }
 }
