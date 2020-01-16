@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         Bundle extras = i.getExtras();
 
         if (extras!=null) {
-            if (FirebaseTypes.valueOf(extras.getInt("type")) == FirebaseTypes.Message) {
+            if (FirebaseTypes.valueOf(Integer.parseInt(extras.getString("type"))) == FirebaseTypes.Message) {
                 Message msg;
                 if (Boolean.valueOf(extras.getString("isEvent"))) {
                     //New Event-----------------------------------------
@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
                             extras.getString("date"),
                             extras.getString("description"),
                             extras.getString("chatid"),
-                            extras.getInt("status"));
+                            Integer.parseInt(extras.getString("status")));
                 } else {
                     //New Message
                     msg = new Message(FormatHelper.formatTime(extras.getString("timestamp")),
@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
                             extras.getString("creator"),
                             extras.getString("chatid"));
                 }
-                switch (FirebaseActions.valueOf(extras.getInt("action"))) {
+                switch (FirebaseActions.valueOf(Integer.parseInt(extras.getString("action")))) {
                     case ADD:
                         DBStatements.insertMessage(msg);
                         break;
@@ -153,11 +153,11 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
 
-            } else if (FirebaseTypes.valueOf(extras.getInt("type")) == FirebaseTypes.Chat) {
+            } else if (FirebaseTypes.valueOf(Integer.parseInt(extras.getString("type"))) == FirebaseTypes.Chat) {
 
-                Chat chat = new Chat(extras.getString("name"), extras.getInt("color"), extras.getString("id"), extras.getString("admin"));
+                Chat chat = new Chat(extras.getString("name"), Integer.parseInt(extras.getString("color")), extras.getString("id"), extras.getString("admin"));
                 List<String> users = Arrays.asList(extras.getString("users").split(";"));
-                switch (FirebaseActions.valueOf(extras.getInt("action"))) {
+                switch (FirebaseActions.valueOf(Integer.parseInt(extras.getString("action")))) {
                     case ADD:
                         DBStatements.insertChat(chat);
                         DBStatements.updateChatMembers(users, chat.getId());
@@ -173,12 +173,12 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
 
-            } else if (FirebaseTypes.valueOf(extras.getInt("type")) == FirebaseTypes.EVENTSTATE) {
+            } else if (FirebaseTypes.valueOf(Integer.parseInt(extras.getString("type"))) == FirebaseTypes.EVENTSTATE) {
                 UserEventStatus userEventStatus = new UserEventStatus(extras.getString("userid"),
                         extras.getString("eventid"),
-                        extras.getInt("status"),
+                        Integer.parseInt(extras.getString("status")),
                         extras.getString("reason"));
-                switch (FirebaseActions.valueOf(extras.getInt("action"))) {
+                switch (FirebaseActions.valueOf(Integer.parseInt(extras.getString("action")))) {
                     case UPDATE:
                         DBStatements.updateUserEventStatus(userEventStatus);
                 }
