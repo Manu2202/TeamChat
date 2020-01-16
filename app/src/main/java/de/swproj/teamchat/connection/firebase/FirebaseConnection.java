@@ -78,7 +78,7 @@ public class FirebaseConnection {
     }
 
 
-    public void addToFirestore(final Chat chat,  final int type, final int action, final List<String> userids) {
+    public void addToFirestore(final Chat chat, final List<String> userids,  final int type, final int action) {
         firebaseDB.collection("chats").add(FirebaseHelper.convertToMap(chat,type,action,userids))
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
@@ -94,7 +94,7 @@ public class FirebaseConnection {
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                addToFirestore(chat, type, action, userids);
+                addToFirestore(chat, userids, type, action);
             }
         });
     }

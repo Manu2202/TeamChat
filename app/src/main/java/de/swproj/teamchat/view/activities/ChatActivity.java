@@ -25,6 +25,8 @@ import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.connection.firebase.FirebaseConnection;
 import de.swproj.teamchat.connection.firebase.services.TeamChatMessagingService;
 import de.swproj.teamchat.datamodell.chat.Chat;
+import de.swproj.teamchat.datamodell.chat.FirebaseActions;
+import de.swproj.teamchat.datamodell.chat.FirebaseTypes;
 import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.helper.EventExpirer;
 import de.swproj.teamchat.view.adapter.AdapterMessage;
@@ -132,9 +134,7 @@ public class ChatActivity extends AppCompatActivity {
             Message message = new Message(GregorianCalendar.getInstance().getTime(),
                     etMessageString, false,
                     FirebaseAuth.getInstance().getCurrentUser().getUid(), chatID);
-            firebaseConnection.addToFirestore(message,
-                    FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),
-                    false, false);
+            firebaseConnection.addToFirestore(message, FirebaseTypes.Message.getValue(), FirebaseActions.ADD.getValue());
             etMessage.setText("");
         }
     }

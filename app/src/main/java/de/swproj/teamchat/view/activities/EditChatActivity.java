@@ -6,6 +6,8 @@ import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.connection.firebase.FirebaseConnection;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.datamodell.chat.Chat;
+import de.swproj.teamchat.datamodell.chat.FirebaseActions;
+import de.swproj.teamchat.datamodell.chat.FirebaseTypes;
 import de.swproj.teamchat.datamodell.chat.User;
 
 import android.annotation.SuppressLint;
@@ -216,11 +218,11 @@ public class EditChatActivity extends AppCompatActivity {
                     FirebaseAuth.getInstance().getCurrentUser().getUid(), color);
             List<String> userIDs = new ArrayList<>(groupMember.keySet());
             userIDs.add(FirebaseAuth.getInstance().getCurrentUser().getUid());
-            firebaseConnection.addToFirestore(chat, userIDs);
+            firebaseConnection.addToFirestore(chat,userIDs, FirebaseTypes.Chat.getValue(), FirebaseActions.ADD.getValue());
 
         }else{
             List<String> userIDs = new ArrayList<>(groupMember.keySet());
-            firebaseConnection.updateUsers(chatId,chat.getName(),userIDs);
+            firebaseConnection.addToFirestore(chat,userIDs, FirebaseTypes.Chat.getValue(), FirebaseActions.UPDATE.getValue());
 
         }
         finish();

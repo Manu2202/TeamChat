@@ -5,6 +5,8 @@ import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.connection.firebase.FirebaseConnection;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.datamodell.chat.Event;
+import de.swproj.teamchat.datamodell.chat.FirebaseActions;
+import de.swproj.teamchat.datamodell.chat.FirebaseTypes;
 import de.swproj.teamchat.helper.FormatHelper;
 
 import android.app.DatePickerDialog;
@@ -185,9 +187,7 @@ public class EditEventActivity extends AppCompatActivity {
                             et_title.getText().toString(), msgId, true, FirebaseAuth.getInstance().getCurrentUser().getUid(),
                             date, et_description.getText().toString(), chatID, status);
                     //Push Event to Firebase
-                    firebaseConnection.addToFirestore(event,
-                            FirebaseAuth.getInstance().getCurrentUser().getDisplayName(),
-                            false, false);
+                    firebaseConnection.addToFirestore(event, FirebaseTypes.Message.getValue(), FirebaseActions.ADD.getValue());
 
                     finish();
                 } else {
