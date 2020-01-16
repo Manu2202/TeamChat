@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
             setUpUI();
         }
 
-        eventExpirer = new EventExpirer(5, 10);
+        eventExpirer = new EventExpirer(7, 15);
 
         //addTestdat();
     }

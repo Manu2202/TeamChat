@@ -1,6 +1,5 @@
 package de.swproj.teamchat.view.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,7 +7,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -24,7 +22,6 @@ import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.datamodell.chat.Chat;
 import de.swproj.teamchat.datamodell.chat.User;
 import de.swproj.teamchat.view.adapter.AdapterChat;
-import de.swproj.teamchat.view.adapter.AdapterContact;
 
 
 public class ViewUserDetailsActivity extends AppCompatActivity {
