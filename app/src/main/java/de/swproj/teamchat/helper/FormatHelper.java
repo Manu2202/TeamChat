@@ -24,7 +24,7 @@ public class FormatHelper {
      */
     public static String formatDateTime(GregorianCalendar date) {
         // Format the Date
-        SimpleDateFormat sdfDate = new SimpleDateFormat("dd.MM.YYYY");
+        SimpleDateFormat sdfDate = new SimpleDateFormat("dd.MM.yyyy");
         sdfDate.setCalendar(date);
         String dateFormatted = sdfDate.format(date.getTime());
         // Getting and Setting the Dy of the week
@@ -39,7 +39,7 @@ public class FormatHelper {
     }
 
     public static GregorianCalendar formatDate(String date) {
-        SimpleDateFormat sdfDate = new SimpleDateFormat("dd.MM.YYYY");
+        SimpleDateFormat sdfDate = new SimpleDateFormat("dd.MM.yyyy");
         GregorianCalendar greg_date = (GregorianCalendar) GregorianCalendar.getInstance();
         try {
             greg_date.setTime(sdfDate.parse(date));
@@ -73,7 +73,7 @@ public class FormatHelper {
     }
 
     public static String formatDate(GregorianCalendar date) {
-        SimpleDateFormat sdfDate = new SimpleDateFormat("dd.MM.YYYY");
+        SimpleDateFormat sdfDate = new SimpleDateFormat("dd.MM.yyyy");
         sdfDate.setCalendar(date);
         return sdfDate.format(date.getTime());
     }
