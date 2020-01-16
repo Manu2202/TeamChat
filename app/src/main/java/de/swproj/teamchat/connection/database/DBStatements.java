@@ -311,20 +311,21 @@ public class DBStatements {
             ) {
                 u.updateObject(cm);
             }
+            db.endTransaction();
 
             //Update UserEventStatus
-            for (String s:actChatMembers
-            ) {
+            db.beginTransaction();
+            for (String s : actChatMembers) {
                 if(newMembers.contains(s)){
                     newMembers.remove(s);
                 }else {
                     deleteUserEventStatus(chatId,s);
                 }
             }
-            for (String s:newMembers
-            ) {
+            for (String s : newMembers) {
                 insertUserEventStatus(chatId,s);
             }
+            db.setTransactionSuccessful();
             success=true;
 
 
@@ -332,7 +333,6 @@ public class DBStatements {
             success = false;
             Log.d("DB_Error DBStatements", "Unable to write CHAT_USER in db");
         } finally {
-
             db.endTransaction();
         }
 
