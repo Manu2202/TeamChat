@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
         Intent i = getIntent();
         Bundle extras = i.getExtras();
 
-        
+        if (extras!=null) {
             if (FirebaseTypes.valueOf(extras.getInt("type")) == FirebaseTypes.Message) {
                 Message msg;
                 if (Boolean.valueOf(extras.getString("isEvent"))) {
@@ -183,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
                         DBStatements.updateUserEventStatus(userEventStatus);
                 }
             }
+        }
     }
         
         /*
