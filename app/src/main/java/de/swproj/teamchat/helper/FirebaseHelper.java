@@ -12,7 +12,7 @@ public static HashMap<String,String> convertToMap(Message message, String title,
     HashMap<String,String> retMap= new HashMap<>();
     if(message.isEvent()){
         Event event = (Event)message;
-        retMap.put("date",FormatHelper.formatDate(event.getDate()));
+        retMap.put("date", event.getDateString());
         retMap.put("description",event.getDescription());
         retMap.put("status",String.valueOf(event.getStatus()));
     }
@@ -23,7 +23,7 @@ public static HashMap<String,String> convertToMap(Message message, String title,
     retMap.put("title",title);
     retMap.put("message",message.getMessage());
     retMap.put("isEvent",((Boolean)message.isEvent()).toString());
-    retMap.put("timestamp",FormatHelper.formatTime(message.getTimeStamp()));
+    retMap.put("timestamp", message.getTimeStampString());
     return retMap;
 }
 }

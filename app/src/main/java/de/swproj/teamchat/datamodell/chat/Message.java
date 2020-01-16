@@ -59,6 +59,7 @@ public class Message {
 
 public void setTimeStampString(String s){
         try{
+            timeStamp = new Date();
             timeStamp.setTime(Long.parseLong(s));
         }catch (Exception e){
             Log.e("Message broken","Unable to cast TimeStampString");

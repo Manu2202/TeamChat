@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.os.Build;
-import android.os.Bundle;
 import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,7 +23,6 @@ import java.util.Map;
 
 import androidx.core.app.NotificationCompat;
 import de.swproj.teamchat.R;
-import de.swproj.teamchat.connection.database.DBConnection;
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.connection.firebase.FirebaseConnection;
 import de.swproj.teamchat.datamodell.chat.Event;
@@ -94,7 +92,7 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
      */
     private void save_message(RemoteMessage.Notification notification, Map<String, String> data) {
 
-        Log.d("IS EVENT", "Ist es ein Event?:"+Boolean.valueOf(data.get("isEvent")));
+        Log.d("IS EVENT", "Ist es ein Event?:" + Boolean.valueOf(data.get("isEvent")));
         if (notification.getBody() != null && notification.getBody().length() > 0 && DBStatements.getMessage(data.get("id")) == null) {
             if (Boolean.parseBoolean(data.get("isInvite"))) {
                 Log.d("Chat", "Got invite");
@@ -108,17 +106,16 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
             }
             if (Boolean.valueOf(data.get("isEvent"))) {
                 //New Event-----------------------------------------
-                Event event = new Event(FormatHelper.formatTime(data.get("timestamp")),
+                Event event = new Event(data.get("timestamp"),
                         data.get("message"),
                         data.get("id"),
                         Boolean.valueOf(data.get("isEvent")),
                         data.get("creator"),
-                        FormatHelper.formatDate(data.get("date")),
+                        data.get("date"),
                         data.get("description"),
                         data.get("chatid"),
                         Integer.parseInt(data.get("status")));
-                //Log.d("Save FCM Event from onMessageReceived", event.getMessage() +
-                //"Status:" + event.getStatus());
+
                 //Save in Database
                 DBStatements.insertMessage(event);
 
@@ -136,19 +133,18 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
                 userEventStatus.setStatus(intStatus);
 
                 DBStatements.updateUserEventStatus(userEventStatus);
-            }
-            else {
-            //New Message
-            Message msg = new Message(FormatHelper.formatTime(data.get("timestamp")),
-                    notification.getBody(),
-                    data.get("id"),
-                    Boolean.valueOf(data.get("isEvent")),
-                    data.get("creator"),
-                    data.get("chatid"));
+            } else {
+                //New Message
+                Message msg = new Message(FormatHelper.formatTime(data.get("timestamp")),
+                        notification.getBody(),
+                        data.get("id"),
+                        Boolean.valueOf(data.get("isEvent")),
+                        data.get("creator"),
+                        data.get("chatid"));
                 //Log.d("Save FCM Message from onMessageReceived", msg.getMessage());
-            //Save in Database
+                //Save in Database
                 DBStatements.insertMessage(msg);
-        }
+            }
         }
     }
 
