@@ -72,6 +72,7 @@
     <string name="viewEvent_cancel">cancel</string>
     <string name="viewEvent_committed">committed</string>
     <string name="viewEvent_yourStatus">Your status:</string>
+    <string name="editChatGroupnameHint">Group Name</string>
 
 
 </resources>

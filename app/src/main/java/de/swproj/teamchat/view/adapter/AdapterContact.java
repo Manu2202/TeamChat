@@ -32,10 +32,17 @@ public class AdapterContact extends BaseAdapter {
     public AdapterContact(List<User> contacts) {
         this.contacts = contacts;
 
-        if (this.contacts.contains(DBStatements.getUser(FirebaseAuth.getInstance().getCurrentUser().getUid()))) {
-            this.contacts.remove(DBStatements.getUser(FirebaseAuth.getInstance().getCurrentUser().getUid()));
+        // Don't display yourself
+        if (contacts.size() > 0) {
+            try {
+                String fireBaseCurrentUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                if (this.contacts.contains(DBStatements.getUser(fireBaseCurrentUserID))) {
+                    this.contacts.remove(DBStatements.getUser(FirebaseAuth.getInstance().getCurrentUser().getUid()));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-
 
     }
 
