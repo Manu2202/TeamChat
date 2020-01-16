@@ -25,8 +25,11 @@ import androidx.annotation.NonNull;
 
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.datamodell.chat.Chat;
+import de.swproj.teamchat.datamodell.chat.FirebaseActions;
+import de.swproj.teamchat.datamodell.chat.FirebaseTypes;
 import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.datamodell.chat.User;
+import de.swproj.teamchat.datamodell.chat.UserEventStatus;
 import de.swproj.teamchat.helper.FirebaseHelper;
 
 public class FirebaseConnection {
@@ -40,10 +43,9 @@ public class FirebaseConnection {
         firebaseDB = FirebaseFirestore.getInstance();
     }
 
-    public void addToFirestore(final Message message, final String title ,
-                               final boolean isInvite, final boolean isEventUpdate) {
+    public void addToFirestore(final Message message, final int type, final int action) {
         firebaseDB.collection("messages")
-                .add(FirebaseHelper.convertToMap(message, title, isInvite, isEventUpdate))
+                .add(FirebaseHelper.convertToMap(message,type, action))
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
@@ -54,20 +56,35 @@ public class FirebaseConnection {
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                addToFirestore(message, title, isInvite, isEventUpdate);
+                addToFirestore(message, type, action);
+            }
+        });
+    }
+    public void addToFirestore(final UserEventStatus status, final int type, final int action) {
+        firebaseDB.collection("usereventstatus")
+                .add(FirebaseHelper.convertToMap(status,type, action))
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d("Firestore Messages", "UserEventStatus added with ID: " + documentReference.getId());
+                        DBStatements.updateUserEventStatus(status);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                addToFirestore(status, type, action);
             }
         });
     }
 
-    public void addToFirestore(final Chat chat, final List<String> userids) {
-        firebaseDB.collection("chats").add(chat)
+
+    public void addToFirestore(final Chat chat,  final int type, final int action, final List<String> userids) {
+        firebaseDB.collection("chats").add(FirebaseHelper.convertToMap(chat,type,action,userids))
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         String chatid = documentReference.getId();
                         Log.d("Firestore Chat", "Chat added to Firebase with ID: " + chatid);
-
-                        updateUsers(chatid,chat.getName(),userids);
 
                         chat.setId(chatid);
                         DBStatements.insertChat(chat);
@@ -77,7 +94,7 @@ public class FirebaseConnection {
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                addToFirestore(chat,userids);
+                addToFirestore(chat, type, action, userids);
             }
         });
     }
@@ -86,63 +103,31 @@ public class FirebaseConnection {
         firebaseDB.collection("users").document(
                 FirebaseAuth.getInstance().getCurrentUser().getUid()).set(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Log.d("Firestore User", "User added to Firebase");
-                DBStatements.insertUser(user);
-            }
-        });
-    }
-
-    public void inviteToChat(String chatid, String chatname){
-        String invite_msg= "Welcome to "+chatname+ "!";
-        Message message = new Message(GregorianCalendar.getInstance().getTime(),
-                invite_msg, false,
-                FirebaseAuth.getInstance().getCurrentUser().getUid(), chatid);
-        addToFirestore(message, "You got invited to be part of "+ chatname,
-                true, false);
-    }
-
-    public void updateUsers(final String ChatID, final String Chatname, List<String> users){
-        Map<String, Object> data = new HashMap<>();
-        data.put("users", users);
-
-        FirebaseFirestore.getInstance().collection("chats").document(ChatID).
-                set(data, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Log.d("Firestore Chat", "Users added to Chat " + ChatID);
-
-                //Send Invite to Users:
-                inviteToChat(ChatID,Chatname);
-
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("Firestore Chat", "onFailure: Users not added to Chat");
-            }
-        });
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Firestore User", "User added to Firebase");
+                        DBStatements.insertUser(user);
+                    }
+                });
     }
 
     public void saveUserByID(String uID) {
         firebaseDB.collection("users").document(uID).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot documentSnapshot = task.getResult();
-                    if (documentSnapshot.exists()) {
-                        User firebaseUser = documentSnapshot.toObject(User.class);
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot documentSnapshot = task.getResult();
+                            if (documentSnapshot.exists()) {
+                                User firebaseUser = documentSnapshot.toObject(User.class);
 
-                        Log.d("FirebaseUser", "Saved new User:"+
-                                firebaseUser.getAccountName() + ", " + firebaseUser.getGoogleMail());
-                        DBStatements.insertUser(firebaseUser);
+                                Log.d("FirebaseUser", "Saved new User:"+
+                                        firebaseUser.getAccountName() + ", " + firebaseUser.getGoogleMail());
+                                DBStatements.insertUser(firebaseUser);
+                            }
+                        }
                     }
-                }
-            }
-        });
+                });
     }
 
     public void saveChatbyID(final String chatid){
@@ -174,21 +159,21 @@ public class FirebaseConnection {
         // Query against the collection WHERE (googleMail == given_email).
         firebaseDB.collection("users").whereEqualTo("googleMail", email).get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        User firebaseUser = document.toObject(User.class);
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                User firebaseUser = document.toObject(User.class);
 
-                        Log.d("FirebaseUser", firebaseUser.getAccountName() + ", " +
-                                firebaseUser.getGoogleMail());
-                        DBStatements.insertUser(firebaseUser);
+                                Log.d("FirebaseUser", firebaseUser.getAccountName() + ", " +
+                                        firebaseUser.getGoogleMail());
+                                DBStatements.insertUser(firebaseUser);
+                            }
+                        } else {
+                            Log.d("Firebase User", "Error getting user: ", task.getException());
+                        }
                     }
-                } else {
-                    Log.d("Firebase User", "Error getting user: ", task.getException());
-                }
-            }
-        });
+                });
 
     }
 

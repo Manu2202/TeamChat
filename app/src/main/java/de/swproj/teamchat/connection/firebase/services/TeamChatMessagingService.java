@@ -19,13 +19,19 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import androidx.core.app.NotificationCompat;
+
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.connection.firebase.FirebaseConnection;
+import de.swproj.teamchat.datamodell.chat.Chat;
 import de.swproj.teamchat.datamodell.chat.Event;
+import de.swproj.teamchat.datamodell.chat.FirebaseActions;
+import de.swproj.teamchat.datamodell.chat.FirebaseTypes;
 import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.datamodell.chat.UserEventStatus;
 import de.swproj.teamchat.helper.FormatHelper;
@@ -91,8 +97,72 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
      * If app is in foreground, notification data comes from onMessageReceived
      */
     private void save_message(RemoteMessage.Notification notification, Map<String, String> data) {
+        if (notification.getBody() != null && notification.getBody().length() > 0) {
+            if (FirebaseTypes.valueOf(Integer.parseInt(data.get("type"))) == FirebaseTypes.Message) {
+                Message msg;
+                if (Boolean.valueOf(data.get("isEvent"))) {
+                    //New Event-----------------------------------------
+                    msg = new Event(data.get("timestamp"),
+                            data.get("message"),
+                            data.get("id"),
+                            Boolean.valueOf(data.get("isEvent")),
+                            data.get("creator"),
+                            data.get("date"),
+                            data.get("description"),
+                            data.get("chatid"),
+                            Integer.parseInt(data.get("status")));
+                } else {
+                    //New Message
+                    msg = new Message(FormatHelper.formatTime(data.get("timestamp")),
+                            notification.getBody(),
+                            data.get("id"),
+                            Boolean.valueOf(data.get("isEvent")),
+                            data.get("creator"),
+                            data.get("chatid"));
+                }
+                switch (FirebaseActions.valueOf(Integer.parseInt(data.get("action")))) {
+                    case ADD:
+                        DBStatements.insertMessage(msg);
+                        break;
+                    case UPDATE:
+                        if (msg.isEvent()) DBStatements.updateEvent((Event) msg);
+                        break;
+                }
 
-        Log.d("IS EVENT", "Ist es ein Event?:" + Boolean.valueOf(data.get("isEvent")));
+            } else if (FirebaseTypes.valueOf(Integer.parseInt(data.get("type"))) == FirebaseTypes.Chat) {
+
+                Chat chat = new Chat(data.get("name"), Integer.parseInt(data.get("color")), data.get("id"), data.get("admin"));
+                List<String> users = Arrays.asList(data.get("users").split(";"));
+                switch (FirebaseActions.valueOf(Integer.parseInt(data.get("action")))) {
+                    case ADD:
+                        DBStatements.insertChat(chat);
+                        DBStatements.updateChatMembers(users,chat.getId());
+                        break;
+                    case UPDATE:
+                        DBStatements.updateChat(chat);
+                        List<String> users_2 = Arrays.asList(data.get("users").split(";"));
+                        DBStatements.updateChatMembers(users,chat.getId());
+                        break;
+                    case REMOVE:
+                        DBStatements.deleteChat(chat.getId());
+                        //TODO delete Chat in Firebase
+                        break;
+                }
+
+            } else if (FirebaseTypes.valueOf(Integer.parseInt(data.get("type"))) == FirebaseTypes.EVENTSTATE) {
+                UserEventStatus userEventStatus = new UserEventStatus(data.get("userid"),
+                        data.get("eventid"),
+                        Integer.parseInt(data.get("status")),
+                        data.get("reason"));
+                switch (FirebaseActions.valueOf(Integer.parseInt(data.get("action")))){
+                    case UPDATE:
+                        DBStatements.updateUserEventStatus(userEventStatus);
+                }
+            }
+        }
+    }
+
+        /*Log.d("IS EVENT", "Ist es ein Event?:" + Boolean.valueOf(data.get("isEvent")));
         if (notification.getBody() != null && notification.getBody().length() > 0 && DBStatements.getMessage(data.get("id")) == null) {
             if (Boolean.parseBoolean(data.get("isInvite"))) {
                 Log.d("Chat", "Got invite");
@@ -146,76 +216,77 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
                 DBStatements.insertMessage(msg);
             }
         }
-    }
+        }*/
 
 
-    private void save_token(final String token) {
-        //Get shared Preference
-        SharedPreferences sharedPref = this.getSharedPreferences(
-                PREFERENCE_FILE_KEY, MODE_PRIVATE);
-        //Write
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString("Token", token);
-        editor.apply();
-    }
-
-    private void sendNotification(RemoteMessage.Notification notification, Map<String, String> data) {
-        //Bundle bundle = new Bundle();
-        Log.d("Message", "Got new Notification with mesage" + notification.getBody());
-        //bundle.putString("body", notification.getBody());
-
-        Intent intent = new Intent(this, MainActivity.class);
-        //intent.putExtras(bundle);
-
-
-        // Creates an Intent for the Activity
-        Intent pendingIntent = new Intent(this, MainActivity.class);
-        // Sets the Activity to start in a new, empty task
-        pendingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        // Creates the PendingIntent
-        PendingIntent notifyPendingIntent =
-                PendingIntent.getActivity(
-                        this,
-                        0,
-                        pendingIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
-
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "noti Builder"/*getString(/*R.string.notification_channel_id)*/)
-                .setContentTitle(notification.getTitle())
-                .setContentText(notification.getBody())
-                .setAutoCancel(true)
-                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
-                //.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.win))
-                .setContentIntent(notifyPendingIntent)
-                .setContentInfo("Hello")
-                //.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
-                .setColor(getColor(R.color.colorAccent))
-                .setLights(Color.RED, 1000, 300)
-                .setDefaults(Notification.DEFAULT_VIBRATE)
-                .setNumber(++numMessages)
-                .setSmallIcon(R.drawable.ic_access_time_white_24dp);
-
-
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                    "NotiChannelID"/*getString(R.string.notification_channel_id)*/, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT
-            );
-            channel.setDescription(CHANNEL_DESC);
-            channel.setShowBadge(true);
-            channel.canShowBadge();
-            channel.enableLights(true);
-            channel.setLightColor(Color.RED);
-            channel.enableVibration(true);
-            channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500});
-
-            assert notificationManager != null;
-            notificationManager.createNotificationChannel(channel);
+        private void save_token ( final String token){
+            //Get shared Preference
+            SharedPreferences sharedPref = this.getSharedPreferences(
+                    PREFERENCE_FILE_KEY, MODE_PRIVATE);
+            //Write
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString("Token", token);
+            editor.apply();
         }
-        //Todo Notification ID?
-        assert notificationManager != null;
-        notificationManager.notify(0, notificationBuilder.build());
+
+        private void sendNotification (RemoteMessage.Notification
+        notification, Map < String, String > data){
+            //Bundle bundle = new Bundle();
+            Log.d("Message", "Got new Notification with mesage" + notification.getBody());
+            //bundle.putString("body", notification.getBody());
+
+            Intent intent = new Intent(this, MainActivity.class);
+            //intent.putExtras(bundle);
+
+
+            // Creates an Intent for the Activity
+            Intent pendingIntent = new Intent(this, MainActivity.class);
+            // Sets the Activity to start in a new, empty task
+            pendingIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            // Creates the PendingIntent
+            PendingIntent notifyPendingIntent =
+                    PendingIntent.getActivity(
+                            this,
+                            0,
+                            pendingIntent,
+                            PendingIntent.FLAG_UPDATE_CURRENT
+                    );
+
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "noti Builder"/*getString(/*R.string.notification_channel_id)*/)
+                    .setContentTitle(notification.getTitle())
+                    .setContentText(notification.getBody())
+                    .setAutoCancel(true)
+                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                    //.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.win))
+                    .setContentIntent(notifyPendingIntent)
+                    .setContentInfo("Hello")
+                    //.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+                    .setColor(getColor(R.color.colorAccent))
+                    .setLights(Color.RED, 1000, 300)
+                    .setDefaults(Notification.DEFAULT_VIBRATE)
+                    .setNumber(++numMessages)
+                    .setSmallIcon(R.drawable.ic_access_time_white_24dp);
+
+
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationChannel channel = new NotificationChannel(
+                        "NotiChannelID"/*getString(R.string.notification_channel_id)*/, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT
+                );
+                channel.setDescription(CHANNEL_DESC);
+                channel.setShowBadge(true);
+                channel.canShowBadge();
+                channel.enableLights(true);
+                channel.setLightColor(Color.RED);
+                channel.enableVibration(true);
+                channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500});
+
+                assert notificationManager != null;
+                notificationManager.createNotificationChannel(channel);
+            }
+            //Todo Notification ID?
+            assert notificationManager != null;
+            notificationManager.notify(0, notificationBuilder.build());
+        }
     }
-}
