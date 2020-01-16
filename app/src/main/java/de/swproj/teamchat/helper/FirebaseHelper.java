@@ -53,7 +53,9 @@ public static HashMap<String,String> convertToMap(Message message, int type, int
         retMap.put("reason",status.getReason());
         retMap.put("status",status.getStatus());
         retMap.put("userid",status.getUserId());
-        retMap.put("eventname",DBStatements.getEvent(status.getEventId()).getMessage());
+        Event event = DBStatements.getEvent(status.getEventId());
+        retMap.put("chatid",event.getChatid());
+        retMap.put("eventname",event.getMessage());
         retMap.put("notification","User"+ DBStatements.getUser(status.getUserId()).getAccountName()+ " "+status.getStatusString());
         retMap.put("type",String.valueOf(type));
         retMap.put("action",String.valueOf(action));
