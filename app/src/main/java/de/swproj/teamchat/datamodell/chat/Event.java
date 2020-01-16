@@ -57,6 +57,9 @@ public class Event extends Message implements Comparable<Event> {
 
 
     }
+    public void setDateString(String s){
+        StringToDate(s);
+    }
 
     public String getDateString(){
         return   date.get(Calendar.YEAR)+";"+ date.get(Calendar.MONTH)+";"+ date.get(Calendar.DAY_OF_MONTH)+";"+ date.get(Calendar.HOUR_OF_DAY)+";"+date.get(Calendar.MINUTE);
