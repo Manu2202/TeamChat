@@ -74,6 +74,7 @@ public class EditEventActivity extends AppCompatActivity {
         if (!msgId.equals("0")) {  // If it`s not a new event
             event = DBStatements.getEvent(msgId);
             et_title.setText(event.getMessage());
+            et_title.setEnabled(false);
             et_description.setText(event.getDescription());
             cal = event.getDate();
 
@@ -100,8 +101,6 @@ public class EditEventActivity extends AppCompatActivity {
      * Private Method to set all Listener on the Date, Time and the Listener on the Dialogs
      */
     private void dateTimeOnClickListener() {
-
-
         // Listener for the Date TextView
         tv_selectDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,12 +172,11 @@ public class EditEventActivity extends AppCompatActivity {
     }
 
     public void onClickSaveChanges(View view) {
+        GregorianCalendar date = new GregorianCalendar(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute);
         if (msgId.equals("0")) {
             // New created event, automatically status = 0
             int status = 0;
             try {
-                GregorianCalendar date = new GregorianCalendar(selectedYear, selectedMonth, selectedDay, selectedHour, selectedMinute);
-
                 // Check if event date is in future
                 if (checkDateFuture(date)) {
 
@@ -189,7 +187,6 @@ public class EditEventActivity extends AppCompatActivity {
                     //Push Event to Firebase
                     firebaseConnection.addToFirestore(event, FirebaseTypes.Message.getValue(), FirebaseActions.ADD.getValue());
 
-                    finish();
                 } else {
                     // send Toast as Info, that Time has to be in Future
                     Toast infoToast = Toast.makeText(getApplicationContext(), R.string.datefuture, Toast.LENGTH_SHORT);
@@ -201,8 +198,14 @@ public class EditEventActivity extends AppCompatActivity {
                 npe.printStackTrace();
             }
         } else {
-            // TODO: Update eines existierenden Events
+            // Update of a existing Event
+            event.setDescription(et_description.getText().toString());
+            event.setDate(date);
+
+            firebaseConnection.addToFirestore(event,
+                    FirebaseTypes.Message.getValue(), FirebaseActions.UPDATE.getValue());
         }
+        finish();
     }
 
     public void onClickCancel(View view) {
