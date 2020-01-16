@@ -108,8 +108,6 @@ public class ViewEventActivity extends AppCompatActivity {
         viewModel.getLiveEvent().observe(this, new Observer<Event>() {
             @Override
             public void onChanged(Event event) {
-                // Display Creator of Event?
-              //  tvCreator.setText(DBStatements.getUser(event.getCreator()).getAccountName());
                 tvCreator.setText(DBStatements.getChat(event.getChatid()).getName());
                 tvtime.setText(FormatHelper.formatTime(event.getTimeStamp()));
                 tvDate.setText(FormatHelper.formatDate(event.getDate()));

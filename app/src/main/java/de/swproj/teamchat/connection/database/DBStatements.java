@@ -707,7 +707,7 @@ public class DBStatements {
         ArrayList<User> users = new ArrayList<>();
         SQLiteDatabase db = dbConnection.getReadableDatabase();
 
-        final String MY_QUERY = "SELECT * FROM "+DBCreate.getUserTable() +" a INNER JOIN "+DBCreate.TABLE_USERCHAT+" b ON a."+ DBCreate.COL_USER_G_ID +"=b."+DBCreate.COL_USERCHAT_FK_USER+
+        final String MY_QUERY = "SELECT * FROM " + DBCreate.getUserTable() + " a INNER JOIN " + DBCreate.TABLE_USERCHAT + " b ON a." + DBCreate.COL_USER_G_ID + "=b." + DBCreate.COL_USERCHAT_FK_USER +
                " WHERE b."+DBCreate.COL_USERCHAT_FK_CHAT+"=?";
         db.beginTransaction();
         try {

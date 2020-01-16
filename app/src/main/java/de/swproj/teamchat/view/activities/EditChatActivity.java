@@ -69,9 +69,15 @@ public class EditChatActivity extends AppCompatActivity {
             etChatName.setText(chat.getName());
             btnSaveChanges.setText(R.string.updateChat);
 
-            for (User user : DBStatements.getUsersOfChat(chatId)) {
-                if(!FirebaseAuth.getInstance().getCurrentUser().getUid().equals(user.getGoogleId()))
+            // FIXME: User direkt aus DB Statements holen statt über String und dann User aus DB
+            User user;
+            //for (User user : DBStatements.getUsersOfChat(chatId)) {
+            for (String userID : DBStatements.getChatMembers(chatId)) {
+                user = DBStatements.getUser(userID);  // Kann nach FIXME wieder gelöscht werden
+                if (!FirebaseAuth.getInstance().getCurrentUser().getUid().equals(user.getGoogleId())) {
                     groupMember.put(user.getGoogleId(), user);
+                    allUser.remove(user.getGoogleId());
+                }
             }
         }
 
@@ -82,14 +88,16 @@ public class EditChatActivity extends AppCompatActivity {
     private void getAllUsers() {
         String selfUserID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         for (User user : DBStatements.getUser()) {
-            if (!groupMember.containsKey(user.getGoogleId()))
+            // Check if the User is in the chat already
+            if (!groupMember.containsKey(user.getGoogleId())) {
                 Log.d("EditChat ", "Users " + user.getGoogleId());
 
-            // Check if user from DB is yourself -> skip, because yourself is admin
-            if (!selfUserID.equals(user.getGoogleId()))
-                allUser.put(user.getGoogleId(), user);
-            if (!allUser.isEmpty()) {
-                //     Log.d("EditChat 2", "GetUser " + allUser.get(user.getGoogleId()).getGoogleId());
+                // Check if user from DB is yourself -> skip, because yourself is admin
+                if (!selfUserID.equals(user.getGoogleId()))
+                    allUser.put(user.getGoogleId(), user);
+                if (!allUser.isEmpty()) {
+                    Log.d("EditChat 2", "GetUser " + allUser.get(user.getGoogleId()).getGoogleId());
+                }
             }
         }
     }
