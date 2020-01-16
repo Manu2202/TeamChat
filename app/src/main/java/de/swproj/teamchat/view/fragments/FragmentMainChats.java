@@ -41,7 +41,7 @@ import de.swproj.teamchat.view.viewmodels.MainChatsViewModel;
  * For the project: TeamChat.
  */
 
-public class FragmentMainChats extends ListFragment {
+public class FragmentMainChats extends ListFragment  {
 
    // private ArrayList<Chat> chats;
     private MainChatsViewModel viewModel;
@@ -56,7 +56,6 @@ public class FragmentMainChats extends ListFragment {
     // only uses one item at once so far, but may be expanded so you can delete multiple items
     private ArrayList<Chat> markedForDeletion = new ArrayList();
     private ArrayList<FrameLayout> markedMenuItems = new ArrayList<>();
-
 
 
     @Nullable
@@ -79,7 +78,7 @@ public class FragmentMainChats extends ListFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         //instanciate LiveData
-        viewModel= new MainChatsViewModel((LinkedList<Chat>) DBStatements.getChat());
+        viewModel = new MainChatsViewModel((LinkedList<Chat>) DBStatements.getChat());
         ListView list = getListView();
 
         final AdapterChat chatAdapter = new AdapterChat(viewModel.getLiveChats().getValue());
@@ -95,7 +94,6 @@ public class FragmentMainChats extends ListFragment {
         });
 
 
-
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -105,6 +103,12 @@ public class FragmentMainChats extends ListFragment {
                     Chat selectedItem = (Chat) chatAdapter.getItem(position);
                     chatIntent.putExtra("chatID", selectedItem.getId());
                     startActivityForResult(chatIntent, position);
+                } else if (menuModus == DEL) {
+                    if (markedForDeletion.contains(chatAdapter.getItem(position))) {
+                        unmarkItem(position, chatAdapter, view);
+                    } else {
+                        markItem(position, chatAdapter, view);
+                    }
                 }
             }
         });
@@ -113,28 +117,29 @@ public class FragmentMainChats extends ListFragment {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view,
                                            int position, long arg3) {
-                deleteButton.setVisible(true);
-                cancelDeleteButton.setVisible(true);
-                menuModus = DEL;
-                if (markedForDeletion.contains(chatAdapter.getItem(position))){
-                    view.findViewById(R.id.list_color_background)
-                            .setBackgroundColor(ContextCompat.getColor(getContext(),
-                                    R.color.background));
-                    markedForDeletion.remove(chatAdapter.getItem(position));
-                    markedMenuItems.remove((FrameLayout) view.findViewById(R.id.list_color_background));
-                }else {
-                    markedForDeletion.add(chatAdapter.getItem(position));
-                    markedMenuItems.add((FrameLayout) view.findViewById(R.id.list_color_background));
-                    view.findViewById(R.id.list_color_background).setBackgroundColor(Color.GRAY);
-                }
 
-                Log.d("Fragments:", "OnLongClick" + " menuModus = " + menuModus);
+                if (menuModus == STD) {
+                    deleteButton.setVisible(true);
+                    cancelDeleteButton.setVisible(true);
+                    menuModus = DEL;
+                    if (markedForDeletion.contains(chatAdapter.getItem(position))) {
+                        unmarkItem(position, chatAdapter, view);
+                    } else {
+                        markItem(position, chatAdapter, view);
+                    }
+
+                    Log.d("Fragments:", "OnLongClick" + " menuModus = " + menuModus);
+
+                } else if (menuModus == DEL) {
+                    cancelDeletion();
+                }
                 return true;
             }
 
         });
 
     }
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -172,22 +177,7 @@ public class FragmentMainChats extends ListFragment {
                 break;
             case R.id.btn_cancel_delete:
                 // Cancel delete process - unmark all items that were marked for deletion
-                AdapterChat updateViewAdapter = (AdapterChat) getListAdapter();
-                for (FrameLayout fl : markedMenuItems) {
-                    fl.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.background));
-                    updateViewAdapter.notifyDataSetChanged();
-                }
-
-                for (Chat c : markedForDeletion) {
-                    Log.d("Fragments:", "Chat should be white now : " + c.getId());
-                }
-
-                markedMenuItems.clear();
-                markedForDeletion.clear();
-                cancelDeleteButton.setVisible(false);
-                deleteButton.setVisible(false);
-                menuModus = STD;
-
+                cancelDeletion();
                 break;
             case R.id.btn_chat_menu_delete:
                 for (Chat c : markedForDeletion) {
@@ -199,38 +189,54 @@ public class FragmentMainChats extends ListFragment {
                 markedForDeletion.clear();
                 cancelDeleteButton.setVisible(false);
                 deleteButton.setVisible(false);
+
                 menuModus = STD;
 
                 break;
         }
         return true;
     }
-/*
-    @Override
-    public void onResume() {
-        super.onResume();
 
-        // set a new Adapter -> QnD
-        ArrayList<Chat> c = DBStatements.getChat();
+    /**
+     * Function that gets called when you used longclick to mark chats for deletions, but want to cancel it
+     */
+    private void cancelDeletion() {
+        AdapterChat updateViewAdapter = (AdapterChat) getListAdapter();
+        for (FrameLayout fl : markedMenuItems) {
+            fl.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.background));
+            updateViewAdapter.notifyDataSetChanged();
+        }
 
-        ListView list = getListView();
+        for (Chat c : markedForDeletion) {
+            Log.d("Fragments:", "Chat should be white now : " + c.getId());
+        }
 
+        markedMenuItems.clear();
+        markedForDeletion.clear();
+        cancelDeleteButton.setVisible(false);
+        deleteButton.setVisible(false);
+        menuModus = STD;
+    }
 
-        final AdapterChat chatAdapter = new AdapterChat(c);
-        setListAdapter(chatAdapter);
+    /**
+     * Function that marks chats so you can delete them afterwards
+     */
+    private void markItem(int position, AdapterChat chatAdapter, View view) {
+        markedForDeletion.add(chatAdapter.getItem(position));
+        markedMenuItems.add((FrameLayout) view.findViewById(R.id.list_color_background));
+        view.findViewById(R.id.list_color_background).setBackgroundColor(Color.GRAY);
+    }
 
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("Fragments:", "OnItemClick (on Resume)" + " menuModus = " + menuModus);
-                if (menuModus == STD) {
-                    Intent chatIntent = new Intent(getActivity(), ChatActivity.class);
-                    Chat selectedItem = (Chat) chatAdapter.getItem(position);
-                    chatIntent.putExtra("chatID", selectedItem.getId());
-                    startActivityForResult(chatIntent, position);
-                }
-            }
-        });
-    } */
+    /**
+     * Function that unmarks them again
+     */
+    private void unmarkItem(int position, AdapterChat chatAdapter, View view) {
+        view.findViewById(R.id.list_color_background)
+                .setBackgroundColor(ContextCompat.getColor(getContext(),
+                        R.color.background));
+        markedForDeletion.remove(chatAdapter.getItem(position));
+        markedMenuItems.remove((FrameLayout) view.findViewById(R.id.list_color_background));
+    }
+
 
 }
