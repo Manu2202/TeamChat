@@ -28,6 +28,8 @@ import de.swproj.teamchat.R;
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.connection.firebase.FirebaseConnection;
 import de.swproj.teamchat.datamodell.chat.Event;
+import de.swproj.teamchat.datamodell.chat.FirebaseActions;
+import de.swproj.teamchat.datamodell.chat.FirebaseTypes;
 import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.datamodell.chat.User;
 import de.swproj.teamchat.datamodell.chat.UserEventStatus;
@@ -166,8 +168,7 @@ public class ViewEventActivity extends AppCompatActivity {
     }
 
     private void sendMyState(UserEventStatus mystate){
-
-        //todo: send to other to Firebase, remove line before
+        fbConnection.addToFirestore(mystate, FirebaseTypes.EVENTSTATE.getValue(), FirebaseActions.UPDATE.getValue());
     }
 
 
