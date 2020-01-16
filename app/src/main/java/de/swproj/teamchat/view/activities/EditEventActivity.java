@@ -187,6 +187,8 @@ public class EditEventActivity extends AppCompatActivity {
                     //Push Event to Firebase
                     firebaseConnection.addToFirestore(event, FirebaseTypes.Message.getValue(), FirebaseActions.ADD.getValue());
 
+                    finish();
+
                 } else {
                     // send Toast as Info, that Time has to be in Future
                     Toast infoToast = Toast.makeText(getApplicationContext(), R.string.datefuture, Toast.LENGTH_SHORT);
@@ -204,8 +206,9 @@ public class EditEventActivity extends AppCompatActivity {
 
             firebaseConnection.addToFirestore(event,
                     FirebaseTypes.Message.getValue(), FirebaseActions.UPDATE.getValue());
+            finish();
         }
-        finish();
+
     }
 
     public void onClickCancel(View view) {
