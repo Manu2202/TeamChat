@@ -77,9 +77,13 @@ public class Chat implements Comparable<Chat> {
 
     @Override
     public int compareTo(Chat c) {
+                      try {
+                          return DBStatements.getLastMessage(id).getTimeStampDate()
+                                  .compareTo(DBStatements.getLastMessage(c.getId()).getTimeStampDate());
+                      }catch (NullPointerException e){
+                          return 0;
+                      }
 
-        return DBStatements.getLastMessage(id).getTimeStampDate()
-                .compareTo(DBStatements.getLastMessage(c.getId()).getTimeStampDate());
     }
 
 }
