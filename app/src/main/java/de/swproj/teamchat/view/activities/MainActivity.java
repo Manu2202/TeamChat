@@ -8,9 +8,13 @@ import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.connection.firebase.FirebaseConnection;
 import de.swproj.teamchat.connection.firebase.services.TeamChatMessagingService;
+import de.swproj.teamchat.datamodell.chat.Chat;
 import de.swproj.teamchat.datamodell.chat.Event;
+import de.swproj.teamchat.datamodell.chat.FirebaseActions;
+import de.swproj.teamchat.datamodell.chat.FirebaseTypes;
 import de.swproj.teamchat.datamodell.chat.Message;
 import de.swproj.teamchat.datamodell.chat.User;
+import de.swproj.teamchat.datamodell.chat.UserEventStatus;
 import de.swproj.teamchat.helper.EventExpirer;
 import de.swproj.teamchat.helper.FormatHelper;
 import de.swproj.teamchat.view.fragments.FragmentMainChats;
@@ -26,6 +30,9 @@ import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -113,6 +120,72 @@ public class MainActivity extends AppCompatActivity {
     private void saveFCMtoDB() {
         Intent i = getIntent();
         Bundle extras = i.getExtras();
+
+        
+            if (FirebaseTypes.valueOf(extras.getInt("type")) == FirebaseTypes.Message) {
+                Message msg;
+                if (Boolean.valueOf(extras.getString("isEvent"))) {
+                    //New Event-----------------------------------------
+                    msg = new Event(extras.getString("timestamp"),
+                            extras.getString("message"),
+                            extras.getString("id"),
+                            extras.getBoolean("isEvent"),
+                            extras.getString("creator"),
+                            extras.getString("date"),
+                            extras.getString("description"),
+                            extras.getString("chatid"),
+                            extras.getInt("status"));
+                } else {
+                    //New Message
+                    msg = new Message(FormatHelper.formatTime(extras.getString("timestamp")),
+                            extras.getString("message"),
+                            extras.getString("id"),
+                            extras.getBoolean("isEvent"),
+                            extras.getString("creator"),
+                            extras.getString("chatid"));
+                }
+                switch (FirebaseActions.valueOf(extras.getInt("action"))) {
+                    case ADD:
+                        DBStatements.insertMessage(msg);
+                        break;
+                    case UPDATE:
+                        if (msg.isEvent()) DBStatements.updateEvent((Event) msg);
+                        break;
+                }
+
+            } else if (FirebaseTypes.valueOf(extras.getInt("type")) == FirebaseTypes.Chat) {
+
+                Chat chat = new Chat(extras.getString("name"), extras.getInt("color"), extras.getString("id"), extras.getString("admin"));
+                List<String> users = Arrays.asList(extras.getString("users").split(";"));
+                switch (FirebaseActions.valueOf(extras.getInt("action"))) {
+                    case ADD:
+                        DBStatements.insertChat(chat);
+                        DBStatements.updateChatMembers(users, chat.getId());
+                        break;
+                    case UPDATE:
+                        DBStatements.updateChat(chat);
+                        List<String> users_2 = Arrays.asList(extras.getString("users").split(";"));
+                        DBStatements.updateChatMembers(users, chat.getId());
+                        break;
+                    case REMOVE:
+                        DBStatements.deleteChat(chat.getId());
+                        //TODO delete Chat in Firebase
+                        break;
+                }
+
+            } else if (FirebaseTypes.valueOf(extras.getInt("type")) == FirebaseTypes.EVENTSTATE) {
+                UserEventStatus userEventStatus = new UserEventStatus(extras.getString("userid"),
+                        extras.getString("eventid"),
+                        extras.getInt("status"),
+                        extras.getString("reason"));
+                switch (FirebaseActions.valueOf(extras.getInt("action"))) {
+                    case UPDATE:
+                        DBStatements.updateUserEventStatus(userEventStatus);
+                }
+            }
+    }
+        
+        /*
         if (extras != null) {
             //Got new Intent extras from Notification
             String message = extras.getString("message");
@@ -164,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
                 getIntent().removeExtra("body");
             }
         }
-    }
+    }/*
 
     /**
      * Private Method to setup the fragements and the Bottom Navigation View

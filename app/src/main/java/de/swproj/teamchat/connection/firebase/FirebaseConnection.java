@@ -61,24 +61,24 @@ public class FirebaseConnection {
         });
     }
     public void addToFirestore(final UserEventStatus status, final int type, final int action) {
-        firebaseDB.collection("usereventstatus")
-                .add(FirebaseHelper.convertToMap(status,type, action))
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d("Firestore Messages", "UserEventStatus added with ID: " + documentReference.getId());
+        firebaseDB.collection("usereventstatus").document(status.getUserId()).set(FirebaseHelper.convertToMap(status,type, action), SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d("Firestore Messages", "UserEventStatus updated");
                         DBStatements.updateUserEventStatus(status);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
+            }
+        }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 addToFirestore(status, type, action);
+                Log.d("Firestore FCM Token", "onFailure: Usereventstatus not added");
             }
         });
     }
 
 
     public void addToFirestore(final Chat chat, final List<String> userids,  final int type, final int action) {
+        if ( action == FirebaseActions.ADD.getValue()){
         firebaseDB.collection("chats").add(FirebaseHelper.convertToMap(chat,type,action,userids))
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
@@ -97,6 +97,22 @@ public class FirebaseConnection {
                 addToFirestore(chat, userids, type, action);
             }
         });
+        }else if (action == FirebaseActions.UPDATE.getValue()){
+            firebaseDB.collection("chats").document(chat.getId()).set(FirebaseHelper.convertToMap(chat,type, action,userids), SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Log.d("Firestore Messages", "Chat updated");
+                    DBStatements.updateChat(chat);
+                    DBStatements.updateChatMembers(userids,chat.getId());
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    addToFirestore(chat,userids, type, action);
+                    Log.d("Firestore Messages", "onFailure: Chat not updated");
+                }
+            });
+        }
     }
 
     public void addToFirestore(final User user) {
