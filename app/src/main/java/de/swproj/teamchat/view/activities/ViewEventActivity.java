@@ -46,7 +46,7 @@ public class ViewEventActivity extends AppCompatActivity {
     private TextView tvStatus;
     private ViewEventViewModel viewModel;
     private AdapterUserEventStatus adapter;
-    private FirebaseConnection fbConnection;
+
     private boolean actUserIsAdmin;
     private String id;
 
@@ -65,6 +65,7 @@ public class ViewEventActivity extends AppCompatActivity {
         id = getIntent().getStringExtra("eventID");
 
         viewModel = new ViewEventViewModel(DBStatements.getUserEventStatus(id, activeUser), DBStatements.getUserEventStatus(id), DBStatements.getEvent(id));
+
 
         actUserIsAdmin = FirebaseAuth.getInstance().getCurrentUser().getUid()
                 .equals(viewModel.getLiveEvent().getValue().getCreator());
@@ -162,12 +163,14 @@ public class ViewEventActivity extends AppCompatActivity {
         UserEventStatus mystate = viewModel.getMyLiveState().getValue();
         mystate.setReason("-");
         mystate.setStatus(1);
+        sendMyState(mystate);
 
 
 
     }
 
     private void sendMyState(UserEventStatus mystate){
+        FirebaseConnection fbConnection= new FirebaseConnection();
         fbConnection.addToFirestore(mystate, FirebaseTypes.EVENTSTATE.getValue(), FirebaseActions.UPDATE.getValue());
     }
 

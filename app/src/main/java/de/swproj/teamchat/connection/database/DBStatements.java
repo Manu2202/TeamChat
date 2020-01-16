@@ -344,15 +344,16 @@ public class DBStatements {
 
         String chatId = chat.getId();
         boolean isNew = true;
-        SQLiteDatabase db = dbConnection.getReadableDatabase();
+
+        if(getChat(chatId)!=null){
+            isNew=false;
+        }
+        SQLiteDatabase db;
+
+
 
         // check if allready exists
 
-        db.beginTransaction();
-        Cursor c = db.query(DBCreate.TABLE_CHAT, new String[]{DBCreate.COL_CHAT_ID}, DBCreate.COL_CHAT_ID + "=?", new String[]{chatId}, null, null, null, null);
-        isNew = c.getCount() == 0;
-        db.setTransactionSuccessful();
-        db.endTransaction();
 
         //Start writing
 
@@ -366,18 +367,8 @@ public class DBStatements {
         db = dbConnection.getWritableDatabase();
         db.beginTransaction();
         try {
-            //create new Chat
-            if (isNew) {
 
-                Long i=   db.insertOrThrow(DBCreate.TABLE_CHAT, null, values);
-                for (Updateable u:updateables
-                ) {
-                    u.insertObject(chat);
-                }
-
-
-            }//update Chat with ID...
-            else {
+            if(!isNew) {
                 int i=  db.update(DBCreate.TABLE_CHAT, values, DBCreate.COL_CHAT_ID + "=?", new String[]{chatId});
                 for (Updateable u:updateables
                 ) {
@@ -389,7 +380,7 @@ public class DBStatements {
             db.setTransactionSuccessful();
         } catch (Exception e) {
 
-            Log.d("DB_Error DBStatements", "Unable to write CHAT in db");
+            Log.d("DB_Error DBStatements", "Unable to UPDATE --> CHAT in db");
         } finally {
             db.endTransaction();
         }
@@ -702,6 +693,7 @@ public class DBStatements {
 
         return users;
     }
+
 
     public static List<User> getUsersOfChat(String chatId) {
         ArrayList<User> users = new ArrayList<>();

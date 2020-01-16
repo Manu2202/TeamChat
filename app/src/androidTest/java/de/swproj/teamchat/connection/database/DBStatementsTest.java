@@ -189,6 +189,10 @@ public class DBStatementsTest {
 
     @Test
     public void getUsersOfChat() {
+        List<User> list=DBStatements.getUsersOfChat(chats.get(1).getId());
+
+        assertThat(list.size(), equalTo(DBStatements.getChatMembers(chats.get(1).getId()).size()));
+
     }
 
 
