@@ -11,7 +11,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Formatter;
 import java.util.GregorianCalendar;
 
 public class FormatHelper {
@@ -38,18 +37,19 @@ public class FormatHelper {
 
         return dateFormatted + "\n" + DAYOFTHEWEEK[dayOfWeek - 1] + " " + timeFormatted;
     }
-    public static GregorianCalendar formatDate(String date){
+
+    public static GregorianCalendar formatDate(String date) {
         SimpleDateFormat sdfDate = new SimpleDateFormat("dd.MM.YYYY");
-        GregorianCalendar greg_date=(GregorianCalendar)GregorianCalendar.getInstance();
+        GregorianCalendar greg_date = (GregorianCalendar) GregorianCalendar.getInstance();
         try {
             greg_date.setTime(sdfDate.parse(date));
         } catch (ParseException e) {
             e.printStackTrace();
         }
         return greg_date;
-
     }
-    public static Time formatTime(String time){
+
+    public static Time formatTime(String time) {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
         long ms = 0;
         try {
@@ -59,7 +59,8 @@ public class FormatHelper {
         }
         return new Time(ms);
     }
-    public static String formatTime(Time time){
+
+    public static String formatTime(Time time) {
         DateFormat format = new SimpleDateFormat("HH:mm");
         return format.format(time.getTime()); // 11:17
     }
@@ -77,12 +78,12 @@ public class FormatHelper {
         return sdfDate.format(date.getTime());
     }
 
-    public static String formatHoursMinutesFromDate(Date date){
+    public static String formatHoursMinutesFromDate(Date date) {
         SimpleDateFormat sdfDate = new SimpleDateFormat("HH:mm");
         return sdfDate.format(date);
     }
 
-    public static String getMonthfromDate(GregorianCalendar date){
+    public static String getMonthfromDate(GregorianCalendar date) {
         SimpleDateFormat sdfMonth = new SimpleDateFormat("MMMM yyyy");
         return sdfMonth.format(date.getTime());
     }
