@@ -98,7 +98,7 @@ public class EditChatActivity extends AppCompatActivity {
                 if (!selfUserID.equals(user.getGoogleId()))
                     allUser.put(user.getGoogleId(), user);
                 if (!allUser.isEmpty()) {
-                    Log.d("EditChat 2", "GetUser " + allUser.get(user.getGoogleId()).getGoogleId());
+
                 }
             }
         }
