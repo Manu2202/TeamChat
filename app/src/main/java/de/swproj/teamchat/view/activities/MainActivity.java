@@ -68,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         fbconnect = new FirebaseConnection();
-        //fbconnect.saveUserByID("gTiVTJ7cjORANbGUw2hpPHZfG122");
 
         //Save FCM from Notification Intent
         saveFCMtoDB();
@@ -143,7 +142,6 @@ public class MainActivity extends AppCompatActivity {
                             extras.getString("description"),
                             extras.getString("chatid"),
                             extras.getInt("status"));
-                //    Log.d("Save FCM Event from Intent", event.getMessage() + "Status: "+event.getStatus());
 
                     //Insert in Database
                     DBStatements.insertMessage(event);

@@ -66,11 +66,6 @@ public class Event extends Message implements Comparable<Event> {
     }
 
 
-
-
-
-
-
     @Override
     public boolean equals(@Nullable Object obj) {
         if (this == obj) {
@@ -149,4 +144,11 @@ public class Event extends Message implements Comparable<Event> {
         return getDate().compareTo(e.getDate());
     }
 
+    public void setDate(GregorianCalendar date) {
+        this.date = date;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }
