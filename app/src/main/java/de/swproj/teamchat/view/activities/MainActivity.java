@@ -98,19 +98,15 @@ public class MainActivity extends AppCompatActivity {
             TeamChatMessagingService.enableFCM();
             Log.d("User-Problem", "Logged in as User" + currentUser.getDisplayName() + " with UID of:" + currentUser.getUid());
 
-            DBStatements.insertUser(new User(currentUser.getUid(),currentUser.getEmail(),currentUser.getDisplayName(),"hh","nch"));
-
             setUpUI();
         }
 
         eventExpirer = new EventExpirer(7, 15);
 
-        //addTestdat();
     }
 
 
-
-    /**
+    /*
      * If app is in background notification data comes from Intent
      * Has to be handled in the Launcher Activity
      * (or other predefined Activity)
