@@ -71,7 +71,7 @@ public class EditChatActivity extends AppCompatActivity {
 
             for (User user : DBStatements.getUsersOfChat(chatId)) {
                 if(!FirebaseAuth.getInstance().getCurrentUser().getUid().equals(user.getGoogleId()))
-                groupMember.put(user.getGoogleId(), user);
+                    groupMember.put(user.getGoogleId(), user);
             }
         }
 

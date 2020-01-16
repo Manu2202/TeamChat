@@ -37,7 +37,7 @@ public class Event extends Message implements Comparable<Event> {
     }
 
 
-    public Event(Date timeStamp, String message, String id, boolean isEvent, String creator,
+    public Event(String timeStamp, String message, String id, boolean isEvent, String creator,
                  String date, String description, String chatid, int status) {
         super(timeStamp, message, id, isEvent, creator, chatid);
 
@@ -56,6 +56,9 @@ public class Event extends Message implements Comparable<Event> {
         }
 
 
+    }
+    public void setDateString(String s){
+        StringToDate(s);
     }
 
     public String getDateString(){
