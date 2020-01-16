@@ -109,7 +109,7 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
             if (Boolean.valueOf(data.get("isEvent"))) {
                 //New Event-----------------------------------------
                 Event event = new Event(FormatHelper.formatTime(data.get("timestamp")),
-                        notification.getBody(),
+                        data.get("message"),
                         data.get("id"),
                         Boolean.valueOf(data.get("isEvent")),
                         data.get("creator"),
