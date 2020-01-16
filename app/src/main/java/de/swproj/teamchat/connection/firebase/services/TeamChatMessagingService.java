@@ -97,7 +97,8 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
      * If app is in foreground, notification data comes from onMessageReceived
      */
     private void save_message(RemoteMessage.Notification notification, Map<String, String> data) {
-        if (notification.getBody() != null && notification.getBody().length() > 0) {
+        //if (notification.getBody() != null && notification.getBody().length() > 0) {
+        Log.d("FB Debug Type", "Type = " + data.get("type"));
             if (FirebaseTypes.valueOf(Integer.parseInt(data.get("type"))) == FirebaseTypes.Message) {
                 Message msg;
                 if (Boolean.valueOf(data.get("isEvent"))) {
@@ -159,7 +160,7 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
                         DBStatements.updateUserEventStatus(userEventStatus);
                 }
             }
-        }
+        //}
     }
 
         /*Log.d("IS EVENT", "Ist es ein Event?:" + Boolean.valueOf(data.get("isEvent")));
