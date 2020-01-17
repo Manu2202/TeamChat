@@ -146,6 +146,32 @@ public class FirebaseConnection {
                 });
     }
 
+    public void saveUserByIDs(List<String> uIDs) {
+        Log.d("Add missing Users", "Try to add Users");
+        if (uIDs.isEmpty()){
+            Log.d("Add missing Users", "User Ids empty");
+        }
+        else{
+            firebaseDB.collection("users").whereIn("googleID", uIDs).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                @Override
+                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                    List<User> firebaseUser = queryDocumentSnapshots.toObjects(User.class);
+                    Log.d("Add missing Users", firebaseUser.toString());
+                    for (User user:firebaseUser) {
+                        DBStatements.insertUser(user);
+                        Log.d("Add missing Users","Saved missing Users in database!");
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("Add missing Users","Error: "+e.getMessage());
+                }
+            });
+        }
+
+    }
+
     public void saveChatbyID(final String chatid){
         firebaseDB.collection("chats").document(chatid)
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -169,6 +195,12 @@ public class FirebaseConnection {
                 }
             }
         });
+
+
+
+
+
+
     }
 
     public void saveUserbyEmail(String email){

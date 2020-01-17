@@ -19,7 +19,7 @@ public static HashMap<String,String> convertToMap(Message message, int type, int
         retMap.put("description",event.getDescription());
         retMap.put("status",String.valueOf(event.getStatus()));
     }
-    retMap.put("title",message.getMessage());
+    retMap.put("chatname",DBStatements.getChat(message.getChatid()).getName());
     retMap.put("chatid",message.getChatid());
     retMap.put("type",String.valueOf(type));
     retMap.put("action",String.valueOf(action));

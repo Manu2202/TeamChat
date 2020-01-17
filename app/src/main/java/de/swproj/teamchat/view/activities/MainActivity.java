@@ -31,6 +31,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -91,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
+
         // Check if user is signed in (non-null) and update UI accordingly.
         final FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
@@ -129,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
                     msg = new Event(extras.getString("timestamp"),
                             extras.getString("message"),
                             extras.getString("id"),
-                            extras.getBoolean("isEvent"),
+                            Boolean.valueOf(extras.getString("isEvent")),
                             extras.getString("creator"),
                             extras.getString("date"),
                             extras.getString("description"),
@@ -140,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
                     msg = new Message(FormatHelper.formatTime(extras.getString("timestamp")),
                             extras.getString("message"),
                             extras.getString("id"),
-                            extras.getBoolean("isEvent"),
+                            Boolean.valueOf(extras.getString("isEvent")),
                             extras.getString("creator"),
                             extras.getString("chatid"));
                 }
@@ -157,14 +159,32 @@ public class MainActivity extends AppCompatActivity {
 
                 Chat chat = new Chat(extras.getString("name"), Integer.parseInt(extras.getString("color")), extras.getString("id"), extras.getString("admin"));
                 List<String> users = Arrays.asList(extras.getString("users").split(";"));
+                List<String> missingUserIDs= new ArrayList<>();
                 switch (FirebaseActions.valueOf(Integer.parseInt(extras.getString("action")))) {
                     case ADD:
                         DBStatements.insertChat(chat);
+                        Log.d("TMS", "Add Chat and missing Users");
+                        for (String userID: users) {
+                            if (DBStatements.getUser(userID)==null){
+                                Log.d("Add missing User", "User "+userID+ "missing");
+                                missingUserIDs.add(userID);
+                            }
+                        }
+                        //Get missing User IDs from Firebase
+                        fbconnect.saveUserByIDs(missingUserIDs);
                         DBStatements.updateChatMembers(users, chat.getId());
                         break;
                     case UPDATE:
                         DBStatements.updateChat(chat);
-                        List<String> users_2 = Arrays.asList(extras.getString("users").split(";"));
+                        Log.d("TMS", "Add Chat and missing Users");
+                        for (String userID: users) {
+                            if (DBStatements.getUser(userID)==null){
+                                Log.d("Add missing User", "User "+userID+ "missing");
+                                missingUserIDs.add(userID);
+                            }
+                        }
+                        //Get missing User IDs from Firebase
+                        fbconnect.saveUserByIDs(missingUserIDs);
                         DBStatements.updateChatMembers(users, chat.getId());
                         break;
                     case REMOVE:
