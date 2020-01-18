@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
                             Integer.parseInt(extras.getString("status")));
                 } else {
                     //New Message
-                    msg = new Message(FormatHelper.formatTime(extras.getString("timestamp")),
+                    msg = new Message(extras.getString("timestamp"),
                             extras.getString("message"),
                             extras.getString("id"),
                             Boolean.valueOf(extras.getString("isEvent")),

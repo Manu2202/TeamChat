@@ -200,7 +200,7 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
 
             Intent intent = new Intent(this, MainActivity.class);
             //intent.putExtras(bundle);
-            //test
+
             // Creates an Intent for the Activity
             Intent pendingIntent = new Intent(this, MainActivity.class);
             // Sets the Activity to start in a new, empty task
