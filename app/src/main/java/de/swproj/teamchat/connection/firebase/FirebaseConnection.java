@@ -25,6 +25,7 @@ import androidx.annotation.NonNull;
 
 import de.swproj.teamchat.connection.database.DBStatements;
 import de.swproj.teamchat.datamodell.chat.Chat;
+import de.swproj.teamchat.datamodell.chat.Event;
 import de.swproj.teamchat.datamodell.chat.FirebaseActions;
 import de.swproj.teamchat.datamodell.chat.FirebaseTypes;
 import de.swproj.teamchat.datamodell.chat.Message;
@@ -44,22 +45,39 @@ public class FirebaseConnection {
     }
 
     public void addToFirestore(final Message message, final int type, final int action) {
-        firebaseDB.collection("messages")
-                .add(FirebaseHelper.convertToMap(message,type, action))
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        if ( action == FirebaseActions.ADD.getValue()) {
+            firebaseDB.collection("messages")
+                    .add(FirebaseHelper.convertToMap(message, type, action))
+                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            Log.d("Firestore Messages", "Message added to Firebase with ID: " + documentReference.getId());
+                            message.setId(documentReference.getId());
+                            DBStatements.insertMessage(message);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    addToFirestore(message, type, action);
+                }
+            });
+        }else if (action == FirebaseActions.UPDATE.getValue()){
+                firebaseDB.collection("chats").document(message.getId()).set(FirebaseHelper.convertToMap(message,type, action), SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d("Firestore Messages", "Message added to Firebase with ID: " + documentReference.getId());
-                        message.setId(documentReference.getId());
-                        DBStatements.insertMessage(message);
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Firestore Messages", "Chat updated");
+                        DBStatements.updateEvent((Event) message);
+                        Log.d("FBUpdateChatID", message.getId());
                     }
                 }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                addToFirestore(message, type, action);
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        addToFirestore(message, type, action);
+                        Log.d("Firestore Messages", "onFailure: Chat not updated");
+                    }
+                });
             }
-        });
-    }
+        }
     public void addToFirestore(final UserEventStatus status, final int type, final int action) {
         firebaseDB.collection("usereventstatus").document(status.getUserId()).set(FirebaseHelper.convertToMap(status,type, action), SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override

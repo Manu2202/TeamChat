@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import androidx.core.app.NotificationCompat;
 
@@ -135,7 +137,11 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
                 Chat chat = new Chat(data.get("name"), Integer.parseInt(data.get("color")), data.get("id"), data.get("admin"));
                 List<String> users = Arrays.asList(data.get("users").split(";"));
                 List<String> missingUserIDs= new ArrayList<>();
-                switch (FirebaseActions.valueOf(Integer.parseInt(data.get("action")))) {
+                FirebaseActions action = FirebaseActions.valueOf(Integer.parseInt(data.get("action")));
+                if (DBStatements.getChat(chat.getId())==null){
+                    action= FirebaseActions.ADD;
+                }
+                switch (action) {
                     case ADD:
                         DBStatements.insertChat(chat);
                         Log.d("TMS", "Add Chat and missing Users");
@@ -192,26 +198,45 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
             editor.putString("Token", token);
             editor.apply();
         }
+    private void createNotificationChannel(String title, String body) {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = title;
+            String description = body;
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(new Random(600000).toString(), name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+        NotificationManager notificationManager;
+
     private void sendNotification_2(String title, String body) {
-        int requestID = (int) System.currentTimeMillis();
-        Intent intent = new Intent(this, MainActivity.class);
+        notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, requestID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        //Setting up Notification channels for android O and above
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            createNotificationChannel(title,body);
+        }
+        int notificationId = new Random().nextInt(60000);
 
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.ic_app_new_round)
-                .setContentTitle(title)
-                .setContentText(body).setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(body))
-                .setTicker(body);
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, new Random(5000).toString())
+                .setSmallIcon(R.mipmap.ic_app_new_round)  //a resource for your custom small icon
+                .setContentTitle(title) //the "title" value you sent in your notification
+                .setContentText(body) //ditto
+                .setAutoCancel(true)  //dismisses the notification on click
+                .setSound(defaultSoundUri);
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationBuilder.getNotification().flags |= Notification.FLAG_AUTO_CANCEL;
-        Notification notification = notificationBuilder.build();
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.notify(requestID, notification);
+        notificationManager.notify(notificationId /* ID of notification */, notificationBuilder.build());
     }
         private void sendNotification (String title, String body){
             //Bundle bundle = new Bundle();
