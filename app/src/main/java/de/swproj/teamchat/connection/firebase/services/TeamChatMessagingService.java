@@ -91,10 +91,10 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
         Map<String, String> data = remoteMessage.getData();
         //Log.d("Messaging Service, Message FROM", remoteMessage.getFrom());
-        if(data!=null){
+        if(data.get("type")!=null){
             save_message(data);
         }
-        sendNotification(data.get("title"),data.get("body"));
+        //sendNotification(data.get("title"),data.get("body"));
 
     }
 

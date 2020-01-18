@@ -62,18 +62,18 @@ public class FirebaseConnection {
                 }
             });
         }else if (action == FirebaseActions.UPDATE.getValue()){
-                firebaseDB.collection("chats").document(message.getId()).set(FirebaseHelper.convertToMap(message,type, action), SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                firebaseDB.collection("messages").document(message.getId()).set(FirebaseHelper.convertToMap(message,type, action), SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d("Firestore Messages", "Chat updated");
+                        Log.d("Firestore Messages", "Event updated");
                         DBStatements.updateEvent((Event) message);
-                        Log.d("FBUpdateChatID", message.getId());
+                        Log.d("FBUpdateEventID", message.getId());
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         addToFirestore(message, type, action);
-                        Log.d("Firestore Messages", "onFailure: Chat not updated");
+                        Log.d("Firestore Messages", "onFailure: Event not updated");
                     }
                 });
             }
