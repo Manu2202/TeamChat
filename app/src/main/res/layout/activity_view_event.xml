@@ -200,9 +200,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
-        android:text="Status of Group Members"
+        android:text="@string/status_of_group_members"
         android:textColor="@color/design_default_color_primary_dark"
-        android:textSize="18dp" />
+        android:textSize="18sp" />
 
     <ListView
         android:id="@+id/viewevent_lvstates"

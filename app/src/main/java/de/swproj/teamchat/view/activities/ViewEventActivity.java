@@ -80,8 +80,8 @@ public class ViewEventActivity extends AppCompatActivity {
         ImageView icon_date = findViewById(R.id.li_icon_date);
         ImageView icon_time = findViewById(R.id.li_icon_time);
         tvStatus = findViewById(R.id.viewevent_tvstatus);
-        Button cancelBtn = findViewById(R.id.viewevent_btncancel);
-        Button commitBtn = findViewById(R.id.viewevent_btncomit);
+        final Button cancelBtn = findViewById(R.id.viewevent_btncancel);
+        final Button commitBtn = findViewById(R.id.viewevent_btncomit);
 
         // Set the background color of the Event
         int chatColor = DBStatements.getChat(DBStatements.getEvent(id).getChatid()).getColor();
@@ -96,6 +96,8 @@ public class ViewEventActivity extends AppCompatActivity {
         // Set the button color (lighter than the chat color)
         ColorHelper.cardViewButtonColor(new Button[]{cancelBtn, commitBtn}, chatColor,
                 getResources(), getApplicationContext());
+
+
 
 
         // Set the icons belong to the colorstring
@@ -126,6 +128,19 @@ public class ViewEventActivity extends AppCompatActivity {
             @Override
             public void onChanged(UserEventStatus status) {
                 tvStatus.setText(status.getStatusString());
+
+
+                if (status.getStatus() == 1) {
+                    cancelBtn.setEnabled(true);
+                    cancelBtn.setAlpha(1.0f);
+                    commitBtn.setEnabled(false);
+                    commitBtn.setAlpha(0.5f);
+                } else if (status.getStatus() == 2) {
+                    cancelBtn.setEnabled(false);
+                    cancelBtn.setAlpha(0.5f);
+                    commitBtn.setEnabled(true);
+                    commitBtn.setAlpha(1.0f);
+                }
             }
         });
 
@@ -133,6 +148,9 @@ public class ViewEventActivity extends AppCompatActivity {
         ListView lvStates = findViewById(R.id.viewevent_lvstates);
         lvStates.setDivider(null);
         adapter = new AdapterUserEventStatus(viewModel.getLiveStates().getValue());
+
+
+
         viewModel.getLiveStates().observe(this, new Observer<List<UserEventStatus>>() {
             @Override
             public void onChanged(List<UserEventStatus> userEventStatuses) {

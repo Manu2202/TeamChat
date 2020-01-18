@@ -69,9 +69,11 @@ public class ColorHelper {
 
         int[] colors = new int[] {
                 buttonColor,
-                changeHSVofColor(buttonColor, 0.5f, 0),
+  //              changeHSVofColor(buttonColor, 0.5f, 1),
                 buttonColor,
-                changeHSVofColor(buttonColor, 0.5f, 0)
+//                changeHSVofColor(buttonColor, 0.5f, 1)
+                buttonColor,
+                buttonColor
         };
 
         ColorStateList myList = new ColorStateList(states, colors);

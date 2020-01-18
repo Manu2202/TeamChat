@@ -49,15 +49,20 @@
         android:maxLength="75"
         android:maxLines="1"
         android:text="@string/noMsgInChat"
-        android:textSize="17dp" />
+        android:textSize="17sp" />
 
     <TextView
         android:id="@+id/chatListChatName"
-        android:layout_width="wrap_content"
+        android:layout_width="223dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_toStartOf="@+id/chatListLastMessageDate"
         android:layout_toEndOf="@+id/list_color_box"
+        android:ellipsize="end"
+        android:maxLength="50"
+        android:maxLines="1"
         android:text="@string/chatName"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
         android:textColor="@color/colorPrimaryDark"

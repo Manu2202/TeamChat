@@ -30,6 +30,7 @@
     <!-- Strings related to Chats -->
     <string name="newEvent">Create Event</string>
     <string name="editChat">Edit Chat</string>
+    <string name="editChatGroupnameHint">Group Name</string>
     <string name="newChat">New Chat</string>
     <string name="createChat">Create Chat</string>
     <string name="updateChat">Update Chat</string>
@@ -65,17 +66,16 @@
     <string name="event_description">Description:</string>
     <string name="event_date">Date</string>
     <string name="event_time">Time</string>
+    <string name="status_of_group_members">Status of Group Members</string>
+    <string name="viewEvent_commit">commit</string>
+    <string name="viewEvent_cancel">cancel</string>
+    <string name="viewEvent_committed">committed</string>
+    <string name="viewEvent_yourStatus">Your status:</string>
 
     <!-- Strings related to Contact Details -->
     <string name="common_groups">Common groups</string>
     <string name="send_email">Send Email</string>
     <string name="deleteUser">Delete Contact from List</string>
-    <string name="debug_displayEventByGroupColor">Debug: Toggle Group Colors</string>
-    <string name="viewEvent_commit">commit</string>
-    <string name="viewEvent_cancel">cancel</string>
-    <string name="viewEvent_committed">committed</string>
-    <string name="viewEvent_yourStatus">Your status:</string>
-    <string name="editChatGroupnameHint">Group Name</string>
 
 
 </resources>

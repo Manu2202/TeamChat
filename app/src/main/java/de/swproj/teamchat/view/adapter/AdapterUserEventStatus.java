@@ -1,10 +1,12 @@
 package de.swproj.teamchat.view.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -48,6 +50,7 @@ public class AdapterUserEventStatus extends BaseAdapter {
         return position;
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -66,43 +69,74 @@ public class AdapterUserEventStatus extends BaseAdapter {
 
 
             if(state.getStatus()==2) {
-                CardView cv = convertView.findViewById(R.id.li_ues_cv);
-                final TextView tvReason = convertView.findViewById(R.id.li_ues_tvreason);
-                tvReason.setText(state.getReason());
-                cv.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        CardView cv = (CardView) view;
-                        TransitionManager.beginDelayedTransition(cv);
-                        if (tvReason.getVisibility() == View.VISIBLE) {
-                            tvReason.setVisibility(View.GONE);
-                        } else tvReason.setVisibility(View.VISIBLE);
-                    }
-                });
+                cancelledUser(convertView, state);
             }
 
          }
         TextView tvUsername = convertView.findViewById(R.id.li_ues_tvusername);
         tvUsername.setText(DBStatements.getUser(state.getUserId()).getAccountName() + ":");
         TextView tvStatus = convertView.findViewById(R.id.li_ues_tvstatus);
+        TextView tvReason = convertView.findViewById(R.id.li_ues_tvreason);
+
 
             switch(state.getStatus()){
 
                 case 1: tvStatus.setTextColor(parent.getResources().getColor(R.color.save_green,null));
-                        tvStatus.setText("zugesagt");
+                        tvReason.setVisibility(View.INVISIBLE);
+                        tvStatus.setText("committed");
                         break;
                 case 2: tvStatus.setTextColor(parent.getResources().getColor(R.color.cancel_red,null));
-                        tvStatus.setText("abgesagt");
+                        tvReason.setVisibility(View.VISIBLE);
+                        cancelledUser(convertView, state);
+                        tvStatus.setText("cancelled");
                         break;
-                default: tvStatus.setText("-");
-                         break;
+                default:
+                        tvStatus.setTextColor(parent.getResources().getColor(R.color.black,null));
+                        tvReason.setVisibility(View.INVISIBLE);
+                        tvStatus.setText("-");
+                        break;
 
         }
                 return convertView;
 
 
+    }
 
+
+    private void cancelledUser(View convertView, UserEventStatus state) {
+        CardView cv = convertView.findViewById(R.id.li_ues_cv);
+        final TextView tvReason = convertView.findViewById(R.id.li_ues_tvreason);
+
+        tvReason.setAlpha(0.2f);
+        tvReason.setText("Reason");
+        final String reason = state.getReason();
+
+        cv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+/*
+                        CardView cv = (CardView) view;
+                        TransitionManager.beginDelayedTransition(cv);
+                        if (tvReason.getVisibility() == View.VISIBLE) {
+                            tvReason.setVisibility(View.GONE);
+                        } else {
+                            tvReason.setVisibility(View.VISIBLE);
+                        }
+
+ */
+                CardView cv = (CardView) view;
+                TransitionManager.beginDelayedTransition(cv);
+                if (tvReason.getAlpha() == 0.2f) {
+                    tvReason.setAlpha(0.55f);
+                    tvReason.setText("Reason: " + reason);
+                } else {
+                    tvReason.setAlpha(0.2f);
+                    tvReason.setText("Reason");
+                }
+
+
+            }
+        });
 
     }
 }
