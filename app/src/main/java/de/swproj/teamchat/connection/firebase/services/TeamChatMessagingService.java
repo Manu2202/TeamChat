@@ -90,7 +90,7 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
         Map<String, String> data = remoteMessage.getData();
         //Log.d("Messaging Service, Message FROM", remoteMessage.getFrom());
 
-        sendNotification(data.get("title"),data.get("body"));
+        sendNotification_2(data.get("title"),data.get("body"));
         save_message(data);
     }
 
@@ -192,7 +192,27 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
             editor.putString("Token", token);
             editor.apply();
         }
+    private void sendNotification_2(String title, String body) {
+        int requestID = (int) System.currentTimeMillis();
+        Intent intent = new Intent(this, MainActivity.class);
 
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, requestID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                //.setSmallIcon()
+                .setContentTitle(title)
+                .setContentText(body).setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(body))
+                .setTicker(body);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationBuilder.getNotification().flags |= Notification.FLAG_AUTO_CANCEL;
+        Notification notification = notificationBuilder.build();
+
+        notificationManager.notify(requestID, notification);
+    }
         private void sendNotification (String title, String body){
             //Bundle bundle = new Bundle();
             Log.d("Message", "Got new Notification with message" + body);
