@@ -74,5 +74,18 @@ public class MainChatsViewModel extends Updateable {
         }
     }
 
+    @Override
+    public void removeObject(Chat obj) {
+        if (obj != null) {
+            LinkedList<Chat> chats = liveChats.getValue();
+            Chat chat = obj;
+            try {
+                chats.remove(findChat(obj.getId()));
+            } catch (IndexOutOfBoundsException e) {
+                e.printStackTrace();
+            }
 
+             liveChats.postValue(chats);
+        }
+    }
 }
