@@ -52,18 +52,18 @@ public class ChatViewModel extends Updateable {
 
     @Override
     public void updateObject(Event event) {
-       if(liveChat.getValue().getId().equals(event.getChatid())){
-           ArrayList<Message> messages = liveMessages.getValue();
-           for(int i =0;i<messages.size();i++){
-               if(messages.get(i).getId().equals(event.getId())){
-                   i=messages.size();
-                   messages.set(i,event);
-                   liveMessages.postValue(messages);
-               }
+        if (liveChat.getValue().getId().equals(event.getChatid())) {
+            ArrayList<Message> messages = liveMessages.getValue();
+            for (int i = 0; i < messages.size(); i++) {
+                if (messages.get(i).getId().equals(event.getId())) {
+                    i = messages.size();
+                    messages.set(i, event);
+                    liveMessages.postValue(messages);
+                }
 
-           }
+            }
 
-       }
+        }
     }
 
 
