@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         //Save FCM from Notification Intent
-        saveFCMtoDB();
+        //saveFCMtoDB();
     }
 
     @Override
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         fbconnect = new FirebaseConnection();
 
         //Save FCM from Notification Intent
-        saveFCMtoDB();
+        //saveFCMtoDB();
 
         //Setup Database
         DBStatements.setDbConnection(null);
