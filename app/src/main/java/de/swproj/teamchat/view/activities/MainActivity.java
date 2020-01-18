@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         fbconnect = new FirebaseConnection();
 
         //Save FCM from Notification Intent
-        saveFCMtoDB();
+        //saveFCMtoDB();
 
         //Setup Database
         DBStatements.setDbConnection(null);
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-
+        DBStatements.dropAll();
         // Check if user is signed in (non-null) and update UI accordingly.
         final FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {

@@ -87,11 +87,10 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.d("Message received", "Message received");
         super.onMessageReceived(remoteMessage);
-        RemoteMessage.Notification notification = remoteMessage.getNotification();
         Map<String, String> data = remoteMessage.getData();
         //Log.d("Messaging Service, Message FROM", remoteMessage.getFrom());
 
-        sendNotification(notification);
+        sendNotification(data.get("title"),data.get("body"));
         save_message(data);
     }
 
@@ -194,10 +193,9 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
             editor.apply();
         }
 
-        private void sendNotification (RemoteMessage.Notification
-        notification){
+        private void sendNotification (String title, String body){
             //Bundle bundle = new Bundle();
-            Log.d("Message", "Got new Notification with mesage" + notification.getBody());
+            Log.d("Message", "Got new Notification with message" + body);
             //bundle.putString("body", notification.getBody());
 
             Intent intent = new Intent(this, MainActivity.class);
@@ -218,8 +216,8 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
                     );
 
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "noti Builder"/*getString(/*R.string.notification_channel_id)*/)
-                    .setContentTitle(notification.getTitle())
-                    .setContentText(notification.getBody())
+                    .setContentTitle(title)
+                    .setContentText(body)
                     .setAutoCancel(true)
                     .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                     //.setSound(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.win))
