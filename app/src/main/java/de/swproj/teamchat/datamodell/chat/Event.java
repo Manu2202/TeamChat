@@ -16,9 +16,10 @@ import androidx.annotation.Nullable;
 
 public class Event extends Message implements Comparable<Event> {
 
+    public static final int REMOVED=1;
     private GregorianCalendar date;
     private String description;
-    private int status;
+    private int status=0;
 
     public Event(Date timeStamp, String message, String id, boolean isEvent, String creator,
                  GregorianCalendar date, String description, String chatid, int status) {
@@ -45,6 +46,7 @@ public class Event extends Message implements Comparable<Event> {
         this.status = status;
         StringToDate(date);
     }
+
 
     private void StringToDate(String s){
         date = new GregorianCalendar();
