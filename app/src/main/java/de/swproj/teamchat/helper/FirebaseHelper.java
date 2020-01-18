@@ -51,7 +51,7 @@ public static HashMap<String,String> convertToMap(Message message, int type, int
         HashMap<String,Object> retMap= new HashMap<>();
         retMap.put("eventid",status.getEventId());
         retMap.put("reason",status.getReason());
-        retMap.put("status",status.getStatus());
+        retMap.put("status",String.valueOf(status.getStatus()));
         retMap.put("userid",status.getUserId());
         Event event = DBStatements.getEvent(status.getEventId());
         retMap.put("chatid",event.getChatid());
