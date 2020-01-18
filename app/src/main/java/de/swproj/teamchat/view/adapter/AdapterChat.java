@@ -1,6 +1,7 @@
 package de.swproj.teamchat.view.adapter;
 
 import android.content.Context;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,6 +77,9 @@ public class AdapterChat extends BaseAdapter {
         TextView lastMessage = (TextView) convertView.findViewById(R.id.chatListLastMessage);
         final Message lastMsg = DBStatements.getLastMessage(chat.getId());
 
+        // Linking the DateTextView of the Last Message
+        TextView messageDate = (TextView) convertView.findViewById(R.id.chatListLastMessageDate);
+
         // Avoid NullpointerException if Chat is empty
         if (lastMsg != null) {
             if (FirebaseAuth.getInstance().getCurrentUser().getUid().equals(lastMsg.getCreator())) {
@@ -85,11 +89,15 @@ public class AdapterChat extends BaseAdapter {
                 lastMessage.setText(msgSender.getFirstName() + ": " + lastMsg.getMessage());
             }
 
-            // Date
-            TextView messageDate = (TextView) convertView.findViewById(R.id.chatListLastMessageDate);
-            messageDate.setText(FormatHelper.formatHoursMinutesFromDate(lastMsg.getTimeStampDate()));
+            // Set the Date and Time of the LastMessage
+            if (DateUtils.isToday(lastMsg.getTimeStampDate().getTime()))
+                messageDate.setText(FormatHelper.formatHoursMinutesFromDate(lastMsg.getTimeStampDate()));
+            else
+                messageDate.setText(FormatHelper.formatDayMonthYearFromDate(lastMsg.getTimeStampDate()));
 
-
+        } else {
+            // If no Last Message, set the Date empty
+            messageDate.setText("");
         }
 
 

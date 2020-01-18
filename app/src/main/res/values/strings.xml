@@ -35,6 +35,9 @@
     <string name="updateChat">Update Chat</string>
     <string name="leaveChat">Leave Chat</string>
     <string name="acceptLeaveChat">Are you sure, you want to leave the Chat?</string>
+    <string name="noMsgInChat">There are No Messages in this Chat yet.</string>
+    <string name="chatName">Name of the Chat</string>
+    <string name="lastMsgDate">Date of the last Message</string>
 
     <!-- Strings related to User -->
     <string name="first_name">First Name</string>
