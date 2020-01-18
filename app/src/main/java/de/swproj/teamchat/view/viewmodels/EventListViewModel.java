@@ -36,10 +36,10 @@ public class EventListViewModel extends Updateable {
 
 
         // Check if new event is the nearest
-        if (events.getFirst().getDate().compareTo(event.getDate()) <= 0) {
-            events.add(0, event);
+   //     if (events.getFirst().getDate().compareTo(event.getDate()) <= 0) {
+     //       events.add(0, event);
 
-            for (int i = 1; i < liveEvents.getValue().size(); i++) {
+            for (int i = 0; i < events.size(); i++) {
                 if (events.get(i).getDate().compareTo(event.getDate()) > 0) {
                     events.add(i, event);
                     break;
@@ -47,7 +47,7 @@ public class EventListViewModel extends Updateable {
             }
             liveEvents.postValue(prepareList(events));
         }
-    }
+
 
     private void setEvents(List<EventSeparator> list){
         events = new LinkedList<>();

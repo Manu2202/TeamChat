@@ -58,6 +58,8 @@ public class Message {
 
 
 public void setTimeStampString(String s){
+
+        timeStamp=new Date();
         try{
             timeStamp = new Date();
             timeStamp.setTime(Long.parseLong(s));

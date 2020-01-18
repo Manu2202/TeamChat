@@ -55,8 +55,9 @@ public class ChatViewModel extends Updateable {
         if (liveChat.getValue().getId().equals(event.getChatid())) {
             ArrayList<Message> messages = liveMessages.getValue();
             for (int i = 0; i < messages.size(); i++) {
-                if (messages.get(i).getId().equals(event.getId())) {
-                    i = messages.size();
+                Message message=messages.get(i);
+                if (message.getId().equals(event.getId())) {
+                  //  i = messages.size();
                     messages.set(i, event);
                     liveMessages.postValue(messages);
                 }
