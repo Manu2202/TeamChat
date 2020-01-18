@@ -23,12 +23,15 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import de.swproj.teamchat.R;
 import de.swproj.teamchat.connection.database.DBStatements;
@@ -359,43 +362,55 @@ public class UserSearchDialog extends Dialog implements
 
     private void queryFirebaseByFirstname(String firstName) {
         //Check if Email exists for User in Auth------------------------------------------
-        final String userFirstName = firstName;
 
         final ArrayList<User> firestoreResults = new ArrayList<User>();
 
+        String[] queries = {firstName.toLowerCase(),
+                firstName.toLowerCase().substring(0, 1).toUpperCase() + firstName.substring(1),
+            firstName};
+        for (String q : queries) {
+
+            Log.d("Queries:", q);
+        }
+
         //Get User from Firestore (gets saved in Database)
-        FirebaseFirestore.getInstance().collection("users").whereEqualTo("firstName", userFirstName).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        FirebaseFirestore.getInstance().collection("users").whereIn("firstName", Arrays.asList(queries)).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        //Got User, anything related to this User has to be done inside here because its async ------->
-                        User firebaseUser = document.toObject(User.class);
-                        Log.d("FirebaseUser", firebaseUser.getAccountName() + ", " + firebaseUser.getFirstName());
-                        // dbStatements.insertUser(firebaseUser);
+                if (task.getResult() != null) {
+                    if (task.getResult().isEmpty()) {
+                        reactToSearchResult(USER_DOES_NOT_EXIST);
+                    } else {
+                  //      if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                //Got User, anything related to this User has to be done inside here because its async ------->
+                                User firebaseUser = document.toObject(User.class);
+                                Log.d("FirebaseUser", firebaseUser.getAccountName() + ", " + firebaseUser.getFirstName());
+                                // dbStatements.insertUser(firebaseUser);
 
-                        if (firebaseUser.getGoogleId() != FirebaseAuth.getInstance().getCurrentUser().getUid()) {
-                            firestoreResults.add(firebaseUser);
-                        }
-                        //<--------------------------------------
-                    }
-                    // Removes Search Results that already exist in local database
-                    for (User u: firestoreResults) {
-                        if (!DBStatements.getUserEmailExists(u.getGoogleMail())) {
-                            searchResultUsers.add(u);
-                        }
-                    }
+                                // Make sure you're not adding yourself
+                                if (!firebaseUser.getGoogleId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                                    firestoreResults.add(firebaseUser);
+                                }
+                                //<--------------------------------------
+                            }
+                            // Removes Search Results that already exist in local database
+                            for (User u : firestoreResults) {
+                                if (!DBStatements.getUserEmailExists(u.getGoogleMail())) {
+                                    searchResultUsers.add(u);
+                                }
+                            }
 
-                    if (searchResultUsers.size() > 0) {
-                        reactToSearchResult(USER_WAS_FOUND);
-                    }
+                            if (searchResultUsers.size() > 0) {
+                                reactToSearchResult(USER_WAS_FOUND);
+                            }
 
-                } else {
-                    reactToSearchResult(USER_DOES_NOT_EXIST);
-                    Log.d("Firebase User", "Error getting user: ", task.getException());
+                      //  }
+                    }
                 }
             }
         });
+
 
     }
 
