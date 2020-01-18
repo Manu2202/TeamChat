@@ -199,7 +199,7 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, requestID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                //.setSmallIcon()
+                .setSmallIcon(R.mipmap.ic_app_new_round)
                 .setContentTitle(title)
                 .setContentText(body).setContentIntent(pendingIntent)
                 .setAutoCancel(true)
