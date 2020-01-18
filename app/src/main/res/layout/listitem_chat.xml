@@ -32,9 +32,9 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:textSize="14sp"
-        android:text="17.11.2019"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+        android:text="@string/lastMsgDate"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+        android:textSize="14sp" />
 
     <TextView
         android:id="@+id/chatListLastMessage"
@@ -48,7 +48,7 @@
         android:ellipsize="end"
         android:maxLength="75"
         android:maxLines="1"
-        android:text="Letzte Chat Message, und so sieht es aus wenn sie nicht ins Feld passt"
+        android:text="@string/noMsgInChat"
         android:textSize="17dp" />
 
     <TextView
@@ -58,7 +58,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="5dp"
         android:layout_toEndOf="@+id/list_color_box"
-        android:text="Hier sollte ein Chatname stehen"
+        android:text="@string/chatName"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="18sp" />

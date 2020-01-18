@@ -87,4 +87,9 @@ public class FormatHelper {
         SimpleDateFormat sdfMonth = new SimpleDateFormat("MMMM yyyy");
         return sdfMonth.format(date.getTime());
     }
+
+    public static String formatDayMonthYearFromDate(Date date) {
+        SimpleDateFormat sdfDate = new SimpleDateFormat("dd.MM.yyyy");
+        return sdfDate.format(date);
+    }
 }

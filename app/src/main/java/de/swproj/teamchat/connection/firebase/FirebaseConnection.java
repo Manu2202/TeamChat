@@ -148,11 +148,14 @@ public class FirebaseConnection {
 
     public void saveUserByIDs(List<String> uIDs) {
         Log.d("Add missing Users", "Try to add Users");
+
+        Log.d("Add missing Users", String.valueOf(uIDs.size()));
+
         if (uIDs.isEmpty()){
             Log.d("Add missing Users", "User Ids empty");
         }
         else{
-            firebaseDB.collection("users").whereIn("googleID", uIDs).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            firebaseDB.collection("users").whereIn("googleId", uIDs).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                 @Override
                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                     List<User> firebaseUser = queryDocumentSnapshots.toObjects(User.class);
