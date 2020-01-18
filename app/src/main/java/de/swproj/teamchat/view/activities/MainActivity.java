@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
 
+        // DBStatements.dropAll();
         // Check if user is signed in (non-null) and update UI accordingly.
         final FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser == null) {
