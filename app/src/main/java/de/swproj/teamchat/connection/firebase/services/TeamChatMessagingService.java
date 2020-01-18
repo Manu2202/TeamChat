@@ -92,7 +92,7 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
         Map<String, String> data = remoteMessage.getData();
         //Log.d("Messaging Service, Message FROM", remoteMessage.getFrom());
 
-        sendNotification_2(data.get("title"),data.get("body"));
+        sendNotification(data.get("title"),data.get("body"));
         save_message(data);
     }
 
@@ -213,31 +213,7 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
             notificationManager.createNotificationChannel(channel);
         }
     }
-        NotificationManager notificationManager;
 
-    private void sendNotification_2(String title, String body) {
-        notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        //Setting up Notification channels for android O and above
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            createNotificationChannel(title,body);
-        }
-        int notificationId = new Random().nextInt(60000);
-
-        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, new Random(5000).toString())
-                .setSmallIcon(R.mipmap.ic_app_new_round)  //a resource for your custom small icon
-                .setContentTitle(title) //the "title" value you sent in your notification
-                .setContentText(body) //ditto
-                .setAutoCancel(true)  //dismisses the notification on click
-                .setSound(defaultSoundUri);
-
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        notificationManager.notify(notificationId /* ID of notification */, notificationBuilder.build());
-    }
         private void sendNotification (String title, String body){
             //Bundle bundle = new Bundle();
             Log.d("Message", "Got new Notification with message" + body);
@@ -277,9 +253,9 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
 
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 NotificationChannel channel = new NotificationChannel(
-                        "NotiChannelID"/*getString(R.string.notification_channel_id)*/, CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT
+                        "NotiChannelID/*getString(R.string.notification_channel_id)*/", CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT
                 );
                 channel.setDescription(CHANNEL_DESC);
                 channel.setShowBadge(true);
