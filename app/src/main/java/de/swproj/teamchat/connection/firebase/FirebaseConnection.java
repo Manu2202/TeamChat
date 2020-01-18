@@ -237,12 +237,12 @@ public class FirebaseConnection {
                 .set(data, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Log.d("Firestore FCM Token", "Token added for User " + uID);
+                Log.d("FirestoreFCMToken", "Token added for User " + uID);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.d("Firestore FCM Token", "onFailure: Token not added");
+                Log.d("FirestoreFCMToken", "onFailure: Token not added");
             }
         });
     }
