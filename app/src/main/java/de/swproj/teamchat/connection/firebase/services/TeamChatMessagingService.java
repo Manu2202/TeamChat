@@ -255,7 +255,8 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 NotificationChannel channel = new NotificationChannel(
-                        "NotiChannelID/*getString(R.string.notification_channel_id)*/", CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT
+
+                        "NotiChannelID/*getString(R.string.fcm_fallback_notification_channel_label)*/", CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT
                 );
                 channel.setDescription(CHANNEL_DESC);
                 channel.setShowBadge(true);
