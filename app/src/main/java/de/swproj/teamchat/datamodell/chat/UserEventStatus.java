@@ -55,7 +55,7 @@ public class UserEventStatus {
             case 1:
                 return "committed";
             case 2:
-                return "cance lled";
+                return "cancelled";
         }
         return "-";
     }
