@@ -1,26 +1,5 @@
 package de.swproj.teamchat.view.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.ListFragment;
-import de.swproj.teamchat.connection.database.DBStatements;
-import de.swproj.teamchat.R;
-import de.swproj.teamchat.connection.firebase.FirebaseConnection;
-import de.swproj.teamchat.connection.firebase.services.TeamChatMessagingService;
-import de.swproj.teamchat.datamodell.chat.Chat;
-import de.swproj.teamchat.datamodell.chat.Event;
-import de.swproj.teamchat.datamodell.chat.FirebaseActions;
-import de.swproj.teamchat.datamodell.chat.FirebaseTypes;
-import de.swproj.teamchat.datamodell.chat.Message;
-import de.swproj.teamchat.datamodell.chat.User;
-import de.swproj.teamchat.datamodell.chat.UserEventStatus;
-import de.swproj.teamchat.helper.EventExpirer;
-import de.swproj.teamchat.helper.FormatHelper;
-import de.swproj.teamchat.view.fragments.FragmentMainChats;
-import de.swproj.teamchat.view.fragments.FragmentMainContacts;
-import de.swproj.teamchat.view.fragments.FragmentMainEvents;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,6 +13,26 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.ListFragment;
+import de.swproj.teamchat.R;
+import de.swproj.teamchat.connection.database.DBStatements;
+import de.swproj.teamchat.connection.firebase.FirebaseConnection;
+import de.swproj.teamchat.connection.firebase.services.TeamChatMessagingService;
+import de.swproj.teamchat.datamodell.chat.Chat;
+import de.swproj.teamchat.datamodell.chat.Event;
+import de.swproj.teamchat.datamodell.chat.FirebaseActions;
+import de.swproj.teamchat.datamodell.chat.FirebaseTypes;
+import de.swproj.teamchat.datamodell.chat.Message;
+import de.swproj.teamchat.datamodell.chat.UserEventStatus;
+import de.swproj.teamchat.helper.EventExpirer;
+import de.swproj.teamchat.helper.FormatHelper;
+import de.swproj.teamchat.view.fragments.FragmentMainChats;
+import de.swproj.teamchat.view.fragments.FragmentMainContacts;
+import de.swproj.teamchat.view.fragments.FragmentMainEvents;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -82,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
 
         //Setup Database
         DBStatements.setDbConnection(null);
-
     }
 
     public static Context getAppContext() {
@@ -124,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         Intent i = getIntent();
         Bundle extras = i.getExtras();
 
-        if (extras!=null) {
+        if (extras != null) {
             if (FirebaseTypes.valueOf(Integer.parseInt(extras.getString("type"))) == FirebaseTypes.Message) {
                 Message msg;
                 if (Boolean.valueOf(extras.getString("isEvent"))) {
@@ -160,14 +158,14 @@ public class MainActivity extends AppCompatActivity {
 
                 Chat chat = new Chat(extras.getString("name"), Integer.parseInt(extras.getString("color")), extras.getString("id"), extras.getString("admin"));
                 List<String> users = Arrays.asList(extras.getString("users").split(";"));
-                List<String> missingUserIDs= new ArrayList<>();
+                List<String> missingUserIDs = new ArrayList<>();
                 switch (FirebaseActions.valueOf(Integer.parseInt(extras.getString("action")))) {
                     case ADD:
                         DBStatements.insertChat(chat);
                         Log.d("TMS", "Add Chat and missing Users");
-                        for (String userID: users) {
-                            if (DBStatements.getUser(userID)==null){
-                                Log.d("Add missing User", "User "+userID+ "missing");
+                        for (String userID : users) {
+                            if (DBStatements.getUser(userID) == null) {
+                                Log.d("Add missing User", "User " + userID + "missing");
                                 missingUserIDs.add(userID);
                             }
                         }
@@ -178,9 +176,9 @@ public class MainActivity extends AppCompatActivity {
                     case UPDATE:
                         DBStatements.updateChat(chat);
                         Log.d("TMS", "Add Chat and missing Users");
-                        for (String userID: users) {
-                            if (DBStatements.getUser(userID)==null){
-                                Log.d("Add missing User", "User "+userID+ "missing");
+                        for (String userID : users) {
+                            if (DBStatements.getUser(userID) == null) {
+                                Log.d("Add missing User", "User " + userID + "missing");
                                 missingUserIDs.add(userID);
                             }
                         }
@@ -206,64 +204,64 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-        
-        /*
-        if (extras != null) {
-            //Got new Intent extras from Notification
-            String message = extras.getString("message");
-            Log.d("Save FCM", "Message: "+message);
-            if (message!=null && message.length()>0 && DBStatements.getMessage(extras.getString("id"))==null) {
-                //Message is new and relevant
-                if(Boolean.parseBoolean(extras.getString("isInvite"))){
-                    Log.d("Chat", "Got invite");
-                    //Got new Invite -> Check if Chat is new
-                    String chatid = extras.getString("chatid");
-                    if (DBStatements.getChat(chatid)==null){
-                        Log.d("Chat","chat nicht vorhanden");
-                        //Chat is not in Database -> Get Chat from Firestore
-                        fbconnect.saveChatbyID(chatid);
-                    }
+
+    /*
+    if (extras != null) {
+        //Got new Intent extras from Notification
+        String message = extras.getString("message");
+        Log.d("Save FCM", "Message: "+message);
+        if (message!=null && message.length()>0 && DBStatements.getMessage(extras.getString("id"))==null) {
+            //Message is new and relevant
+            if(Boolean.parseBoolean(extras.getString("isInvite"))){
+                Log.d("Chat", "Got invite");
+                //Got new Invite -> Check if Chat is new
+                String chatid = extras.getString("chatid");
+                if (DBStatements.getChat(chatid)==null){
+                    Log.d("Chat","chat nicht vorhanden");
+                    //Chat is not in Database -> Get Chat from Firestore
+                    fbconnect.saveChatbyID(chatid);
                 }
-                if(Boolean.valueOf(extras.getString("isEvent"))) {
-                    //New Event received--------------------------------
-                    Log.d("Save Fcm", "Save Event in Database");
-
-                    Event event= new Event(FormatHelper.formatTime(extras.getString("timestamp")),
-                            message,
-                            extras.getString("id"),
-                            Boolean.valueOf(extras.getString("isEvent")),
-                            extras.getString("creator"),
-                            FormatHelper.formatDate(extras.getString("date")),
-                            extras.getString("description"),
-                            extras.getString("chatid"),
-                            extras.getInt("status"));
-
-                    //Insert in Database
-                    DBStatements.insertMessage(event);
-                    }else {
-                    //New Message received-------------------------------
-                    Log.d("Save Fcm", "Save Message in Database");
-
-                    Message msg = new Message(FormatHelper.formatTime(extras.getString("timestamp")),
-                            message,
-                            extras.getString("id"),
-                            Boolean.valueOf((String) extras.get("isEvent")),
-                            extras.getString("creator"),
-                            extras.getString("chatid"));
-                 //   Log.d("Save FCM Message from Intent", msg.getMessage());
-
-                    //Insert in Database
-                    DBStatements.insertMessage(msg);
-                }
-                //TODO: necessary to delete?
-                getIntent().removeExtra("body");
             }
-        }
-    }/*
+            if(Boolean.valueOf(extras.getString("isEvent"))) {
+                //New Event received--------------------------------
+                Log.d("Save Fcm", "Save Event in Database");
 
-    /**
-     * Private Method to setup the fragements and the Bottom Navigation View
-     */
+                Event event= new Event(FormatHelper.formatTime(extras.getString("timestamp")),
+                        message,
+                        extras.getString("id"),
+                        Boolean.valueOf(extras.getString("isEvent")),
+                        extras.getString("creator"),
+                        FormatHelper.formatDate(extras.getString("date")),
+                        extras.getString("description"),
+                        extras.getString("chatid"),
+                        extras.getInt("status"));
+
+                //Insert in Database
+                DBStatements.insertMessage(event);
+                }else {
+                //New Message received-------------------------------
+                Log.d("Save Fcm", "Save Message in Database");
+
+                Message msg = new Message(FormatHelper.formatTime(extras.getString("timestamp")),
+                        message,
+                        extras.getString("id"),
+                        Boolean.valueOf((String) extras.get("isEvent")),
+                        extras.getString("creator"),
+                        extras.getString("chatid"));
+             //   Log.d("Save FCM Message from Intent", msg.getMessage());
+
+                //Insert in Database
+                DBStatements.insertMessage(msg);
+            }
+
+            getIntent().removeExtra("body");
+        }
+    }
+}/*
+
+/**
+ * Private Method to setup the fragements and the Bottom Navigation View
+ */
     private void setUpUI() {
         // Set the BottomNavigationView
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav_main);
@@ -274,7 +272,7 @@ public class MainActivity extends AppCompatActivity {
 
         //---------------------------------------------------------------  Test
         //addTestdat();
-       // DBStatements.dropAll();
+        // DBStatements.dropAll();
 
         //Set Up the first Fragment, if lastSelectedFragment is NULL, else use this
         if (lastSelectedFragment == null) {
@@ -314,5 +312,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 
 }

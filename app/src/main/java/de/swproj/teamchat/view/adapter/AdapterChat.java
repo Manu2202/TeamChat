@@ -100,7 +100,6 @@ public class AdapterChat extends BaseAdapter {
             messageDate.setText("");
         }
 
-
         return convertView;
     }
 }
