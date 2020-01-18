@@ -49,7 +49,7 @@ public class FirebaseConnection {
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Log.d("Firestore Messages", "Message added to Firebase with ID: " + documentReference.getId());
+                        Log.d("FirestoreMessages", "Message added to Firebase with ID: " + documentReference.getId());
                         message.setId(documentReference.getId());
                         DBStatements.insertMessage(message);
                     }
@@ -64,14 +64,14 @@ public class FirebaseConnection {
         firebaseDB.collection("usereventstatus").document(status.getUserId()).set(FirebaseHelper.convertToMap(status,type, action), SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                Log.d("Firestore Messages", "UserEventStatus updated");
+                Log.d("FirestoreMessages", "UserEventStatus updated");
                         DBStatements.updateUserEventStatus(status);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 addToFirestore(status, type, action);
-                Log.d("Firestore FCM Token", "onFailure: Usereventstatus not added");
+                Log.d("FirestoreFCMToken", "onFailure: Usereventstatus not added");
             }
         });
     }
@@ -84,7 +84,7 @@ public class FirebaseConnection {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         String chatid = documentReference.getId();
-                        Log.d("Firestore Chat", "Chat added to Firebase with ID: " + chatid);
+                        Log.d("FirestoreChat", "Chat added to Firebase with ID: " + chatid);
 
                         chat.setId(chatid);
                         DBStatements.insertChat(chat);
@@ -101,16 +101,15 @@ public class FirebaseConnection {
             firebaseDB.collection("chats").document(chat.getId()).set(FirebaseHelper.convertToMap(chat,type, action,userids), SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    Log.d("Firestore Messages", "Chat updated");
+                    Log.d("FirestoreMessages", "Chat updated");
                     DBStatements.updateChat(chat);
-                    Log.d("FBUpdateChatID", chat.getId());
                     DBStatements.updateChatMembers(userids, chat.getId());
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     addToFirestore(chat,userids, type, action);
-                    Log.d("Firestore Messages", "onFailure: Chat not updated");
+                    Log.d("FirestoreMessages", "onFailure: Chat not updated");
                 }
             });
         }
@@ -122,7 +121,7 @@ public class FirebaseConnection {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d("Firestore User", "User added to Firebase");
+                        Log.d("FirestoreUser", "User added to Firebase");
                         DBStatements.insertUser(user);
                     }
                 });
@@ -148,28 +147,28 @@ public class FirebaseConnection {
     }
 
     public void saveUserByIDs(List<String> uIDs) {
-        Log.d("Add missing Users", "Try to add Users");
+        Log.d("AddMissingUsers", "Try to add Users");
 
-        Log.d("Add missing Users", String.valueOf(uIDs.size()));
+        Log.d("AddMissingUsers", String.valueOf(uIDs.size()));
 
         if (uIDs.isEmpty()){
-            Log.d("Add missing Users", "User Ids empty");
+            Log.d("AddMissingUsers", "User Ids empty");
         }
         else{
             firebaseDB.collection("users").whereIn("googleId", uIDs).get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                 @Override
                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                     List<User> firebaseUser = queryDocumentSnapshots.toObjects(User.class);
-                    Log.d("Add missing Users", firebaseUser.toString());
+                    Log.d("AddMissingUsers", firebaseUser.toString());
                     for (User user:firebaseUser) {
                         DBStatements.insertUser(user);
-                        Log.d("Add missing Users","Saved missing Users in database!");
+                        Log.d("AddMissingUsers", "Saved missing Users in database!");
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Log.d("Add missing Users","Error: "+e.getMessage());
+                    Log.d("AddMissingUsers", "Error: " + e.getMessage());
                 }
             });
         }
