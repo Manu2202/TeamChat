@@ -91,9 +91,11 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
         Map<String, String> data = remoteMessage.getData();
         //Log.d("Messaging Service, Message FROM", remoteMessage.getFrom());
-
+        if(data!=null){
+            save_message(data);
+        }
         sendNotification(data.get("title"),data.get("body"));
-        save_message(data);
+
     }
 
     /**
@@ -235,7 +237,7 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
                             PendingIntent.FLAG_UPDATE_CURRENT
                     );
 
-            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "noti Builder"/*getString(/*R.string.notification_channel_id)*/)
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, "noti Builder/*getString(/*R.string.notification_channel_id)*/")
                     .setContentTitle(title)
                     .setContentText(body)
                     .setAutoCancel(true)
@@ -266,11 +268,14 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
                 channel.enableVibration(true);
                 channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500});
 
-                assert notificationManager != null;
+                //Sets whether notifications from these Channel should be visible on Lockscreen or not
+                channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+
+                    assert notificationManager != null;
                 notificationManager.createNotificationChannel(channel);
             }
             //Todo Notification ID?
             assert notificationManager != null;
-            notificationManager.notify(0, notificationBuilder.build());
+            notificationManager.notify(101, notificationBuilder.build());
         }
     }
