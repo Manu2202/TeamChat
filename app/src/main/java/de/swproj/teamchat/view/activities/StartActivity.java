@@ -27,6 +27,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.shobhitpuri.custombuttons.GoogleSignInButton;
 //import com.shobhitpuri.custombuttons.GoogleSignInButton;
 
@@ -100,6 +103,7 @@ public class StartActivity extends AppCompatActivity {
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent login_intent = new Intent(StartActivity.this,LoginActivity.class);
                 startActivity(login_intent);
             }
@@ -146,6 +150,8 @@ public class StartActivity extends AppCompatActivity {
                             //Assign Token from Shared Preference
                             String token=get_token();
                             FirebaseConnection.updateToken(FirebaseAuth.getInstance().getCurrentUser().getUid(),token);
+
+
                             //Check if User is New -> if true add to Database
                             if (task.getResult().getAdditionalUserInfo().isNewUser()){
                                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -158,7 +164,15 @@ public class StartActivity extends AppCompatActivity {
                                 }
 
                                 fbconnect.addToFirestore(new User(user.getUid(),user.getEmail(),user.getDisplayName(),forname_lastname[1],forname_lastname[0]));
+                            } else {
+                                if (!DBStatements.getUserEmailExists(FirebaseAuth.getInstance().getCurrentUser().getEmail())) {
+                                       queryFirebaseByID(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                }
                             }
+
+
+
+
                             //Send to MainActivity
                             Intent mainIntent = new Intent(StartActivity.this, MainActivity.class);
                             mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -213,5 +227,31 @@ public class StartActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void queryFirebaseByID(String id) {
+        //Check if Email exists for User in Auth------------------------------------------
+        final String fireBaseID = id;
+
+        //Get User from Firestore (gets saved in Database)
+        FirebaseFirestore.getInstance().collection("users").whereEqualTo("googleId", fireBaseID).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    if (task.getResult() != null) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            //Got User, anything related to this User has to be done inside here because its async ------->
+                            User firebaseUser = document.toObject(User.class);
+                            Log.d("FirebaseUser", firebaseUser.getAccountName() + ", " + firebaseUser.getFirstName());
+                            DBStatements.insertUser(firebaseUser);
+
+                        }
+                    }
+
+                }
+
+            }
+        });
+
     }
 }
