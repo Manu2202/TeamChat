@@ -222,7 +222,8 @@ public class EditChatActivity extends AppCompatActivity {
 
         }else{
             List<String> userIDs = new ArrayList<>(groupMember.keySet());
-            firebaseConnection.addToFirestore(chat,userIDs, FirebaseTypes.Chat.getValue(), FirebaseActions.UPDATE.getValue());
+            chat.setName(etChatName.getText().toString());
+            firebaseConnection.addToFirestore(chat, userIDs, FirebaseTypes.Chat.getValue(), FirebaseActions.UPDATE.getValue());
 
         }
         finish();

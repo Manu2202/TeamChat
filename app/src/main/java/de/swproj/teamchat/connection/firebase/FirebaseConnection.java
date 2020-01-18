@@ -103,7 +103,8 @@ public class FirebaseConnection {
                 public void onSuccess(Void aVoid) {
                     Log.d("Firestore Messages", "Chat updated");
                     DBStatements.updateChat(chat);
-                    DBStatements.updateChatMembers(userids,chat.getId());
+                    Log.d("FBUpdateChatID", chat.getId());
+                    DBStatements.updateChatMembers(userids, chat.getId());
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
