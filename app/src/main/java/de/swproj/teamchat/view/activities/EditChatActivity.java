@@ -66,6 +66,10 @@ public class EditChatActivity extends AppCompatActivity {
 
         isAdmin = adminID.equals(FirebaseAuth.getInstance().getCurrentUser().getUid());
 
+        // Disable change of group name, if user is not admin
+        if (!isAdmin)
+            etChatName.setEnabled(false);
+
         if (!chatId.equals("0")) {
             chat = DBStatements.getChat(chatId);
             etChatName.setText(chat.getName());
