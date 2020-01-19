@@ -130,7 +130,8 @@ public class TeamChatMessagingService extends FirebaseMessagingService {
                         DBStatements.insertMessage(msg);
                         break;
                     case UPDATE:
-                        if (msg.isEvent()) DBStatements.updateEvent((Event) msg);
+                        if (msg.isEvent())
+                            DBStatements.updateEvent((Event) msg);
                         break;
                 }
 

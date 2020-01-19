@@ -426,60 +426,63 @@ public class DBStatements {
     public static boolean updateEvent(Event event){
         boolean res = false;
 
-        //check existents
-        Message message = getMessage(event.getId());
-        if(message.isEvent()) {
-            SQLiteDatabase db = dbConnection.getWritableDatabase();
+            //check existents
+            Message message = getMessage(event.getId());
+            if (message.isEvent()) {
+                SQLiteDatabase db = dbConnection.getWritableDatabase();
 
-            try {
+                try {
 
-                ContentValues values = new ContentValues();
+                    ContentValues values = new ContentValues();
 
-                values.put(DBCreate.COL_MESSAGE_FK_CREATOR, event.getCreator());
-                values.put(DBCreate.COL_MESSAGE_FK_CHATID, event.getChatid());
-                values.put(DBCreate.COL_MESSAGE_ISEVENT, 1);
-                values.put(DBCreate.COL_MESSAGE_MESSAGE, event.getMessage());
-                values.put(DBCreate.COL_MESSAGE_ID, event.getId());
-                values.put(DBCreate.COL_MESSAGE_TIMESTAMP, String.valueOf(event.getTimeStampDate().getTime()));
+                    values.put(DBCreate.COL_MESSAGE_FK_CREATOR, event.getCreator());
+                    values.put(DBCreate.COL_MESSAGE_FK_CHATID, event.getChatid());
+                    values.put(DBCreate.COL_MESSAGE_ISEVENT, 1);
+                    values.put(DBCreate.COL_MESSAGE_MESSAGE, event.getMessage());
+                    values.put(DBCreate.COL_MESSAGE_ID, event.getId());
+                    values.put(DBCreate.COL_MESSAGE_TIMESTAMP, String.valueOf(event.getTimeStampDate().getTime()));
 
-                db.beginTransaction();
-
-
-                db.update(DBCreate.TABLE_MESSAGE,values,DBCreate.COL_MESSAGE_ID+"=?",new String[]{event.getId()});
-
-                db.setTransactionSuccessful();
-                db.endTransaction();
-
-                db.beginTransaction();
-
-                values = new ContentValues();
+                    db.beginTransaction();
 
 
-                values.put(DBCreate.COL_EVENT_DATE, event.getDate().getTime().getTime() + "");
-                values.put(DBCreate.COL_EVENT_DESCRIPTION, event.getDescription());
-                values.put(DBCreate.COL_EVENT_STATE, event.getStatus());
+                    db.update(DBCreate.TABLE_MESSAGE, values, DBCreate.COL_MESSAGE_ID + "=?", new String[]{event.getId()});
 
-                db.update(DBCreate.TABLE_EVENT,values,DBCreate.COL_EVENT_ID+"=?",new String[]{event.getId()});
+                    db.setTransactionSuccessful();
+                    db.endTransaction();
 
-                db.setTransactionSuccessful();
+                    db.beginTransaction();
 
-                res=true;
+                    values = new ContentValues();
 
 
-            } catch (Exception e) {
-                Log.e("DatabaseError","Unable to update Event wit id "+event.getId());
-                return false;
+                    values.put(DBCreate.COL_EVENT_DATE, event.getDate().getTime().getTime() + "");
+                    values.put(DBCreate.COL_EVENT_DESCRIPTION, event.getDescription());
+                    values.put(DBCreate.COL_EVENT_STATE, event.getStatus());
+
+                    db.update(DBCreate.TABLE_EVENT, values, DBCreate.COL_EVENT_ID + "=?", new String[]{event.getId()});
+
+                    db.setTransactionSuccessful();
+
+                    res = true;
+
+
+                        for (Updateable u : updateables) {
+                            u.updateObject(event);
+                        }
+
+
+
+                } catch (Exception e) {
+                    Log.e("DatabaseError", "Unable to update Event wit id " + event.getId());
+                    return false;
+                } finally {
+                    db.endTransaction();
+                }
+
+
+
+
             }
-            finally {
-                db.endTransaction();
-            }
-            for (Updateable u:updateables) {
-                u.updateObject(event);
-            }
-
-
-
-        }
 
         return res;
     }

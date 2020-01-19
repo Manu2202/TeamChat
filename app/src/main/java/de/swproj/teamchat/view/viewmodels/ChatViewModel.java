@@ -68,5 +68,21 @@ public class ChatViewModel extends Updateable {
         }
     }
 
+    @Override
+    public void removeObject(Event obj) {
+        if (liveChat.getValue().getId().equals(obj.getChatid())) {
+            ArrayList<Message> messages = liveMessages.getValue();
+            for (int i = 0; i < messages.size(); i++) {
+                Message message=messages.get(i);
 
+                if (message.getId().equals(obj.getId())) {
+                     messages.remove(i);
+                    messages.add(obj);
+                    liveMessages.postValue(messages);
+                    break;
+                }
+
+            }
+        }
+    }
 }

@@ -16,7 +16,7 @@ import androidx.annotation.Nullable;
 
 public class Event extends Message implements Comparable<Event> {
 
-    public static final int REMOVED=1;
+
     private GregorianCalendar date;
     private String description;
     private int status=0;

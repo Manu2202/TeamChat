@@ -74,7 +74,12 @@ public class AdapterUserEventStatus extends BaseAdapter {
 
          }
         TextView tvUsername = convertView.findViewById(R.id.li_ues_tvusername);
-        tvUsername.setText(DBStatements.getUser(state.getUserId()).getAccountName() + ":");
+        try {
+            tvUsername.setText(DBStatements.getUser(state.getUserId()).getAccountName() + ":");
+        }catch (NullPointerException e){
+            tvUsername.setText("Unknown:");
+        }
+
         TextView tvStatus = convertView.findViewById(R.id.li_ues_tvstatus);
         TextView tvReason = convertView.findViewById(R.id.li_ues_tvreason);
 

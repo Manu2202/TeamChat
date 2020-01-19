@@ -18,6 +18,8 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import androidx.appcompat.app.AlertDialog;
@@ -127,20 +129,21 @@ public class ViewEventActivity extends AppCompatActivity {
         viewModel.getMyLiveState().observe(this, new Observer<UserEventStatus>() {
             @Override
             public void onChanged(UserEventStatus status) {
-                tvStatus.setText(status.getStatusString());
-
-
-                if (status.getStatus() == 1) {
-                    cancelBtn.setEnabled(true);
-                    cancelBtn.setAlpha(1.0f);
-                    commitBtn.setEnabled(false);
-                    commitBtn.setAlpha(0.5f);
-                } else if (status.getStatus() == 2) {
-                    cancelBtn.setEnabled(false);
-                    cancelBtn.setAlpha(0.5f);
-                    commitBtn.setEnabled(true);
-                    commitBtn.setAlpha(1.0f);
+                if(status!=null){
+                    tvStatus.setText(status.getStatusString());
+                    if (status.getStatus() == 1) {
+                        cancelBtn.setEnabled(true);
+                        cancelBtn.setAlpha(1.0f);
+                        commitBtn.setEnabled(false);
+                        commitBtn.setAlpha(0.5f);
+                    } else if (status.getStatus() == 2) {
+                        cancelBtn.setEnabled(false);
+                        cancelBtn.setAlpha(0.5f);
+                        commitBtn.setEnabled(true);
+                        commitBtn.setAlpha(1.0f);
+                    }
                 }
+
             }
         });
 
@@ -279,9 +282,22 @@ public class ViewEventActivity extends AppCompatActivity {
         builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 
             public void onClick(DialogInterface dialog, int which) {
-                // TODO: Löschen des Events und senden einer Nachricht an andere User
+             Event event = viewModel.getLiveEvent().getValue();
+                //Push Event to Firebase
+                event.setStatus(2);
+                // generate Delete Message
+                Message message =new Message(GregorianCalendar.getInstance().getTime(),
+                        "Event "+ event.getMessage()+" is cancelled by " +DBStatements.getUser(event.getCreator()).getAccountName()+"!",
+                        false, FirebaseAuth.getInstance().getCurrentUser().getUid(), event.getChatid());
+
+
+                FirebaseConnection firebaseConnection = new FirebaseConnection();
+                firebaseConnection.addToFirestore(event, FirebaseTypes.Message.getValue(), FirebaseActions.UPDATE.getValue());
+                firebaseConnection.addToFirestore(message, FirebaseTypes.Message.getValue(), FirebaseActions.ADD.getValue());
+
 
                 dialog.dismiss();
+                finish();
             }
         });
 
